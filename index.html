@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cobblemon Pokédex</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header>
+    <h1><span>Cobblemon</span> Pokédex</h1>
+  </header>
+
+  <div class="container" style="margin-top: 2rem; padding-bottom: 4rem;">
+
+    <!-- Filters -->
+    <div class="filters-row">
+      <input id="searchInput" type="text" placeholder="Search by name or #…" autocomplete="off">
+      <select id="typeFilter">
+        <option value="">All Types</option>
+        <!-- Populated dynamically from data -->
+      </select>
+      <select id="genFilter">
+        <option value="">All Gens</option>
+        <!-- Populated dynamically from data -->
+      </select>
+    </div>
+
+    <!-- Grid -->
+    <div id="pokemonGrid"
+         class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-5">
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
