@@ -32,7 +32,7 @@
       "spawnLevel": "5-31",
       "spawnContext": "-",
       "spawnPreset": "Natural",
-      "spawnBiomes": ["#cobblemon:is_hills", "#cobblemon:is_volcanic"],
+      "spawnBiomes": ["Hills", "Volcanic"],
       "isRaining": false,
       "spawnRequirements": "N/A",
 
