@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cobblemon Pokédex</title>
-  <link rel="icon" type="image/png" href="assets/images/items/favicon.png">
+  <link rel="icon" type="image/png" href="assets/images/favicon.png">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -15,6 +15,13 @@
   </header>
 
   <div class="container" style="margin-top: 2rem; padding-bottom: 4rem;">
+
+    <!-- Top 5 Strongest -->
+    <div class="top5-section">
+      <h2 class="top5-title">⚔️ Strongest Pokémon</h2>
+      <p class="top5-subtitle">Ranked by total base stats</p>
+      <div id="top5Grid" class="top5-grid" style="display:flex;flex-direction:row;flex-wrap:nowrap;gap:1rem;"></div>
+    </div>
 
     <!-- Filters -->
     <div class="filters-row">

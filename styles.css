@@ -60,6 +60,136 @@ header h1 span {
   color: var(--accent);
 }
 
+/* ====================== Top 5 Section ====================== */
+.top5-section {
+  margin-bottom: 2.5rem;
+  overflow: visible;
+}
+
+
+
+
+.top5-title {
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.2rem;
+}
+
+.top5-subtitle {
+  font-size: 0.8rem;
+.top5-grid {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap;
+  gap: 1rem;
+  overflow-x: auto;
+  overflow-y: visible;
+  padding: 0.5rem 0.25rem 0.75rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+
+
+
+
+
+
+
+  padding-bottom: 0.5rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.top5-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  width: 160px;
+  min-width: 160px;
+  flex-shrink: 0;
+  position: relative;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.top5-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-4px);
+}
+
+.top5-rank {
+  position: absolute;
+  top: 0.6rem;
+  left: 0.7rem;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.top5-sprite-wrap {
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.top5-sprite {
+  width: 180px;
+  height: 180px;
+  object-fit: contain;
+  object-position: center center;
+  image-rendering: pixelated;
+  transform: scale(1.5);
+}
+
+.top5-info {
+  text-align: center;
+}
+
+.top5-number {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-family: monospace;
+}
+
+.top5-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin: 0.1rem 0;
+}
+
+.top5-total {
+  font-size: 0.75rem;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.top5-btn {
+  display: inline-block;
+  background: var(--accent-dim);
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  border-radius: 999px;
+  padding: 0.3rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+  margin-top: 0.25rem;
+}
+
+.top5-btn:hover {
+  background: var(--accent);
+  color: #052e16;
+}
+
 /* ====================== Filters ====================== */
 .filters-row {
   display: flex;

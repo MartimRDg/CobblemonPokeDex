@@ -100,6 +100,40 @@ function renderGrid(pokemonList) {
   }).join('');
 }
 
+function renderTop5() {
+  var grid = document.getElementById('top5Grid');
+  if (!grid) return;
+
+  var ranked = State.allPokemon.slice().sort(function(a, b) {
+    var sumA = a.baseStats ? Object.values(a.baseStats).reduce(function(t, v) { return t + v; }, 0) : 0;
+    var sumB = b.baseStats ? Object.values(b.baseStats).reduce(function(t, v) { return t + v; }, 0) : 0;
+    return sumB - sumA;
+  }).slice(0, 5);
+
+  grid.innerHTML = ranked.map(function(poke, i) {
+    var total = poke.baseStats ? Object.values(poke.baseStats).reduce(function(t, v) { return t + v; }, 0) : 0;
+    var num   = poke.number || String(poke.id).padStart(4, '0');
+    var medals = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣'];
+    return (
+      '<div class="top5-card">' +
+        '<div class="top5-rank">' + medals[i] + '</div>' +
+        '<div class="top5-sprite-wrap">' +
+          '<img src="' + (poke.sprite || 'assets/images/placeholder.png') + '"' +
+               ' alt="' + poke.name + '"' +
+               ' onerror="this.src=\'assets/images/placeholder.png\'"' +
+               ' class="top5-sprite">' +
+        '</div>' +
+        '<div class="top5-info">' +
+          '<p class="top5-number">#' + num + '</p>' +
+          '<h3 class="top5-name">' + poke.name + '</h3>' +
+          '<p class="top5-total">' + total + ' BST</p>' +
+        '</div>' +
+        '<a href="pokemon.html?id=' + poke.id + '" class="top5-btn">View</a>' +
+      '</div>'
+    );
+  }).join('');
+}
+
 function filterPokemon() {
   var search     = (document.getElementById('searchInput') ? document.getElementById('searchInput').value.toLowerCase().trim() : '');
   var typeFilter = (document.getElementById('typeFilter') ? document.getElementById('typeFilter').value : '');
@@ -586,6 +620,7 @@ document.addEventListener('DOMContentLoaded', async function() {
   var grid = document.getElementById('pokemonGrid');
   if (grid) {
     buildFilters();
+    renderTop5();
     renderGrid(State.allPokemon);
     var searchInput = document.getElementById('searchInput');
     var typeFilter  = document.getElementById('typeFilter');
