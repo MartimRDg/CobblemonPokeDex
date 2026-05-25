@@ -19,6 +19,7 @@ async function loadData() {
 
     State.allPokemon = pokeData.pokemon || [];
     State.allMoves = movesData.moves || {};
+    window._allMoves = State.allMoves;
 
     console.log('Loaded ' + State.allPokemon.length + ' Pokemon and ' + Object.keys(State.allMoves).length + ' moves');
     return true;
@@ -31,6 +32,28 @@ async function loadData() {
 function enrichMove(move) {
   if (!move || !move.name || !State.allMoves[move.name]) return move;
   return Object.assign({}, State.allMoves[move.name], move);
+}
+
+// Returns either a <video> or <img> tag depending on whether a video exists
+function buildSpriteEl(src, alt, cssClass, fallback) {
+  fallback = fallback || 'assets/images/placeholder.png';
+  if (!src) return '<img src="' + fallback + '" alt="' + alt + '" class="' + cssClass + '">';
+  var ext = src.split('.').pop().toLowerCase();
+  if (ext === 'mov' || ext === 'mp4' || ext === 'webm') {
+    return (
+      '<video class="' + cssClass + '" autoplay loop muted playsinline disablepictureinpicture preload="auto" style="display:block">' +
+        '<source src="' + src + '" type="video/' + (ext === 'mov' ? 'mp4' : ext) + '">' +
+      '</video>'
+    );
+  }
+  return '<img src="' + src + '" alt="' + alt + '" class="' + cssClass + '" onerror="this.src=\'' + fallback + '\'">';
+}
+
+function playAllVideos() {
+  document.querySelectorAll('video').forEach(function(v) {
+    v.muted = true;
+    v.play().catch(function() {});
+  });
 }
 
 
@@ -87,10 +110,7 @@ function renderGrid(pokemonList) {
            ' onclick="location.href=\'pokemon.html?id=' + poke.id + '\'"' +
            ' onkeydown="if(event.key===\'Enter\') location.href=\'pokemon.html?id=' + poke.id + '\'">' +
         '<div class="card-inner">' +
-          '<img src="' + (poke.sprite || 'assets/images/placeholder.png') + '"' +
-               ' alt="' + poke.name + '" loading="lazy"' +
-               ' onerror="this.src=\'assets/images/placeholder.png\'"' +
-               ' class="pokemon-sprite">' +
+          buildSpriteEl(poke.video || poke.sprite, poke.name, 'pokemon-sprite', 'assets/images/placeholder.png') +
           '<h3 class="pokemon-name">' + poke.name + '</h3>' +
           '<p class="pokemon-number">#' + num + '</p>' +
           '<div class="type-badges">' + typeBadges + '</div>' +
@@ -118,10 +138,7 @@ function renderTop5() {
       '<div class="top5-card">' +
         '<div class="top5-rank">' + medals[i] + '</div>' +
         '<div class="top5-sprite-wrap">' +
-          '<img src="' + (poke.sprite || 'assets/images/placeholder.png') + '"' +
-               ' alt="' + poke.name + '"' +
-               ' onerror="this.src=\'assets/images/placeholder.png\'"' +
-               ' class="top5-sprite">' +
+          buildSpriteEl(poke.video || poke.sprite, poke.name, 'top5-sprite', 'assets/images/placeholder.png') +
         '</div>' +
         '<div class="top5-info">' +
           '<p class="top5-number">#' + num + '</p>' +
@@ -275,7 +292,128 @@ function buildRidingSection(poke) {
 }
 
 
-// ====================== Pokemon Detail Page ======================
+// ====================== Decks Section ======================
+function resolveFormVideo(poke, version) {
+  var v = version || 'Normal';
+  if (v === 'Normal') return poke.video || null;
+  if (v === 'Shiny')  return poke.shinyVideo || null;
+  var megas = poke.megaEvolutions || [];
+  for (var i = 0; i < megas.length; i++) {
+    if (v === megas[i].name)           return megas[i].video || null;
+    if (v === megas[i].name + ' Shiny') return megas[i].shinyVideo || null;
+  }
+  return null;
+}
+
+
+function resolveFormSprite(poke, version) {
+  var v = version || 'Normal';
+
+  // Shiny base
+  if (v === 'Shiny') {
+    return poke.shinySprite || poke.sprite;
+  }
+
+  // Normal base
+  if (v === 'Normal') {
+    return poke.sprite;
+  }
+
+  // Mega / Gigantamax forms
+  var megas = poke.megaEvolutions || [];
+  for (var i = 0; i < megas.length; i++) {
+    var mega = megas[i];
+    if (v === mega.name) {
+      return mega.sprite;
+    }
+    if (v === mega.name + ' Shiny') {
+      return mega.shinySprite || mega.sprite;
+    }
+  }
+
+  return poke.sprite;
+}
+
+function buildDecksSection(poke) {
+  if (!poke.decks || !poke.decks.length) return '';
+
+  // Max possible power for 4 moves (4 x 150 = 600)
+  var MAX_DECK_POWER = 600;
+
+  var cards = poke.decks.map(function(deck) {
+    var sprite = resolveFormSprite(poke, deck.version);
+    var logoPath = deck.logo || '';    // Calculate deck strength
+    var totalPower = (deck.moves || []).reduce(function(sum, moveName) {
+      var move = window._allMoves ? window._allMoves[moveName] : null;
+      return sum + (parseInt(move && move.power) || 0);
+    }, 0);
+    var strengthPct = Math.min((totalPower / MAX_DECK_POWER) * 100, 100).toFixed(1);
+    var strengthColor = totalPower >= 400 ? '#4ade80' : totalPower >= 250 ? '#facc15' : '#f87171';
+
+    var movesList = (deck.moves || []).map(function(moveName) {
+      var move = window._allMoves ? window._allMoves[moveName] : null;
+      var typeClass = move ? 'type-' + move.type.toLowerCase() : '';
+      var typeLabel = move ? move.type : '';
+      var power    = move && move.power && move.power !== '-' ? move.power : '—';
+      var accuracy = move && move.accuracy ? move.accuracy : '—';
+      var pp       = move && move.pp ? move.pp : '—';
+      var category = move && move.category ? move.category : '—';
+
+      return (
+        '<div class="deck-move">' +
+          '<div class="deck-move-top">' +
+            '<span class="deck-move-name">' + moveName + '</span>' +
+            (typeLabel ? '<span class="type-badge ' + typeClass + ' type-xs">' + typeLabel + '</span>' : '') +
+          '</div>' +
+          '<div class="deck-move-stats">' +
+            '<span title="Power">Pwr: ' + power + '</span>' +
+            '<span title="Accuracy">Acc: ' + accuracy + '</span>' +
+            '<span title="PP">PP: ' + pp + '</span>' +
+            '<span title="Category" class="deck-move-cat">' + category + '</span>' +
+          '</div>' +
+        '</div>'
+      );
+    }).join('');
+
+    return (
+      '<div class="deck-card">' +
+        '<div class="deck-sprite-wrap">' +
+          buildSpriteEl(resolveFormVideo(poke, deck.version) || resolveFormSprite(poke, deck.version), deck.version, 'deck-sprite', 'assets/images/placeholder.png') +
+        '</div>' +
+        '<div class="deck-info">' +
+          '<div class="deck-header">' +
+            '<h3 class="deck-name">' + deck.name + '</h3>' +
+            '<span class="deck-game">' +
+              '<img src="' + logoPath + '" alt="' + deck.game + '" class="deck-game-logo" onerror="this.style.display=\'none\'">' +
+              (deck.game || '') +
+            '</span>' +
+          '</div>' +
+          '<p class="deck-version">' + deck.version + '</p>' +
+          '<div class="deck-moves">' + movesList + '</div>' +
+          '<div class="deck-strength">' +
+            '<div class="deck-strength-header">' +
+              '<span class="deck-strength-label">Deck Power</span>' +
+              '<span class="deck-strength-value" style="color:' + strengthColor + '">' + totalPower + ' / ' + MAX_DECK_POWER + '</span>' +
+            '</div>' +
+            '<div class="deck-strength-bar-bg">' +
+              '<div class="deck-strength-bar-fill" style="width:' + strengthPct + '%;background:' + strengthColor + '"></div>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>'
+    );
+  }).join('');
+
+  return (
+    '<section class="detail-section">' +
+      '<h2 class="section-title">&#127922; Decks</h2>' +
+      '<p class="section-subtitle">' + poke.decks.length + ' deck' + (poke.decks.length > 1 ? 's' : '') + ' available</p>' +
+      '<div class="decks-list">' + cards + '</div>' +
+    '</section>'
+  );
+}
+
+
 function loadPokemonDetail() {
   var container = document.getElementById('pokemonDetail');
   if (!container) return;
@@ -345,10 +483,9 @@ function loadPokemonDetail() {
       '<div class="detail-hero">' +
         '<div class="sprite-container">' +
           '<div class="sprite-wrap">' +
-            '<img id="pokemonSprite" src="' + poke.sprite + '" alt="' + poke.name + '"' +
-                 ' onerror="this.src=\'assets/images/placeholder.png\'" class="detail-sprite">' +
-            shinyBtn +
-          '</div>' +
+          buildSpriteEl(poke.video || poke.sprite, poke.name, 'detail-sprite', 'assets/images/placeholder.png') +
+          shinyBtn +
+        '</div>' +
           megaButtons +
         '</div>' +
 
@@ -418,6 +555,8 @@ function loadPokemonDetail() {
         '<div id="movesContent" class="moves-content"></div>' +
       '</section>' +
 
+      buildDecksSection(poke) +
+
     '</div>';
 
   window._shinyData = { poke: poke, isShiny: false, formIndex: 0 };
@@ -442,15 +581,17 @@ window.switchForm = function(index) {
       }
     : d.poke.megaEvolutions[index - 1];
 
-  // Sprite
-  var img   = document.getElementById('pokemonSprite');
+  // Sprite — swap video or image
+  var spriteWrap = document.querySelector('.sprite-wrap');
+  if (spriteWrap) {
+    var newSrc = resolveFormVideo(d.poke, form.name || (index === 0 ? 'Normal' : '')) || form.sprite;
+    var existing = spriteWrap.querySelector('video, img');
+    if (existing) existing.remove();
+    spriteWrap.insertAdjacentHTML('afterbegin', buildSpriteEl(newSrc, d.poke.name, 'detail-sprite', 'assets/images/placeholder.png'));
+  }
   var btn   = document.getElementById('shinyBtn');
   var label = document.getElementById('shinyLabel');
-  if (img) img.src = form.sprite;
-  if (btn) {
-    btn.classList.remove('active');
-    btn.style.display = form.shinySprite ? '' : 'none';
-  }
+  if (btn) { btn.classList.remove('active'); btn.style.display = form.shinySprite ? '' : 'none'; }
   if (label) label.textContent = 'SHINY';
 
   // Abilities
@@ -562,13 +703,23 @@ window.toggleShiny = function() {
   if (!d || !d.poke) return;
 
   var form = d.formIndex === 0
-    ? { sprite: d.poke.sprite, shinySprite: d.poke.shinySprite }
+    ? { sprite: d.poke.sprite, shinySprite: d.poke.shinySprite, shinyVideo: d.poke.shinyVideo }
     : d.poke.megaEvolutions[d.formIndex - 1];
 
-  if (!form.shinySprite) return;
+  if (!form.shinySprite && !form.shinyVideo) return;
   d.isShiny = !d.isShiny;
 
-  document.getElementById('pokemonSprite').src = d.isShiny ? form.shinySprite : form.sprite;
+  var src = d.isShiny
+    ? (form.shinyVideo || form.shinySprite)
+    : (resolveFormVideo(d.poke, form.name || 'Normal') || form.sprite);
+
+  var spriteWrap = document.querySelector('.sprite-wrap');
+  if (spriteWrap) {
+    var existing = spriteWrap.querySelector('video, img');
+    if (existing) existing.remove();
+    spriteWrap.insertAdjacentHTML('afterbegin', buildSpriteEl(src, d.poke.name, 'detail-sprite', 'assets/images/placeholder.png'));
+  }
+
   var btn   = document.getElementById('shinyBtn');
   var label = document.getElementById('shinyLabel');
   if (btn)   btn.classList.toggle('active', d.isShiny);
@@ -622,15 +773,17 @@ document.addEventListener('DOMContentLoaded', async function() {
     buildFilters();
     renderTop5();
     renderGrid(State.allPokemon);
+    setTimeout(playAllVideos, 100);
     var searchInput = document.getElementById('searchInput');
     var typeFilter  = document.getElementById('typeFilter');
     var genFilter   = document.getElementById('genFilter');
-    if (searchInput) searchInput.addEventListener('input',  filterPokemon);
-    if (typeFilter)  typeFilter.addEventListener('change',  filterPokemon);
-    if (genFilter)   genFilter.addEventListener('change',   filterPokemon);
+    if (searchInput) searchInput.addEventListener('input',  function() { filterPokemon(); setTimeout(playAllVideos, 100); });
+    if (typeFilter)  typeFilter.addEventListener('change',  function() { filterPokemon(); setTimeout(playAllVideos, 100); });
+    if (genFilter)   genFilter.addEventListener('change',   function() { filterPokemon(); setTimeout(playAllVideos, 100); });
   }
 
   if (document.getElementById('pokemonDetail')) {
     loadPokemonDetail();
+    setTimeout(playAllVideos, 100);
   }
 });

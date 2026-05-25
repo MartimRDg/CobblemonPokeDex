@@ -19,7 +19,9 @@
         "speed": 65
       },
       "sprite": "assets/images/charmander.png",
+      "video": "assets/videos/charmander.webm",
       "shinySprite": "assets/images/charmander-shiny.png",
+      "shinyVideo": "assets/videos/charmander-shiny.webm",
       "drops": [
   { "item": "Charcoal Stick", "chance": 10, "quantity": "1", "image": "assets/images/items/charcoal_stick.png" },
   { "item": "Blaze Powder", "chance": 100, "quantity": "0-1", "image": "assets/images/items/blaze_powder.png" }
@@ -332,6 +334,16 @@
     "stamina":      { "min": 45, "max": 75 }
   }
 },
+
+"decks": [
+  {
+    "name": "",
+    "game": "Pokemon Fire Red Version",
+    "version": "Charizard",
+    "logo": "assets/images/games/pokemon.png",
+    "moves": ["Cut", "Flamethrower", "Wing Attack", "Dragon Rage"]
+  }
+],
 
 "megaEvolutions": [
   {
