@@ -2,26 +2,32 @@
 const State = {
   allPokemon: [],
   allMoves: {},
+  allAbilities: {},
   currentMoveTab: 0,
   isShiny: false,
 };
 
 async function loadData() {
   try {
-    const [pokeRes, movesRes] = await Promise.all([
+    const [pokeRes, movesRes, abilitiesRes] = await Promise.all([
       fetch('data/pokemon.json'),
       fetch('data/moves.json'),
+      fetch('data/abilities.json'),
     ]);
 
     if (!pokeRes.ok || !movesRes.ok) throw new Error('Failed to fetch data files');
 
-    const [pokeData, movesData] = await Promise.all([pokeRes.json(), movesRes.json()]);
+    const [pokeData, movesData, abilitiesData] = await Promise.all([
+      pokeRes.json(), movesRes.json(),
+      abilitiesRes.ok ? abilitiesRes.json() : Promise.resolve({ abilities: {} }),
+    ]);
 
-    State.allPokemon = pokeData.pokemon || [];
-    State.allMoves = movesData.moves || {};
-    window._allMoves = State.allMoves;
+    State.allPokemon   = pokeData.pokemon || [];
+    State.allMoves     = movesData.moves || {};
+    State.allAbilities = abilitiesData.abilities || {};
+    window._allMoves   = State.allMoves;
 
-    console.log('Loaded ' + State.allPokemon.length + ' Pokemon and ' + Object.keys(State.allMoves).length + ' moves');
+    console.log('Loaded ' + State.allPokemon.length + ' Pokemon, ' + Object.keys(State.allMoves).length + ' moves, ' + Object.keys(State.allAbilities).length + ' abilities');
     return true;
   } catch (err) {
     console.error('Error loading data:', err);
@@ -453,6 +459,85 @@ function buildDecksSection(poke) {
 }
 
 
+// ====================== Pokédex Data Builders ======================
+function buildCatchRate(poke) {
+  if (poke.catchRate === undefined) return '';
+  var rate  = poke.catchRate;
+  var pct   = ((rate / 255) * 100).toFixed(1);
+  var color = rate >= 150 ? '#4ade80' : rate >= 75 ? '#facc15' : '#f87171';
+  var label = rate >= 150 ? 'Easy' : rate >= 75 ? 'Medium' : 'Hard';
+  return (
+    '<div class="meta-card pokedex-data-card">' +
+      '<h3 class="meta-title">Catch Rate</h3>' +
+      '<div class="pokedex-data-row">' +
+        '<span class="pokedex-data-value" style="color:' + color + '">' + rate + '</span>' +
+        '<span class="pokedex-data-sub">' + label + '</span>' +
+      '</div>' +
+      '<div class="stat-bar-bg" style="margin-top:0.5rem">' +
+        '<div class="stat-bar-fill" style="width:' + pct + '%;background:' + color + '"></div>' +
+      '</div>' +
+    '</div>'
+  );
+}
+
+function buildShinyRate(poke) {
+  if (!poke.shinyRate) return '';
+  return (
+    '<div class="meta-card pokedex-data-card">' +
+      '<h3 class="meta-title">Shiny Rate</h3>' +
+      '<div class="pokedex-data-row">' +
+        '<span class="pokedex-data-value" style="color:#facc15">&#10024;</span>' +
+        '<span class="pokedex-data-sub">' + poke.shinyRate + '</span>' +
+      '</div>' +
+    '</div>'
+  );
+}
+
+function buildEVYield(poke) {
+  if (!poke.evYield) return '';
+  var statLabels = { hp: 'HP', attack: 'Attack', defense: 'Defense', spAttack: 'Sp. Atk', spDefense: 'Sp. Def', speed: 'Speed' };
+  var rows = Object.entries(poke.evYield).map(function(e) {
+    return (
+      '<div class="ev-row">' +
+        '<span class="ev-stat">' + (statLabels[e[0]] || e[0]) + '</span>' +
+        '<span class="ev-value">+' + e[1] + '</span>' +
+      '</div>'
+    );
+  }).join('');
+  return (
+    '<div class="meta-card pokedex-data-card">' +
+      '<h3 class="meta-title">EV Yield</h3>' +
+      '<div class="ev-list">' + rows + '</div>' +
+    '</div>'
+  );
+}
+
+function buildHeldItems(poke) {
+  if (!poke.heldItems || !poke.heldItems.length) return '';
+  var rows = poke.heldItems.map(function(item) {
+    return (
+      '<div class="drop-row">' +
+        '<div class="drop-icon">' +
+          (item.image
+            ? '<img src="' + item.image + '" alt="' + item.item + '" onerror="this.parentElement.innerHTML=\'&#128230;\'">'
+            : '&#128230;') +
+        '</div>' +
+        '<div class="drop-info">' +
+          '<p class="drop-name">' + item.item + '</p>' +
+          '<p class="drop-meta"><span style="color:#4ade80;font-weight:600">' + item.chance + '%</span> chance</p>' +
+        '</div>' +
+      '</div>'
+    );
+  }).join('');
+  return (
+    '<div class="meta-card pokedex-data-card">' +
+      '<h3 class="meta-title">Held Items</h3>' +
+      rows +
+    '</div>'
+  );
+}
+
+
 function loadPokemonDetail() {
   var container = document.getElementById('pokemonDetail');
   if (!container) return;
@@ -487,7 +572,16 @@ function loadPokemonDetail() {
     : '';
 
   var abilitiesHTML = (poke.abilities || []).map(function(a) {
-    return '<div class="meta-tag">' + a + '</div>';
+    var cleanName = a.replace(' (Hidden)', '').trim();
+    var isHidden  = a.indexOf('(Hidden)') !== -1;
+    var desc = State.allAbilities[cleanName] ? State.allAbilities[cleanName].description : '';
+    return (
+      '<div class="meta-tag ability-tag' + (isHidden ? ' ability-hidden' : '') + '"' +
+           (desc ? ' data-tooltip="' + desc.replace(/"/g, '&quot;') + '"' : '') + '>' +
+        a +
+        (desc ? '<div class="ability-tooltip">' + desc + '</div>' : '') +
+      '</div>'
+    );
   }).join('');
 
   var weakHTML      = buildTypeBadges(poke.weaknesses);
@@ -552,6 +646,16 @@ function loadPokemonDetail() {
       '</div>' +
 
       '<section class="detail-section">' +
+        '<h2 class="section-title">Pokédex Data</h2>' +
+        '<div class="pokedex-data-grid">' +
+          buildCatchRate(poke) +
+          buildShinyRate(poke) +
+          buildEVYield(poke) +
+          buildHeldItems(poke) +
+        '</div>' +
+      '</section>' +
+
+      '<section class="detail-section">' +
         '<h2 class="section-title">Base Stats</h2>' +
         '<div class="stats-grid">' + statsHTML + '</div>' +
       '</section>' +
@@ -593,6 +697,23 @@ function loadPokemonDetail() {
       '<section class="detail-section">' +
         '<h2 class="section-title">Moves</h2>' +
         '<div class="move-tabs" role="tablist">' + moveTabs + '</div>' +
+        '<div class="move-filters">' +
+          '<input id="moveSearch" type="text" placeholder="Search name..." class="move-filter-input" oninput="filterMoves()">' +
+          '<select id="moveCategoryFilter" class="move-filter-select" onchange="filterMoves()">' +
+            '<option value="">All Categories</option>' +
+            '<option value="Physical">Physical</option>' +
+            '<option value="Special">Special</option>' +
+            '<option value="Status">Status</option>' +
+          '</select>' +
+          '<select id="movePowerFilter" class="move-filter-select" onchange="filterMoves()">' +
+            '<option value="">Any Power</option>' +
+            '<option value="0-40">0 – 40</option>' +
+            '<option value="41-80">41 – 80</option>' +
+            '<option value="81-120">81 – 120</option>' +
+            '<option value="121-999">121+</option>' +
+            '<option value="status">Status (no power)</option>' +
+          '</select>' +
+        '</div>' +
         '<div id="movesContent" class="moves-content"></div>' +
       '</section>' +
 
@@ -639,7 +760,16 @@ window.switchForm = function(index) {
   var abilitiesEl = document.getElementById('pokemonAbilities');
   if (abilitiesEl && form.abilities) {
     abilitiesEl.innerHTML = form.abilities.map(function(a) {
-      return '<div class="meta-tag">' + a + '</div>';
+      var cleanName = a.replace(' (Hidden)', '').trim();
+      var isHidden  = a.indexOf('(Hidden)') !== -1;
+      var desc = State.allAbilities[cleanName] ? State.allAbilities[cleanName].description : '';
+      return (
+        '<div class="meta-tag ability-tag' + (isHidden ? ' ability-hidden' : '') + '"' +
+             (desc ? ' data-tooltip="' + desc.replace(/"/g, '&quot;') + '"' : '') + '>' +
+          a +
+          (desc ? '<div class="ability-tooltip">' + desc + '</div>' : '') +
+        '</div>'
+      );
     }).join('');
   }
 
@@ -679,15 +809,15 @@ window.switchForm = function(index) {
 
 
 // ====================== Moves ======================
-function renderMoves(poke) {
+function renderMoves(poke, filtered) {
   var content = document.getElementById('movesContent');
   if (!content) return;
 
   var keys  = ['level', 'tm', 'egg', 'tutor'];
-  var moves = ((poke.moves || {})[keys[State.currentMoveTab]] || []).map(enrichMove);
+  var moves = filtered !== undefined ? filtered : ((poke.moves || {})[keys[State.currentMoveTab]] || []).map(enrichMove);
 
   if (moves.length === 0) {
-    content.innerHTML = '<p class="moves-empty">No moves in this category.</p>';
+    content.innerHTML = '<p class="moves-empty">No moves match your search.</p>';
     return;
   }
 
@@ -732,6 +862,37 @@ function renderMoves(poke) {
     '</div>';
 }
 
+window.filterMoves = function() {
+  var id   = parseInt(new URLSearchParams(window.location.search).get('id'));
+  var poke = getPokemonById(id);
+  if (!poke) return;
+
+  var search   = (document.getElementById('moveSearch') ? document.getElementById('moveSearch').value.toLowerCase().trim() : '');
+  var category = (document.getElementById('moveCategoryFilter') ? document.getElementById('moveCategoryFilter').value : '');
+  var power    = (document.getElementById('movePowerFilter') ? document.getElementById('movePowerFilter').value : '');
+
+  var keys  = ['level', 'tm', 'egg', 'tutor'];
+  var moves = ((poke.moves || {})[keys[State.currentMoveTab]] || []).map(enrichMove);
+
+  var filtered = moves.filter(function(m) {
+    var matchName = !search || m.name.toLowerCase().includes(search);
+    var matchCat  = !category || m.category === category;
+    var matchPow  = true;
+    if (power === 'status') {
+      matchPow = !m.power || m.power === '-';
+    } else if (power) {
+      var parts = power.split('-');
+      var min = parseInt(parts[0]);
+      var max = parseInt(parts[1]);
+      var p   = parseInt(m.power) || 0;
+      matchPow = p >= min && p <= max;
+    }
+    return matchName && matchCat && matchPow;
+  });
+
+  renderMoves(poke, filtered);
+};
+
 window.switchMoveTab = function(index) {
   State.currentMoveTab = index;
   document.querySelectorAll('.move-tab').forEach(function(btn, i) {
@@ -739,6 +900,13 @@ window.switchMoveTab = function(index) {
     btn.classList.toggle('active', active);
     btn.setAttribute('aria-selected', active);
   });
+  // Reset filters on tab switch
+  var s = document.getElementById('moveSearch');
+  var c = document.getElementById('moveCategoryFilter');
+  var p = document.getElementById('movePowerFilter');
+  if (s) s.value = '';
+  if (c) c.value = '';
+  if (p) p.value = '';
   var id   = parseInt(new URLSearchParams(window.location.search).get('id'));
   var poke = getPokemonById(id);
   if (poke) renderMoves(poke);
@@ -925,6 +1093,118 @@ window.switchMoveLearnerTab = function(index) {
 };
 
 
+// ====================== Ability Detail Page ======================
+function loadAbilityDetail() {
+  var container = document.getElementById('abilityDetail');
+  if (!container) return;
+
+  var params      = new URLSearchParams(window.location.search);
+  var abilityName = decodeURIComponent(params.get('name') || '');
+  var fromUrl     = decodeURIComponent(params.get('from') || 'index.html');
+
+  var backLink = document.getElementById('backLink');
+  if (backLink) backLink.href = fromUrl;
+
+  var ability = State.allAbilities[abilityName];
+
+  document.title = abilityName + ' — Cobblemon Pokédex';
+
+  var regular = [];
+  var hidden  = [];
+
+  State.allPokemon.forEach(function(poke) {
+    (poke.abilities || []).forEach(function(a) {
+      var isHidden  = a.indexOf('(Hidden)') !== -1;
+      var cleanName = a.replace(' (Hidden)', '').trim();
+      if (cleanName === abilityName) {
+        if (isHidden) hidden.push(poke);
+        else regular.push(poke);
+      }
+    });
+  });
+
+  var tabs = [
+    { label: 'Regular', list: regular },
+    { label: 'Hidden',  list: hidden  },
+  ];
+
+  var moveTabs = tabs.map(function(t, i) {
+    return (
+      '<button class="move-tab ' + (i === 0 ? 'active' : '') + '"' +
+              ' onclick="switchAbilityTab(' + i + ')">' +
+        t.label + ' <span class="move-tab-count">' + t.list.length + '</span>' +
+      '</button>'
+    );
+  }).join('');
+
+  container.innerHTML =
+    '<div class="detail-wrapper">' +
+      '<section class="detail-section move-hero">' +
+        '<div class="move-hero-top">' +
+          '<h1 class="move-hero-name">' + abilityName + '</h1>' +
+        '</div>' +
+        (ability && ability.description
+          ? '<p class="move-description">' + ability.description + '</p>'
+          : '<p class="move-description" style="color:var(--text-dim);font-style:italic">No description available yet.</p>') +
+      '</section>' +
+      '<section class="detail-section">' +
+        '<h2 class="section-title">Pok\u00e9mon with this Ability</h2>' +
+        '<div class="move-tabs" role="tablist">' + moveTabs + '</div>' +
+        '<div id="abilityPokemonContent" class="moves-content"></div>' +
+      '</section>' +
+    '</div>';
+
+  window._abilityTabData    = tabs;
+  window._currentAbilityTab = 0;
+  renderAbilityPokemon();
+}
+
+function renderAbilityPokemon() {
+  var content = document.getElementById('abilityPokemonContent');
+  if (!content) return;
+
+  var list = (window._abilityTabData[window._currentAbilityTab] || {}).list || [];
+
+  if (list.length === 0) {
+    content.innerHTML = '<p class="moves-empty">No Pok\u00e9mon have this ability via this method.</p>';
+    return;
+  }
+
+  var rows = list.map(function(poke) {
+    var sprite = poke.video || poke.sprite;
+    var num    = poke.number || String(poke.id).padStart(4, '0');
+    var types  = (poke.types || []).map(function(t) {
+      return '<span class="type-badge type-' + t.toLowerCase() + ' type-xs">' + t + '</span>';
+    }).join('');
+    return (
+      '<tr class="learner-row" onclick="location.href=\'pokemon.html?id=' + poke.id + '\'" style="cursor:pointer">' +
+        '<td><div class="learner-sprite-wrap">' + buildSpriteEl(sprite, poke.name, 'learner-sprite') + '</div></td>' +
+        '<td class="move-name"><a href="pokemon.html?id=' + poke.id + '" class="move-link">#' + num + ' ' + poke.name + '</a></td>' +
+        '<td><div class="badge-row">' + types + '</div></td>' +
+      '</tr>'
+    );
+  }).join('');
+
+  content.innerHTML =
+    '<div class="table-wrapper">' +
+      '<table class="moves-table">' +
+        '<thead><tr><th></th><th>Pok\u00e9mon</th><th>Type</th></tr></thead>' +
+        '<tbody>' + rows + '</tbody>' +
+      '</table>' +
+    '</div>';
+
+  setTimeout(playAllVideos, 100);
+}
+
+window.switchAbilityTab = function(index) {
+  window._currentAbilityTab = index;
+  document.querySelectorAll('.move-tab').forEach(function(btn, i) {
+    btn.classList.toggle('active', i === index);
+  });
+  renderAbilityPokemon();
+};
+
+
 function showLoadingState() {
   var grid   = document.getElementById('pokemonGrid');
   var detail = document.getElementById('pokemonDetail');
@@ -986,6 +1266,10 @@ document.addEventListener('DOMContentLoaded', async function() {
 
   if (document.getElementById('moveDetail')) {
     loadMoveDetail();
+  }
+
+  if (document.getElementById('abilityDetail')) {
+    loadAbilityDetail();
   }
 
   // Back to top visibility

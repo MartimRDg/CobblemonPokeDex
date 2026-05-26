@@ -1662,3 +1662,158 @@ video.learner-sprite {
     flex: 1;
   }
 }
+
+/* ====================== Ability Tooltip ====================== */
+.ability-tag {
+  position: relative;
+  cursor: default;
+}
+
+.ability-hidden {
+  border: 1px dashed var(--accent);
+  color: var(--accent);
+}
+
+.ability-tooltip {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--surface3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.55rem 0.85rem;
+  font-size: 0.78rem;
+  color: var(--text);
+  line-height: 1.5;
+  width: 220px;
+  text-align: left;
+  z-index: 50;
+  pointer-events: none;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+
+.ability-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--border);
+}
+
+.ability-tag:hover .ability-tooltip {
+  display: block;
+}
+
+/* ====================== Move Filters ====================== */
+.move-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.85rem 0 0.5rem;
+}
+
+.move-filter-input {
+  flex: 1;
+  min-width: 140px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: var(--radius-sm);
+  padding: 0.45rem 0.85rem;
+  font-size: 0.82rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.move-filter-input:focus {
+  border-color: var(--accent);
+}
+
+.move-filter-select {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: var(--radius-sm);
+  padding: 0.45rem 0.75rem;
+  font-size: 0.82rem;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.move-filter-select:focus {
+  border-color: var(--accent);
+}
+
+@media (max-width: 768px) {
+  .move-filters {
+    flex-direction: column;
+  }
+
+  .move-filter-input,
+  .move-filter-select {
+    width: 100%;
+  }
+}
+
+/* ====================== Pokédex Data Section ====================== */
+.pokedex-data-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.pokedex-data-card {}
+
+.pokedex-data-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+}
+
+.pokedex-data-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  font-family: monospace;
+  line-height: 1;
+}
+
+.pokedex-data-sub {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.ev-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-top: 0.4rem;
+}
+
+.ev-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--surface3);
+  border-radius: var(--radius-sm);
+  padding: 0.3rem 0.65rem;
+  font-size: 0.82rem;
+}
+
+.ev-stat {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.ev-value {
+  color: var(--accent);
+  font-weight: 700;
+  font-family: monospace;
+}

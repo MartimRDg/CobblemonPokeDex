@@ -1,0 +1,19 @@
+{
+  "abilities": {
+    "Blaze": {
+      "description": "Blaze increases the power of Fire-type moves by 50% (1.5×) when the ability-bearer's HP falls below a third of its maximum (known in-game as in a pinch)."
+    },
+    "Solar Power": {
+      "description": "During harsh sunlight, Solar Power raises the ability-bearer's Special Attack by 50%, but it also loses 1⁄8 of its maximum HP after each turn."
+    },
+    "Tough Claws": {
+      "description": "Tough Claws increases the power of moves that make contact. Most Physical-category moves are contact moves."
+    },
+     "Drought": {
+      "description": "Drought creates harsh sunlight when the ability-bearer enters battle. The effect lasts 5 turns, unless it is cleared via Air Lock or Cloud Nine or replaced by another weather condition."
+    },
+      "G-Max Wildfire": {
+      "description": "G-Max Wildfire is a G-Max Move from Pokemon Sword and Shield, exclusive to Charizard. Fire type moves turn into G-Max Wildfire during Gigantamax."
+    }
+  }
+}

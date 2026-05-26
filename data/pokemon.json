@@ -10,6 +10,18 @@
       "rideable": false,
       "flying": false,
       "abilities": ["Blaze", "Solar Power (Hidden)"],
+
+      "catchRate": 45,
+      "shinyRate": "1/8192",
+
+      "evYield": {
+        "speed": 1
+      },
+
+      "heldItems": [
+  { "item": "None", "chance": "-", "image": "-" }
+],
+
       "baseStats": {
         "hp": 39,
         "attack": 52,
@@ -18,10 +30,12 @@
         "spDefense": 50,
         "speed": 65
       },
+
       "sprite": "assets/images/charmander.png",
       "video": "assets/videos/charmander.webm",
       "shinySprite": "assets/images/charmander-shiny.png",
       "shinyVideo": "assets/videos/charmander-shiny.webm",
+      
       "drops": [
   { "item": "Charcoal Stick", "chance": 10, "quantity": "1", "image": "assets/images/items/charcoal_stick.png" },
   { "item": "Blaze Powder", "chance": 100, "quantity": "0-1", "image": "assets/images/items/blaze_powder.png" }
@@ -191,6 +205,18 @@
       "resistances": ["Fire", "Grass", "Ice", "Bug", "Steel", "Fairy"],
       "immunities": ["None"],
       
+"catchRate": 45,
+      "shinyRate": "1/8192",
+
+      "evYield": {
+        "speed": 1,
+        "SpAttack": 1
+      },
+
+      "heldItems": [
+  { "item": "None", "chance": "-", "image": "-" }
+],
+
       "spawnBucket": "Ultra-rare",
       "spawnLevel": "16-40",
       "spawnContext": "-",
@@ -333,6 +359,8 @@
       "rarity": "Ultra-rare",
       "rideable": true,
       "flying": true,
+      "catchRate": 45,
+      "shinyRate": "1/4096",
 
       "abilities": ["Blaze", "Solar Power (Hidden)"],
 
@@ -345,9 +373,17 @@
         "speed": 100
        },
 
+       "evYield": {
+        "SpAttack": 3
+       },
+
        "drops": [
         { "item": "Charcoal Stick", "chance": 25, "quantity": "1", "image": "assets/images/items/charcoal_stick.png"},
         { "item": "Blaze Powder", "chance": 100, "quantity": "0-3", "image": "assets/images/items/blaze_powder.png"}
+       ],
+
+       "heldItems": [
+        { "item": "None", "chance": "-", "image": "" }
        ],
 
       "weaknesses": ["Electric", "Ice", "Rock", "Water"],
