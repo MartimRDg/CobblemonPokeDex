@@ -695,18 +695,23 @@ function renderMoves(poke) {
     moves = moves.slice().sort(function(a, b) { return (parseInt(b.power) || 0) - (parseInt(a.power) || 0); });
   }
 
+  var categoryColors = { Physical: '#f87171', Special: '#818cf8', Status: '#4ade80' };
   var isLevelTab = State.currentMoveTab === 0;
 
   var rows = moves.map(function(m) {
     var typeCell = m.type
       ? '<span class="type-badge type-' + m.type.toLowerCase() + ' type-xs">' + m.type + '</span>'
       : '\u2014';
+    var catColor = categoryColors[m.category] || '#9ca3af';
+    var catCell  = m.category
+      ? '<span class="move-category-badge" style="background:' + catColor + '20;border-color:' + catColor + ';color:' + catColor + '">' + m.category + '</span>'
+      : '\u2014';
     return (
       '<tr>' +
         (isLevelTab ? '<td class="move-level">' + (m.level || '\u2014') + '</td>' : '') +
-        '<td class="move-name">' + m.name + '</td>' +
+        '<td class="move-name"><a href="move.html?name=' + encodeURIComponent(m.name) + '&from=' + encodeURIComponent(window.location.href) + '" class="move-link">' + m.name + '</a></td>' +
         '<td>' + typeCell + '</td>' +
-        '<td class="move-cat">' + (m.category || '\u2014') + '</td>' +
+        '<td>' + catCell + '</td>' +
         '<td class="text-center move-power">' + (m.power || '\u2014') + '</td>' +
         '<td class="text-center">' + (m.accuracy || '\u2014') + '</td>' +
         '<td class="text-center">' + (m.pp || '\u2014') + '</td>' +
@@ -768,7 +773,158 @@ window.toggleShiny = function() {
 };
 
 
-// ====================== Loading / Error States ======================
+// ====================== Move Detail Page ======================
+function loadMoveDetail() {
+  var container = document.getElementById('moveDetail');
+  if (!container) return;
+
+  var params   = new URLSearchParams(window.location.search);
+  var moveName = decodeURIComponent(params.get('name') || '');
+  var fromUrl  = decodeURIComponent(params.get('from') || 'index.html');
+
+  // Update back link
+  var backLink = document.getElementById('backLink');
+  if (backLink) backLink.href = fromUrl;
+
+  var move = State.allMoves[moveName];
+  if (!move) {
+    container.innerHTML = '<div class="error-state"><div class="text-4xl mb-3">❓</div><p class="text-red-400 text-lg">Move not found: ' + moveName + '</p></div>';
+    return;
+  }
+
+  document.title = moveName + ' — Cobblemon Pokédex';
+
+  // Find all pokemon that learn this move
+  var learnedBy = { level: [], tm: [], egg: [], tutor: [] };
+  State.allPokemon.forEach(function(poke) {
+    if (!poke.moves) return;
+    ['level', 'tm', 'egg', 'tutor'].forEach(function(method) {
+      var found = (poke.moves[method] || []).find(function(m) { return m.name === moveName; });
+      if (found) learnedBy[method].push({ poke: poke, level: found.level });
+    });
+  });
+
+  var categoryColors = { Physical: '#f87171', Special: '#818cf8', Status: '#4ade80' };
+  var catColor = categoryColors[move.category] || '#9ca3af';
+
+  var statBlocks = [
+    { label: 'Power',    value: move.power    || '—' },
+    { label: 'Accuracy', value: move.accuracy ? move.accuracy + '%' : '—' },
+    { label: 'PP',       value: move.pp       || '—' },
+  ].map(function(s) {
+    return (
+      '<div class="move-stat-block">' +
+        '<p class="move-stat-value">' + s.value + '</p>' +
+        '<p class="move-stat-label">' + s.label + '</p>' +
+      '</div>'
+    );
+  }).join('');
+
+  var moveTabs = ['Level Up', 'TM', 'Egg', 'Tutor'].map(function(label, i) {
+    var key = ['level', 'tm', 'egg', 'tutor'][i];
+    var count = learnedBy[key].length;
+    return (
+      '<button class="move-tab ' + (i === 0 ? 'active' : '') + '"' +
+              ' onclick="switchMoveLearnerTab(' + i + ')">' +
+        label + ' <span class="move-tab-count">' + count + '</span>' +
+      '</button>'
+    );
+  }).join('');
+
+  container.innerHTML =
+    '<div class="detail-wrapper">' +
+
+      '<section class="detail-section move-hero">' +
+        '<div class="move-hero-top">' +
+          '<div>' +
+            '<h1 class="move-hero-name">' + moveName + '</h1>' +
+            '<div class="move-hero-badges">' +
+              '<span class="type-badge type-' + (move.type || 'normal').toLowerCase() + ' type-lg">' + (move.type || '—') + '</span>' +
+              '<span class="move-category-badge" style="background:' + catColor + '20;border-color:' + catColor + ';color:' + catColor + '">' + (move.category || '—') + '</span>' +
+            '</div>' +
+          '</div>' +
+          '<div class="move-stat-blocks">' + statBlocks + '</div>' +
+        '</div>' +
+        (move.description
+          ? '<p class="move-description">' + move.description + '</p>'
+          : '') +
+      '</section>' +
+
+      '<section class="detail-section">' +
+        '<h2 class="section-title">Learned By</h2>' +
+        '<div class="move-tabs" role="tablist">' + moveTabs + '</div>' +
+        '<div id="moveLearnerContent" class="moves-content"></div>' +
+      '</section>' +
+
+    '</div>';
+
+  window._moveLearnerData = learnedBy;
+  window._currentMoveLearnerTab = 0;
+  renderMoveLearners();
+}
+
+function renderMoveLearners() {
+  var content = document.getElementById('moveLearnerContent');
+  if (!content) return;
+
+  var keys = ['level', 'tm', 'egg', 'tutor'];
+  var entries = window._moveLearnerData[keys[window._currentMoveLearnerTab]] || [];
+
+  if (entries.length === 0) {
+    content.innerHTML = '<p class="moves-empty">No Pokémon learn this move via this method.</p>';
+    return;
+  }
+
+  var isLevel = window._currentMoveLearnerTab === 0;
+
+  var rows = entries.map(function(entry) {
+    var poke   = entry.poke;
+    var sprite = poke.video || poke.sprite;
+    var num    = poke.number || String(poke.id).padStart(4, '0');
+    var types  = (poke.types || []).map(function(t) {
+      return '<span class="type-badge type-' + t.toLowerCase() + ' type-xs">' + t + '</span>';
+    }).join('');
+
+    return (
+      '<tr class="learner-row" onclick="location.href=\'pokemon.html?id=' + poke.id + '\'" style="cursor:pointer">' +
+        (isLevel ? '<td class="move-level">' + (entry.level || '—') + '</td>' : '') +
+        '<td>' +
+          '<div class="learner-sprite-wrap">' +
+            buildSpriteEl(sprite, poke.name, 'learner-sprite') +
+          '</div>' +
+        '</td>' +
+        '<td class="move-name"><a href="pokemon.html?id=' + poke.id + '" class="move-link">#' + num + ' ' + poke.name + '</a></td>' +
+        '<td><div class="badge-row">' + types + '</div></td>' +
+      '</tr>'
+    );
+  }).join('');
+
+  content.innerHTML =
+    '<div class="table-wrapper">' +
+      '<table class="moves-table">' +
+        '<thead><tr>' +
+          (isLevel ? '<th>Lv.</th>' : '') +
+          '<th></th>' +
+          '<th>Pokémon</th>' +
+          '<th>Type</th>' +
+        '</tr></thead>' +
+        '<tbody>' + rows + '</tbody>' +
+      '</table>' +
+    '</div>';
+
+  setTimeout(playAllVideos, 100);
+}
+
+window.switchMoveLearnerTab = function(index) {
+  window._currentMoveLearnerTab = index;
+  document.querySelectorAll('.move-tab').forEach(function(btn, i) {
+    btn.classList.toggle('active', i === index);
+    btn.setAttribute('aria-selected', i === index);
+  });
+  renderMoveLearners();
+};
+
+
 function showLoadingState() {
   var grid   = document.getElementById('pokemonGrid');
   var detail = document.getElementById('pokemonDetail');
@@ -826,6 +982,10 @@ document.addEventListener('DOMContentLoaded', async function() {
   if (document.getElementById('pokemonDetail')) {
     loadPokemonDetail();
     setTimeout(playAllVideos, 100);
+  }
+
+  if (document.getElementById('moveDetail')) {
+    loadMoveDetail();
   }
 
   // Back to top visibility
