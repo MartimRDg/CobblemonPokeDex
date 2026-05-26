@@ -220,7 +220,46 @@ function buildDrops(drops) {
 }
 
 
-// ====================== Riding Section ======================
+// ====================== Evolution Section ======================
+function buildEvolutionSection(poke) {
+  if (!poke.evolutions || !poke.evolutions.length) return '';
+
+  var stages = poke.evolutions.map(function(evo, i) {
+    var evoPoke = getPokemonById(evo.id);
+    var sprite  = evoPoke ? (evoPoke.video || evoPoke.sprite) : null;
+    var isCurrent = evo.id === poke.id;
+
+    var arrow = i > 0
+      ? '<div class="evo-arrow">' +
+          '<div class="evo-arrow-line"></div>' +
+          '<span class="evo-arrow-label">' + (evo.level ? 'Lv. ' + evo.level : evo.method || '?') + '</span>' +
+          '<div class="evo-arrow-tip">▶</div>' +
+        '</div>'
+      : '';
+
+    var spriteEl = sprite
+      ? buildSpriteEl(sprite, evo.name, 'evo-sprite', 'assets/images/placeholder.png')
+      : '<div class="evo-sprite-placeholder">?</div>';
+
+    return (
+      arrow +
+      '<a href="pokemon.html?id=' + evo.id + '" class="evo-card' + (isCurrent ? ' evo-current' : '') + '">' +
+        '<div class="evo-sprite-wrap">' + spriteEl + '</div>' +
+        '<p class="evo-name">' + evo.name + '</p>' +
+        '<p class="evo-number">#' + String(evo.id).padStart(4, '0') + '</p>' +
+      '</a>'
+    );
+  }).join('');
+
+  return (
+    '<section class="detail-section">' +
+      '<h2 class="section-title">Evolution Chart</h2>' +
+      '<div class="evo-chain">' + stages + '</div>' +
+    '</section>'
+  );
+}
+
+
 function buildRangeBar(stat) {
   if (!stat) return '';
   var min = Math.min(stat.min, stat.max);
@@ -546,6 +585,8 @@ function loadPokemonDetail() {
           '</div>' +
         '</div>' +
       '</section>' +
+
+      buildEvolutionSection(poke) +
 
       buildRidingSection(poke) +
 

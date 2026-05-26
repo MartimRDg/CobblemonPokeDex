@@ -39,6 +39,13 @@
       "isRaining": false,
       "spawnRequirements": "N/A",
 
+      "evolutions": [
+  { "id": 4, "name": "Charmander", "level": null },
+  { "id": 5, "name": "Charmeleon", "level": 16 },
+  { "id": 6, "name": "Charizard", "level": 36 }
+],
+
+
       "moves": {
   "level": [
     { "level": 1, "name": "Scratch" },
@@ -191,6 +198,12 @@
       "spawnBiomes": ["Hills", "Volcanic"],
       "isRaining": false,
       "spawnRequirements": "N/A",
+
+      "evolutions": [
+  { "id": 4, "name": "Charmander", "level": null },
+  { "id": 5, "name": "Charmeleon", "level": 16 },
+  { "id": 6, "name": "Charizard", "level": 36 }
+],
 
       "moves": {
   "level": [
@@ -405,6 +418,12 @@
       "spawnBiomes": ["Hills", "Volcanic"],
       "isRaining": false,
       "spawnRequirements": "N/A",
+
+"evolutions": [
+  { "id": 4, "name": "Charmander", "level": null },
+  { "id": 5, "name": "Charmeleon", "level": 16 },
+  { "id": 6, "name": "Charizard", "level": 36 }
+],
 
       "moves": {
   "level": [

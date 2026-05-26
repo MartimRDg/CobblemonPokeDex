@@ -1054,3 +1054,112 @@ video.deck-sprite {
   object-fit: contain;
   background: transparent;
 }
+
+/* ====================== Evolution Chain ====================== */
+.evo-chain {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0;
+  margin-top: 1.25rem;
+}
+
+.evo-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  text-decoration: none;
+  color: var(--text);
+  transition: border-color 0.2s, background 0.2s, transform 0.2s;
+  min-width: 100px;
+}
+
+.evo-card:hover {
+  border-color: var(--accent);
+  background: var(--surface2);
+  transform: translateY(-4px);
+}
+
+.evo-card.evo-current {
+  border-color: var(--accent);
+  background: var(--surface2);
+}
+
+.evo-sprite-wrap {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.evo-sprite {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+video.evo-sprite {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+}
+
+.evo-sprite-placeholder {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface3);
+  border-radius: var(--radius-sm);
+  font-size: 1.5rem;
+  color: var(--text-dim);
+}
+
+.evo-name {
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.evo-number {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-family: monospace;
+}
+
+.evo-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 0 0.5rem;
+  color: var(--text-muted);
+}
+
+.evo-arrow-line {
+  width: 32px;
+  height: 2px;
+  background: var(--border);
+  border-radius: 999px;
+}
+
+.evo-arrow-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.evo-arrow-tip {
+  font-size: 0.6rem;
+  color: var(--border);
+}
