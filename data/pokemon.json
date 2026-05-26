@@ -27,7 +27,7 @@
   { "item": "Blaze Powder", "chance": 100, "quantity": "0-1", "image": "assets/images/items/blaze_powder.png" }
 ],
 
-      "weaknesses": ["Water", "Rock", "Ground"],
+      "weaknesses": ["Water", "Ground", "Rock"],
       "resistances": ["Fire", "Grass", "Ice", "Bug", "Steel", "Fairy"],
       "immunities": ["None"],
       
@@ -162,7 +162,7 @@
   ]
 }
     },
-     {
+    {
       "id": 5,
       "name": "Charmeleon",
       "number": "0005",
@@ -187,7 +187,7 @@
   { "item": "Blaze Powder", "chance": 100, "quantity": "0-1", "image": "assets/images/items/blaze_powder.png" }
 ],
 
-      "weaknesses": ["Water", "Rock", "Ground"],
+      "weaknesses": ["Water", "Ground", "Rock"],
       "resistances": ["Fire", "Grass", "Ice", "Bug", "Steel", "Fairy"],
       "immunities": ["None"],
       
@@ -323,6 +323,8 @@
 }
     },
     {
+      "_comment": "Base Stats",
+
       "id": 6,
       "name": "Charizard",
       "number": "0006",
@@ -331,67 +333,9 @@
       "rarity": "Ultra-rare",
       "rideable": true,
       "flying": true,
-      "riding": {
-  "ground": {
-    "acceleration": { "min": 56, "max": 65 },
-    "jump":         { "min": 15, "max": 25 },
-    "skill":        { "min": 10, "max": 25 },
-    "speed":        { "min": 25, "max": 40 },
-    "stamina":      { "min": 20, "max": 30 }
-  },
-  "air": {
-    "acceleration": { "min": 45, "max": 75 },
-    "jump":         { "min": 30, "max": 65 },
-    "skill":        { "min": 55, "max": 85 },
-    "speed":        { "min": 30, "max": 65 },
-    "stamina":      { "min": 45, "max": 75 }
-  }
-},
-
-"decks": [
-  {
-    "name": "",
-    "game": "Pokemon Fire Red Version",
-    "version": "Charizard",
-    "logo": "assets/images/games/pokemon.png",
-    "moves": ["Cut", "Flamethrower", "Wing Attack", "Dragon Rage"]
-  }
-],
-
-"megaEvolutions": [
-  {
-    "name": "Mega Charizard X",
-    "sprite": "assets/images/charizard-mega-x.png",
-    "shinySprite": "assets/images/charizard-mega-x-shiny.png",
-    "abilities": ["Tough Claws"],
-    "types": ["Fire", "Dragon"],
-    "weaknesses": ["Rock", "Dragon", "Ground"],
-    "resistances": ["Fire", "Grass", "Electric", "Bug", "Steel"],
-    "immunities": ["None"]
-  },
-  {
-    "name": "Mega Charizard Y",
-    "sprite": "assets/images/charizard-mega-y.png",
-    "shinySprite": "assets/images/charizard-mega-y-shiny.png",
-    "abilities": ["Drought"],
-    "types": ["Fire", "Flying"],
-    "weaknesses": ["Water", "Rock", "Electric"],
-    "resistances": ["Fire", "Grass", "Fighting", "Steel", "Fairy"],
-    "immunities": ["Ground"]
-  },
-  {
-    "name": "Charizard Gigantamax",
-    "sprite": "assets/images/charizard-gmax.png",
-    "abilities": [" G-Max Wildfire"],
-    "types": ["Fire", "Flying"],
-    "weaknesses": ["Water", "Rock", "Electric"],
-    "resistances": ["Fire", "Grass", "Fighting", "Steel", "Fairy"],
-    "immunities": ["Ground"]
-  }
-
-],
 
       "abilities": ["Blaze", "Solar Power (Hidden)"],
+
       "baseStats": {
         "hp": 78,
         "attack": 84,
@@ -399,16 +343,15 @@
         "spAttack": 109,
         "spDefense": 85,
         "speed": 100
-      },
-      "sprite": "assets/images/charizard.png",
-      "shinySprite": "assets/images/charizard-shiny.png",
-      "drops": [
-  { "item": "Charcoal Stick", "chance": 25, "quantity": "1", "image": "assets/images/items/charcoal_stick.png" },
-  { "item": "Blaze Powder", "chance": 100, "quantity": "0-3", "image": "assets/images/items/blaze_powder.png" }
-],
+       },
 
-      "weaknesses": ["Water", "Rock", "Electric"],
-      "resistances": ["Fire", "Grass", "Fighting", "Steel", "Fairy"],
+       "drops": [
+        { "item": "Charcoal Stick", "chance": 25, "quantity": "1", "image": "assets/images/items/charcoal_stick.png"},
+        { "item": "Blaze Powder", "chance": 100, "quantity": "0-3", "image": "assets/images/items/blaze_powder.png"}
+       ],
+
+      "weaknesses": ["Electric", "Ice", "Rock", "Water"],
+      "resistances": ["Grass", "Fighting", "Bug", "Fire", "Steel", "Fairy"],
       "immunities": ["Ground"],
       
       "spawnBucket": "Ultra-rare",
@@ -419,165 +362,236 @@
       "isRaining": false,
       "spawnRequirements": "N/A",
 
-"evolutions": [
-  { "id": 4, "name": "Charmander", "level": null },
-  { "id": 5, "name": "Charmeleon", "level": 16 },
-  { "id": 6, "name": "Charizard", "level": 36 }
-],
+      "sprite": "assets/images/charizard.png",
+      "shinySprite": "assets/images/charizard-shiny.png",
+
+      "riding": {
+       "ground": {
+         "acceleration": { "min": 56, "max": 65 },
+         "jump":         { "min": 15, "max": 25 },
+         "skill":        { "min": 10, "max": 25 },
+         "speed":        { "min": 25, "max": 40 },
+         "stamina":      { "min": 20, "max": 30 }
+        },
+       "air": {
+         "acceleration": { "min": 45, "max": 75 },
+         "jump":         { "min": 30, "max": 65 },
+         "skill":        { "min": 55, "max": 85 },
+         "speed":        { "min": 30, "max": 65 },
+         "stamina":      { "min": 45, "max": 75 }
+        }
+      },
+
+      "_comment1": "Decks",
+
+      "decks": [
+        {
+         "name": "",
+         "game": "Pokemon Fire Red Version",
+         "version": "Charizard",
+         "logo": "assets/images/games/pokemon.png",
+         "moves": ["Cut", "Flamethrower", "Wing Attack", "Dragon Rage"]
+        }
+      ],
+
+      "_comment2": "Evolutions",
+      
+      "evolutions": [
+       { "id": 4, "name": "Charmander", "level": null },
+       { "id": 5, "name": "Charmeleon", "level": 16 },
+       { "id": 6, "name": "Charizard", "level": 36 }
+      ],
+
+      "megaEvolutions": [
+       {
+        "name": "Mega Charizard X",
+        "sprite": "assets/images/charizard-mega-x.png",
+        "shinySprite": "assets/images/charizard-mega-x-shiny.png",
+        "abilities": ["Tough Claws"],
+        "types": ["Fire", "Dragon"],
+
+        "weaknesses": ["Water", "Ground", "Rock", "Dragon", "Fairy"],
+        "resistances": ["Fire", "Grass", "Bug", "Steel", "Electric"],
+        "immunities": ["None"]
+      },
+      {
+        "name": "Mega Charizard Y",
+        "sprite": "assets/images/charizard-mega-y.png",
+        "shinySprite": "assets/images/charizard-mega-y-shiny.png",
+        "abilities": ["Drought"],
+        "types": ["Fire", "Flying"],
+
+        "weaknesses": ["Electric", "Ice", "Rock", "Water"],
+        "resistances": ["Grass", "Fighting", "Bug", "Fire", "Steel", "Fairy"],
+        "immunities": ["Ground"]
+      },
+      {
+        "name": "Charizard Gigantamax",
+        "sprite": "assets/images/charizard-gmax.png",
+        "abilities": [" G-Max Wildfire"],
+        "types": ["Fire", "Flying"],
+
+        "weaknesses": ["Electric", "Ice", "Rock", "Water"],
+        "resistances": ["Grass", "Fighting", "Bug", "Fire", "Steel", "Fairy"],
+        "immunities": ["Ground"]
+      } 
+    ],
+
+      "_comment3": "Movesets",
 
       "moves": {
-  "level": [
-    { "level": 1, "name": "Dragon Claw" },
-    { "level": 1, "name": "Air Slash" },
-    { "level": 1, "name": "Scratch" },
-    { "level": 1, "name": "Growl" },
-    { "level": 1, "name": "Ember" },
-    { "level": 1, "name": "Smokescreen" },
-    { "level": 1, "name": "Dragon Rage" },
-    { "level": 1, "name": "Wing Attack" },
-    { "level": 1, "name": "Heat Wave" },
-    { "level": 1, "name": "Flame Burst" },
-    { "level": 12, "name": "Dragon Breath" },
-    { "level": 19, "name": "Fire Fang" },
-    { "level": 24, "name": "Slash" },
-    { "level": 30, "name": "Flamethrower" },
-    { "level": 39, "name": "Scary Face" },
-    { "level": 46, "name": "Fire Spin" },
-    { "level": 54, "name": "Inferno" },
-    { "level": 62, "name": "Flare Blitz" }
-  ],
-  "tm": [
-    { "name": "Acrobatics" },
-    { "name": "Aerial Ace" },
-    { "name": "Air Cutter" },
-    { "name": "Air Slash" },
-    { "name": "Ancient Power" },
-    { "name": "Beat Up" },
-    { "name": "Blast Burn" },
-    { "name": "Blaze Kick" },
-    { "name": "Body Slam" },
-    { "name": "Breaking Swipe" },
-    { "name": "Brick Break" },
-    { "name": "Brutal Swing" },
-    { "name": "Bulldoze" },
-    { "name": "Crunch" },
-    { "name": "Cut" },
-    { "name": "Dig" },
-    { "name": "Double-Edge" },
-    { "name": "Dragon Cheer" },
-    { "name": "Dragon Claw" },
-    { "name": "Dragon Dance" },
-    { "name": "Dragon Pulse" },
-    { "name": "Dragon Tail" },
-    { "name": "Earthquake" },
-    { "name": "Echoed Voice" },
-    { "name": "Endure" },
-    { "name": "Facade" },
-    { "name": "Fire Blast" },
-    { "name": "Fire Fang" },
-    { "name": "Fire Pledge" },
-    { "name": "Fire Punch" },
-    { "name": "Fire Spin" },
-    { "name": "Flame Charge" },
-    { "name": "Flamethrower" },
-    { "name": "Flare Blitz" },
-    { "name": "Fling" },
-    { "name": "Fly" },
-    { "name": "Focus Blast" },
-    { "name": "Focus Punch" },
-    { "name": "Fury Cutter" },
-    { "name": "Giga Impact" },
-    { "name": "Headbutt" },
-    { "name": "Heat Crash" },
-    { "name": "Heat Wave" },
-    { "name": "Helping Hand" },
-    { "name": "Hone Claws" },
-    { "name": "Hurricane" },
-    { "name": "Hyper Beam" },
-    { "name": "Incinerate" },
-    { "name": "Iron Tail" },
-    { "name": "Mega Kick" },
-    { "name": "Mega Punch" },
-    { "name": "Metal Claw" },
-    { "name": "Mystical Fire" },
-    { "name": "Ominous Wind" },
-    { "name": "Outrage" },
-    { "name": "Overheat" },
-    { "name": "Power-Up Punch" },
-    { "name": "Protect" },
-    { "name": "Rest" },
-    { "name": "Roar" },
-    { "name": "Rock Slide" },
-    { "name": "Rock Smash" },
-    { "name": "Rock Tomb" },
-    { "name": "Roost" },
-    { "name": "Sandstorm" },
-    { "name": "Scary Face" },
-    { "name": "Schorching Sands" },
-    { "name": "Shadow Claw" },
-    { "name": "Sky Drop" },
-    { "name": "Sleep Talk" },
-    { "name": "Solar Beam" },
-    { "name": "Steel Wing" },
-    { "name": "Strength" },
-    { "name": "Substitute" },
-    { "name": "Sunny Day" },
-    { "name": "Swift" },
-    { "name": "Swords Dance" },
-    { "name": "Take Down" },
-    { "name": "Temper Flare" },
-    { "name": "Tera Blast" },
-    { "name": "Thunder Punch" },
-    { "name": "Twister" },
-    { "name": "Weather Ball" },
-    { "name": "Will-O-Wisp" },
-    { "name": "Work Up" }
-  ],
-  "egg": [
-    { "name": "Ancient Power" },
-    { "name": "Belly Drum" },
-    { "name": "Bite" },
-    { "name": "Counter" },
-    { "name": "Dragon Rage" },
-    { "name": "Dragon Rush" },
-    { "name": "Dragon Tail" },
-    { "name": "Iron Tail" },
-    { "name": "Metal Claw" },
-    { "name": "Wing Attack" }
-  ],
-  "tutor": [
-    { "name": "Ancient Power" },
-    { "name": "Blast Burn" },
-    { "name": "Block" },
-    { "name": "Bulldoze" },
-    { "name": "Dragon Pulse" },
-    { "name": "Fire Fang" },
-    { "name": "Fire Pledge" },
-    { "name": "Fire Punch" },
-    { "name": "Flamethrower" },
-    { "name": "Focus Punch" },
-    { "name": "Fury Cutter" },
-    { "name": "Giga Impact" },
-    { "name": "Heat Wave" },
-    { "name": "Helping Hand" },
-    { "name": "Hyper Beam" },
-    { "name": "Iron Tail" },
-    { "name": "Block" },
-    { "name": "Mystical Fire" },
-    { "name": "Ominous Wind" },
-    { "name": "Outrage" },
-    { "name": "Rest" },
-    { "name": "Rock Slide" },
-    { "name": "Rock Smash" },
-    { "name": "Roost" },
-    { "name": "Schorching Sands" },
-    { "name": "Shadow Claw" },
-    { "name": "Sleep Talk" },
-    { "name": "Swift" },
-    { "name": "Thunder Punch" },
-    { "name": "Twister" }
-  ]
-}
+        "level": [
+         { "level": 1, "name": "Dragon Claw" },
+         { "level": 1, "name": "Air Slash" },
+         { "level": 1, "name": "Scratch" },
+         { "level": 1, "name": "Growl" },
+         { "level": 1, "name": "Ember" },
+         { "level": 1, "name": "Smokescreen" },
+         { "level": 1, "name": "Dragon Rage" },
+         { "level": 1, "name": "Wing Attack" },
+         { "level": 1, "name": "Heat Wave" },
+         { "level": 1, "name": "Flame Burst" },
+         { "level": 12, "name": "Dragon Breath" },
+         { "level": 19, "name": "Fire Fang" },
+         { "level": 24, "name": "Slash" },
+         { "level": 30, "name": "Flamethrower" },
+         { "level": 39, "name": "Scary Face" },
+         { "level": 46, "name": "Fire Spin" },
+         { "level": 54, "name": "Inferno" },
+         { "level": 62, "name": "Flare Blitz" }
+        ],
+        "tm": [
+         { "name": "Acrobatics" },
+         { "name": "Aerial Ace" },
+         { "name": "Air Cutter" },
+         { "name": "Air Slash" },
+         { "name": "Ancient Power" },
+         { "name": "Beat Up" },
+         { "name": "Blast Burn" },
+         { "name": "Blaze Kick" },
+         { "name": "Body Slam" },
+         { "name": "Breaking Swipe" },
+         { "name": "Brick Break" },
+         { "name": "Brutal Swing" },
+         { "name": "Bulldoze" },
+         { "name": "Crunch" },
+         { "name": "Cut" },
+         { "name": "Dig" },
+         { "name": "Double-Edge" },
+         { "name": "Dragon Cheer" },
+         { "name": "Dragon Claw" },
+         { "name": "Dragon Dance" },
+         { "name": "Dragon Pulse" },
+         { "name": "Dragon Tail" },
+         { "name": "Earthquake" },
+         { "name": "Echoed Voice" },
+         { "name": "Endure" },
+         { "name": "Facade" },
+         { "name": "Fire Blast" },
+         { "name": "Fire Fang" },
+         { "name": "Fire Pledge" },
+         { "name": "Fire Punch" },
+         { "name": "Fire Spin" },
+         { "name": "Flame Charge" },
+         { "name": "Flamethrower" },
+         { "name": "Flare Blitz" },
+         { "name": "Fling" },
+         { "name": "Fly" },
+         { "name": "Focus Blast" },
+         { "name": "Focus Punch" },
+         { "name": "Fury Cutter" },
+         { "name": "Giga Impact" },
+         { "name": "Headbutt" },
+         { "name": "Heat Crash" },
+         { "name": "Heat Wave" },
+         { "name": "Helping Hand" },
+         { "name": "Hone Claws" },
+         { "name": "Hurricane" },
+         { "name": "Hyper Beam" },
+         { "name": "Incinerate" },
+         { "name": "Iron Tail" },
+         { "name": "Mega Kick" },
+         { "name": "Mega Punch" },
+         { "name": "Metal Claw" },
+         { "name": "Mystical Fire" },
+         { "name": "Ominous Wind" },
+         { "name": "Outrage" },
+         { "name": "Overheat" },
+         { "name": "Power-Up Punch" },
+         { "name": "Protect" },
+         { "name": "Rest" },
+         { "name": "Roar" },
+         { "name": "Rock Slide" },
+         { "name": "Rock Smash" },
+         { "name": "Rock Tomb" },
+         { "name": "Roost" },
+         { "name": "Sandstorm" },
+         { "name": "Scary Face" },
+         { "name": "Schorching Sands" },
+         { "name": "Shadow Claw" },
+         { "name": "Sky Drop" },
+         { "name": "Sleep Talk" },
+         { "name": "Solar Beam" },
+         { "name": "Steel Wing" },
+         { "name": "Strength" },
+         { "name": "Substitute" },
+         { "name": "Sunny Day" },
+         { "name": "Swift" },
+         { "name": "Swords Dance" },
+         { "name": "Take Down" },
+         { "name": "Temper Flare" },
+         { "name": "Tera Blast" },
+         { "name": "Thunder Punch" },
+         { "name": "Twister" },
+         { "name": "Weather Ball" },
+         { "name": "Will-O-Wisp" },
+         { "name": "Work Up" }
+        ],
+        "egg": [
+         { "name": "Ancient Power" },
+         { "name": "Belly Drum" },
+         { "name": "Bite" },
+         { "name": "Counter" },
+         { "name": "Dragon Rage" },
+         { "name": "Dragon Rush" },
+         { "name": "Dragon Tail" },
+         { "name": "Iron Tail" },
+         { "name": "Metal Claw" },
+         { "name": "Wing Attack" }
+        ],
+        "tutor": [
+         { "name": "Ancient Power" },
+         { "name": "Blast Burn" },
+         { "name": "Block" },
+         { "name": "Bulldoze" },
+         { "name": "Dragon Pulse" },
+         { "name": "Fire Fang" },
+         { "name": "Fire Pledge" },
+         { "name": "Fire Punch" },
+         { "name": "Flamethrower" },
+         { "name": "Focus Punch" },
+         { "name": "Fury Cutter" },
+         { "name": "Giga Impact" },
+         { "name": "Heat Wave" },
+         { "name": "Helping Hand" },
+         { "name": "Hyper Beam" },
+         { "name": "Iron Tail" },
+         { "name": "Block" },
+         { "name": "Mystical Fire" },
+         { "name": "Ominous Wind" },
+         { "name": "Outrage" },
+         { "name": "Rest" },
+         { "name": "Rock Slide" },
+         { "name": "Rock Smash" },
+         { "name": "Roost" },
+         { "name": "Schorching Sands" },
+         { "name": "Shadow Claw" },
+         { "name": "Sleep Talk" },
+         { "name": "Swift" },
+         { "name": "Thunder Punch" },
+         { "name": "Twister" }
+       ]
+     }
     }
   ]
 }

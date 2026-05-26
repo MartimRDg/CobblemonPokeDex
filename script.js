@@ -827,4 +827,12 @@ document.addEventListener('DOMContentLoaded', async function() {
     loadPokemonDetail();
     setTimeout(playAllVideos, 100);
   }
+
+  // Back to top visibility
+  var backToTop = document.getElementById('backToTop');
+  if (backToTop) {
+    window.addEventListener('scroll', function() {
+      backToTop.classList.toggle('visible', window.scrollY > 400);
+    });
+  }
 });
