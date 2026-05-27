@@ -5,6 +5,8 @@ const State = {
   allAbilities: {},
   currentMoveTab: 0,
   isShiny: false,
+  currentPage: 1,
+  pageSize: 18,
 };
 
 async function loadData() {
@@ -90,9 +92,15 @@ function buildFilters() {
   }
 }
 
-function renderGrid(pokemonList) {
+// Stores the current filtered list for pagination
+var _filteredList = [];
+
+function renderGrid(pokemonList, resetPage) {
   const grid = document.getElementById('pokemonGrid');
   if (!grid) return;
+
+  _filteredList = pokemonList;
+  if (resetPage) State.currentPage = 1;
 
   if (pokemonList.length === 0) {
     grid.innerHTML =
@@ -101,16 +109,19 @@ function renderGrid(pokemonList) {
         '<p class="text-xl">No Pokémon found</p>' +
         '<p class="text-sm mt-2">Try adjusting your filters</p>' +
       '</div>';
+    renderPagination(0);
     return;
   }
 
-  grid.innerHTML = pokemonList.map(function(poke) {
+  var start   = (State.currentPage - 1) * State.pageSize;
+  var end     = start + State.pageSize;
+  var page    = pokemonList.slice(start, end);
+
+  grid.innerHTML = page.map(function(poke) {
     var typeBadges = (poke.types || [])
       .map(function(t) { return '<span class="type-badge type-' + t.toLowerCase() + '">' + t + '</span>'; })
       .join('');
-
     var num = poke.number || String(poke.id).padStart(4, '0');
-
     return (
       '<div class="pokemon-card" role="button" tabindex="0"' +
            ' onclick="location.href=\'pokemon.html?id=' + poke.id + '\'"' +
@@ -124,7 +135,35 @@ function renderGrid(pokemonList) {
       '</div>'
     );
   }).join('');
+
+  renderPagination(pokemonList.length);
+  setTimeout(playAllVideos, 100);
 }
+
+function renderPagination(total) {
+  var el = document.getElementById('pagination');
+  if (!el) return;
+
+  var totalPages = Math.ceil(total / State.pageSize);
+  if (totalPages <= 1) { el.innerHTML = ''; return; }
+
+  var start = (State.currentPage - 1) * State.pageSize + 1;
+  var end   = Math.min(State.currentPage * State.pageSize, total);
+
+  el.innerHTML =
+    '<div class="pagination">' +
+      '<button class="page-btn" onclick="changePage(-1)"' + (State.currentPage === 1 ? ' disabled' : '') + '>← Prev</button>' +
+      '<span class="page-info">' + start + '–' + end + ' of ' + total + '</span>' +
+      '<button class="page-btn" onclick="changePage(1)"' + (State.currentPage === totalPages ? ' disabled' : '') + '>Next →</button>' +
+    '</div>';
+}
+
+window.changePage = function(dir) {
+  var totalPages = Math.ceil(_filteredList.length / State.pageSize);
+  State.currentPage = Math.max(1, Math.min(State.currentPage + dir, totalPages));
+  renderGrid(_filteredList);
+  window.scrollTo({ top: document.getElementById('pokemonGrid').offsetTop - 80, behavior: 'smooth' });
+};
 
 function renderCompletion() {
   var el = document.getElementById('completionBar');
@@ -256,7 +295,7 @@ function filterPokemon() {
     return matchSearch && matchType && matchGen;
   });
 
-  renderGrid(filtered);
+  renderGrid(filtered, true);
 }
 
 
@@ -1346,7 +1385,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     renderPotd();
     renderRecentlyViewed();
     renderTop5();
-    renderGrid(State.allPokemon);
+    renderGrid(State.allPokemon, true);
     setTimeout(playAllVideos, 100);
     var searchInput = document.getElementById('searchInput');
     var typeFilter  = document.getElementById('typeFilter');
