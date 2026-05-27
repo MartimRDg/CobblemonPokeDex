@@ -13,8 +13,19 @@
   <header>
     <h1><span>Cobblemon</span> Pokédex</h1>
   </header>
+  <nav class="site-nav">
+    <div class="container">
+      <div class="nav-links">
+        <a href="index.html" class="nav-link active">📖 Pokédex</a>
+        <a href="compare.html" class="nav-link">⚔️ Compare & Calc</a>
+      </div>
+    </div>
+  </nav>
 
   <div class="container" style="margin-top: 2rem; padding-bottom: 4rem;">
+
+    <!-- Pokédex Completion Counter -->
+    <div id="completionBar" class="completion-bar"></div>
 
     <!-- Top 5 Strongest -->
     <div class="top5-section">
@@ -28,17 +39,28 @@
       <input id="searchInput" type="text" placeholder="Search by name or #…" autocomplete="off">
       <select id="typeFilter">
         <option value="">All Types</option>
-        <!-- Populated dynamically from data -->
       </select>
       <select id="genFilter">
         <option value="">All Gens</option>
-        <!-- Populated dynamically from data -->
       </select>
     </div>
 
     <!-- Grid -->
     <div id="pokemonGrid"
          class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-5">
+    </div>
+
+    <!-- Pokémon of the Day -->
+    <div class="potd-section" style="margin-top:2.5rem;">
+      <h2 class="top5-title">🌟 Pokémon of the Day</h2>
+      <p class="top5-subtitle">Resets at midnight</p>
+      <div id="potdCard"></div>
+    </div>
+
+    <!-- Recently Viewed -->
+    <div id="recentSection" class="recent-section" style="display:none;margin-top:2rem;">
+      <h2 class="top5-title">🕐 Recently Viewed</h2>
+      <div id="recentGrid" style="display:flex;flex-wrap:nowrap;gap:1rem;overflow-x:auto;padding-bottom:0.5rem;"></div>
     </div>
 
   </div>

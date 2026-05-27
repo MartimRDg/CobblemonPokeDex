@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compare & Calculator — Cobblemon Pokédex</title>
+  <link rel="icon" type="image/png" href="assets/images/favicon.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header>
+    <h1><span>Cobblemon</span> Pokédex</h1>
+  </header>
+  <nav class="site-nav">
+    <div class="container">
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">📖 Pokédex</a>
+        <a href="compare.html" class="nav-link active">⚔️ Compare & Calc</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container" style="margin-top: 2rem; padding-bottom: 4rem;">
+
+    <a href="index.html" class="back-link">← Back to Pokédex</a>
+
+    <!-- Compare Tool -->
+    <section class="detail-section" style="margin-bottom:1.5rem;">
+      <h2 class="section-title">⚔️ Compare Pokémon</h2>
+      <p class="section-subtitle">Pick two Pokémon to compare their base stats</p>
+
+      <div class="compare-pickers">
+        <div class="compare-picker-wrap">
+          <select id="picker1" class="compare-picker" onchange="runCompare()">
+            <option value="">Select Pokémon…</option>
+          </select>
+        </div>
+        <div class="compare-vs">VS</div>
+        <div class="compare-picker-wrap">
+          <select id="picker2" class="compare-picker" onchange="runCompare()">
+            <option value="">Select Pokémon…</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="compareResult"></div>
+    </section>
+
+    <!-- Damage Calculator -->
+    <section class="detail-section">
+      <h2 class="section-title">💥 Damage Calculator</h2>
+      <p class="section-subtitle">Estimate type effectiveness multiplier for a move against a defender</p>
+
+      <div class="calc-grid">
+        <div class="calc-group">
+          <label class="calc-label">Move</label>
+          <select id="calcMove" class="compare-picker" onchange="runCalc()">
+            <option value="">Select Move…</option>
+          </select>
+        </div>
+        <div class="calc-group">
+          <label class="calc-label">Attacker Type</label>
+          <select id="calcAttackerType" class="compare-picker" onchange="runCalc()">
+            <option value="">Select Type…</option>
+          </select>
+        </div>
+        <div class="calc-group">
+          <label class="calc-label">Defender Type 1</label>
+          <select id="calcDefType1" class="compare-picker" onchange="runCalc()">
+            <option value="">Select Type…</option>
+          </select>
+        </div>
+        <div class="calc-group">
+          <label class="calc-label">Defender Type 2 <span style="color:var(--text-dim)">(optional)</span></label>
+          <select id="calcDefType2" class="compare-picker" onchange="runCalc()">
+            <option value="">None</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="calcResult"></div>
+    </section>
+
+  </div>
+
+  <button id="backToTop" class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>
+
+  <script src="script.js"></script>
+</body>
+</html>

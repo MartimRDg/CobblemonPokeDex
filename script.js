@@ -126,6 +126,91 @@ function renderGrid(pokemonList) {
   }).join('');
 }
 
+function renderCompletion() {
+  var el = document.getElementById('completionBar');
+  if (!el) return;
+  var total   = State.allPokemon.length;
+  var max     = 1025;
+  var pct     = Math.min((total / max) * 100, 100).toFixed(1);
+  el.innerHTML =
+    '<div class="completion-inner">' +
+      '<div class="completion-text">' +
+        '<span class="completion-label">Pokédex Completion</span>' +
+        '<span class="completion-count">' + total + ' / ' + max + '</span>' +
+      '</div>' +
+      '<div class="completion-track">' +
+        '<div class="completion-fill" style="width:' + pct + '%"></div>' +
+      '</div>' +
+    '</div>';
+}
+
+function renderPotd() {
+  var el = document.getElementById('potdCard');
+  if (!el || !State.allPokemon.length) return;
+
+  // Seed with today's date so it's the same all day
+  var today    = new Date();
+  var seed     = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+  var index    = seed % State.allPokemon.length;
+  var poke     = State.allPokemon[index];
+  var sprite   = poke.video || poke.sprite;
+  var num      = poke.number || String(poke.id).padStart(4, '0');
+  var total    = poke.baseStats ? Object.values(poke.baseStats).reduce(function(t, v) { return t + v; }, 0) : 0;
+  var types    = (poke.types || []).map(function(t) {
+    return '<span class="type-badge type-' + t.toLowerCase() + '">' + t + '</span>';
+  }).join('');
+
+  el.innerHTML =
+    '<a href="pokemon.html?id=' + poke.id + '" class="potd-card">' +
+      '<div class="potd-sprite-wrap">' +
+        buildSpriteEl(sprite, poke.name, 'potd-sprite') +
+      '</div>' +
+      '<div class="potd-info">' +
+        '<p class="potd-number">#' + num + '</p>' +
+        '<h3 class="potd-name">' + poke.name + '</h3>' +
+        '<div class="potd-types">' + types + '</div>' +
+        (total ? '<p class="potd-bst">' + total + ' BST</p>' : '') +
+      '</div>' +
+      '<span class="potd-btn">View</span>' +
+    '</a>';
+
+  setTimeout(playAllVideos, 100);
+}
+
+function renderRecentlyViewed() {
+  var section = document.getElementById('recentSection');
+  var grid    = document.getElementById('recentGrid');
+  if (!section || !grid) return;
+
+  var ids = [];
+  try { ids = JSON.parse(localStorage.getItem('recentPokemon') || '[]'); } catch(e) {}
+
+  var recent = ids.map(function(id) {
+    return State.allPokemon.find(function(p) { return p.id === id; });
+  }).filter(Boolean);
+
+  if (!recent.length) { section.style.display = 'none'; return; }
+  section.style.display = 'block';
+
+  grid.innerHTML = recent.map(function(poke) {
+    var sprite = poke.video || poke.sprite;
+    var num    = poke.number || String(poke.id).padStart(4, '0');
+    var types  = (poke.types || []).map(function(t) {
+      return '<span class="type-badge type-' + t.toLowerCase() + ' type-xs">' + t + '</span>';
+    }).join('');
+    return (
+      '<a href="pokemon.html?id=' + poke.id + '" class="top5-card" style="text-decoration:none;color:inherit;min-width:140px;">' +
+        '<div class="top5-sprite-wrap">' + buildSpriteEl(sprite, poke.name, 'top5-sprite') + '</div>' +
+        '<p class="pokemon-number">#' + num + '</p>' +
+        '<h3 class="pokemon-name" style="font-size:0.9rem">' + poke.name + '</h3>' +
+        '<div class="type-badges">' + types + '</div>' +
+      '</a>'
+    );
+  }).join('');
+
+  setTimeout(playAllVideos, 100);
+}
+
 function renderTop5() {
   var grid = document.getElementById('top5Grid');
   if (!grid) return;
@@ -722,6 +807,15 @@ function loadPokemonDetail() {
     '</div>';
 
   window._shinyData = { poke: poke, isShiny: false, formIndex: 0 };
+
+  // Track recently viewed
+  try {
+    var history = JSON.parse(localStorage.getItem('recentPokemon') || '[]');
+    history = history.filter(function(id) { return id !== poke.id; });
+    history.unshift(poke.id);
+    localStorage.setItem('recentPokemon', JSON.stringify(history.slice(0, 5)));
+  } catch(e) {}
+
   renderMoves(poke);
 }
 
@@ -1248,6 +1342,9 @@ document.addEventListener('DOMContentLoaded', async function() {
   var grid = document.getElementById('pokemonGrid');
   if (grid) {
     buildFilters();
+    renderCompletion();
+    renderPotd();
+    renderRecentlyViewed();
     renderTop5();
     renderGrid(State.allPokemon);
     setTimeout(playAllVideos, 100);
@@ -1272,6 +1369,10 @@ document.addEventListener('DOMContentLoaded', async function() {
     loadAbilityDetail();
   }
 
+  if (document.getElementById('compareResult')) {
+    loadComparePage();
+  }
+
   // Back to top visibility
   var backToTop = document.getElementById('backToTop');
   if (backToTop) {
@@ -1280,3 +1381,171 @@ document.addEventListener('DOMContentLoaded', async function() {
     });
   }
 });
+
+
+// ====================== Compare Page ======================
+var TYPE_CHART = {
+  Normal:   { Rock:0.5, Ghost:0, Steel:0.5 },
+  Fire:     { Fire:0.5, Water:0.5, Grass:2, Ice:2, Bug:2, Rock:0.5, Dragon:0.5, Steel:2 },
+  Water:    { Fire:2, Water:0.5, Grass:0.5, Ground:2, Rock:2, Dragon:0.5 },
+  Electric: { Water:2, Electric:0.5, Grass:0.5, Ground:0, Flying:2, Dragon:0.5 },
+  Grass:    { Fire:0.5, Water:2, Grass:0.5, Poison:0.5, Ground:2, Flying:0.5, Bug:0.5, Rock:2, Dragon:0.5, Steel:0.5 },
+  Ice:      { Fire:0.5, Water:0.5, Grass:2, Ice:0.5, Ground:2, Flying:2, Dragon:2, Steel:0.5 },
+  Fighting: { Normal:2, Ice:2, Poison:0.5, Flying:0.5, Psychic:0.5, Bug:0.5, Rock:2, Ghost:0, Dark:2, Steel:2, Fairy:0.5 },
+  Poison:   { Grass:2, Poison:0.5, Ground:0.5, Rock:0.5, Ghost:0.5, Steel:0, Fairy:2 },
+  Ground:   { Fire:2, Electric:2, Grass:0.5, Poison:2, Flying:0, Bug:0.5, Rock:2, Steel:2 },
+  Flying:   { Electric:0.5, Grass:2, Fighting:2, Bug:2, Rock:0.5, Steel:0.5 },
+  Psychic:  { Fighting:2, Poison:2, Psychic:0.5, Dark:0, Steel:0.5 },
+  Bug:      { Fire:0.5, Grass:2, Fighting:0.5, Flying:0.5, Psychic:2, Ghost:0.5, Dark:2, Steel:0.5, Fairy:0.5 },
+  Rock:     { Fire:2, Ice:2, Fighting:0.5, Ground:0.5, Flying:2, Bug:2, Steel:0.5 },
+  Ghost:    { Normal:0, Psychic:2, Ghost:2, Dark:0.5 },
+  Dragon:   { Dragon:2, Steel:0.5, Fairy:0 },
+  Dark:     { Fighting:0.5, Psychic:2, Ghost:2, Dark:0.5, Fairy:0.5 },
+  Steel:    { Fire:0.5, Water:0.5, Electric:0.5, Ice:2, Rock:2, Steel:0.5, Fairy:2 },
+  Fairy:    { Fire:0.5, Fighting:2, Poison:0.5, Dragon:2, Dark:2, Steel:0.5 },
+};
+
+var ALL_TYPES = ['Normal','Fire','Water','Electric','Grass','Ice','Fighting','Poison','Ground','Flying','Psychic','Bug','Rock','Ghost','Dragon','Dark','Steel','Fairy'];
+
+var STAT_LABELS = { hp: 'HP', attack: 'Attack', defense: 'Defense', spAttack: 'Sp. Atk', spDefense: 'Sp. Def', speed: 'Speed' };
+
+function loadComparePage() {
+  // Populate Pokémon pickers
+  var opts = State.allPokemon.map(function(p) {
+    var num = p.number || String(p.id).padStart(4,'0');
+    return '<option value="' + p.id + '">#' + num + ' ' + p.name + '</option>';
+  }).join('');
+
+  ['picker1','picker2'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.innerHTML += opts;
+  });
+
+  // Populate move picker
+  var moveOpts = Object.keys(State.allMoves).sort().map(function(name) {
+    return '<option value="' + name + '">' + name + '</option>';
+  }).join('');
+  var calcMove = document.getElementById('calcMove');
+  if (calcMove) calcMove.innerHTML += moveOpts;
+
+  // Populate type pickers
+  var typeOpts = ALL_TYPES.map(function(t) {
+    return '<option value="' + t + '">' + t + '</option>';
+  }).join('');
+  ['calcAttackerType','calcDefType1','calcDefType2'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.innerHTML += typeOpts;
+  });
+}
+
+window.runCompare = function() {
+  var id1  = parseInt(document.getElementById('picker1').value);
+  var id2  = parseInt(document.getElementById('picker2').value);
+  var result = document.getElementById('compareResult');
+  if (!result) return;
+
+  if (!id1 || !id2) { result.innerHTML = ''; return; }
+
+  var p1 = getPokemonById(id1);
+  var p2 = getPokemonById(id2);
+  if (!p1 || !p2) return;
+
+  var stats = Object.keys(STAT_LABELS);
+  var maxVals = {};
+  stats.forEach(function(k) {
+    maxVals[k] = Math.max((p1.baseStats || {})[k] || 0, (p2.baseStats || {})[k] || 0, 1);
+  });
+
+  var total1 = stats.reduce(function(t,k){ return t + ((p1.baseStats||{})[k]||0); }, 0);
+  var total2 = stats.reduce(function(t,k){ return t + ((p2.baseStats||{})[k]||0); }, 0);
+
+  function statRows(poke, other) {
+    return stats.map(function(k) {
+      var val   = (poke.baseStats  || {})[k] || 0;
+      var oval  = (other.baseStats || {})[k] || 0;
+      var pct   = ((val / 255) * 100).toFixed(1);
+      var wins  = val > oval;
+      var color = wins ? '#4ade80' : val === oval ? '#facc15' : '#f87171';
+      return (
+        '<div class="cmp-stat-row">' +
+          '<span class="stat-label">' + STAT_LABELS[k] + '</span>' +
+          '<span class="stat-value" style="color:' + color + '">' + val + '</span>' +
+          '<div class="stat-bar-bg">' +
+            '<div class="stat-bar-fill" style="width:' + pct + '%;background:' + color + '"></div>' +
+          '</div>' +
+        '</div>'
+      );
+    }).join('');
+  }
+
+  function pokeCard(poke, total, other) {
+    var sprite  = poke.video || poke.sprite;
+    var wins    = total > (other.baseStats ? Object.keys(STAT_LABELS).reduce(function(t,k){ return t+((other.baseStats||{})[k]||0); },0) : 0);
+    var num     = poke.number || String(poke.id).padStart(4,'0');
+    return (
+      '<div class="cmp-card' + (wins ? ' cmp-winner' : '') + '">' +
+        (wins ? '<div class="cmp-winner-badge">Winner</div>' : '') +
+        '<div class="cmp-sprite-wrap">' + buildSpriteEl(sprite, poke.name, 'cmp-sprite') + '</div>' +
+        '<p class="cmp-number">#' + num + '</p>' +
+        '<h3 class="cmp-name"><a href="pokemon.html?id=' + poke.id + '" class="move-link">' + poke.name + '</a></h3>' +
+        '<div class="badge-row" style="justify-content:center;margin-bottom:0.75rem">' + buildTypeBadges(poke.types) + '</div>' +
+        '<div class="cmp-stats">' + statRows(poke, other) + '</div>' +
+        '<div class="cmp-total" style="color:' + (wins?'#4ade80':total===total2?'#facc15':'#f87171') + '">Total: ' + total + '</div>' +
+      '</div>'
+    );
+  }
+
+  result.innerHTML =
+    '<div class="cmp-result">' +
+      pokeCard(p1, total1, p2) +
+      '<div class="cmp-divider">VS</div>' +
+      pokeCard(p2, total2, p1) +
+    '</div>';
+
+  setTimeout(playAllVideos, 100);
+};
+
+window.runCalc = function() {
+  var moveName  = document.getElementById('calcMove').value;
+  var atkType   = document.getElementById('calcAttackerType').value;
+  var defType1  = document.getElementById('calcDefType1').value;
+  var defType2  = document.getElementById('calcDefType2').value;
+  var result    = document.getElementById('calcResult');
+  if (!result) return;
+
+  if (!moveName || !defType1) { result.innerHTML = ''; return; }
+
+  var move      = State.allMoves[moveName];
+  var moveType  = move ? move.type : atkType;
+  var power     = parseInt(move && move.power) || 0;
+
+  // Type effectiveness
+  function effectiveness(attackType, defType) {
+    if (!attackType || !defType) return 1;
+    var chart = TYPE_CHART[attackType] || {};
+    return chart[defType] !== undefined ? chart[defType] : 1;
+  }
+
+  var mult1 = effectiveness(moveType, defType1);
+  var mult2 = defType2 ? effectiveness(moveType, defType2) : 1;
+  var total  = mult1 * mult2;
+
+  var color  = total >= 2 ? '#4ade80' : total === 1 ? '#facc15' : total > 0 ? '#f87171' : '#6b7280';
+  var label  = total === 0 ? 'No effect' : total < 1 ? 'Not very effective' : total === 1 ? 'Normal effectiveness' : 'Super effective!';
+
+  var stab   = moveType && atkType && moveType === atkType ? 1.5 : 1;
+  var baseDmg = power ? Math.round(power * total * stab) : null;
+
+  result.innerHTML =
+    '<div class="calc-result">' +
+      '<div class="calc-multiplier" style="color:' + color + '">' + total + 'x</div>' +
+      '<div class="calc-label-text" style="color:' + color + '">' + label + '</div>' +
+      '<div class="calc-breakdown">' +
+        '<span class="calc-chip">Move: <strong>' + moveName + '</strong></span>' +
+        '<span class="calc-chip">Type: <strong>' + (moveType||'?') + '</strong></span>' +
+        (power ? '<span class="calc-chip">Base Power: <strong>' + power + '</strong></span>' : '') +
+        (stab > 1 ? '<span class="calc-chip stab">STAB ×1.5</span>' : '') +
+        (baseDmg ? '<span class="calc-chip">Estimated Power: <strong>' + baseDmg + '</strong></span>' : '') +
+      '</div>' +
+    '</div>';
+};
