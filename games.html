@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title id="pageTitle">Move — Cobblemon Pokédex</title>
+  <title>Game Timeline — Cobblemon Pokédex</title>
   <link rel="icon" type="image/png" href="assets/images/favicon.png">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="styles.css">
@@ -18,17 +18,15 @@
       <div class="nav-links">
         <a href="index.html" class="nav-link">📖 Pokédex</a>
         <a href="compare.html" class="nav-link">⚔️ Compare & Calc</a>
-        <a href="games.html" class="nav-link">🎮 Games</a>
+        <a href="games.html" class="nav-link active">🎮 Games</a>
       </div>
     </div>
   </nav>
 
   <div class="container" style="margin-top: 2rem; padding-bottom: 4rem;">
-
-    <a id="backLink" href="index.html" class="back-link">← Back</a>
-
-    <div id="moveDetail"></div>
-
+    <h2 class="section-title" style="margin-bottom:0.25rem;">Pokémon Game Timeline</h2>
+    <p class="section-subtitle" style="margin-bottom:2rem;">From oldest to newest - games released together appear side by side. These games may be assigned wrong, these are the games I played and I tried to follow it in order.</p>
+    <div id="gamesTimeline"></div>
   </div>
 
   <button id="backToTop" class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>

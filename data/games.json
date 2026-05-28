@@ -1,0 +1,41 @@
+{
+    "games": [
+        {
+            "row": 1,
+            "entries": [
+                {
+                    "name": "Pokémon FireRed",
+                    "logo": "assets/games/fire_red.png",
+                    "color": "#e53935",
+                    "year": 2004,
+                    "generation": 3,
+                    "region": "Kanto",
+                    "description": "Pokémon FireRed Version é um remake de Pokémon Red Version, um dos primeiros dois títulos da série de videojogos Pokémon. Este jogo para a Game Boy Advance foi lançado originalmente em 2004. Agora, podes desfrutar desta aventura Pokémon clássica na Nintendo Switch e na Nintendo Switch 2!."
+                },
+                {
+                    "name": "Pokémon LeafGreen",
+                    "logo": "assets/games/leaf_green.png",
+                    "color": "#35e544",
+                    "year": 2004,
+                    "generation": 3,
+                    "region": "Kanto",
+                    "description": "Pokémon LeafGreen Version é um remake de Pokémon Green Version (conhecido como Pokémon Blue Version na Europa), um dos primeiros dois títulos da série de videojogos Pokémon. Este jogo para a Game Boy Advance foi lançado originalmente em 2004. Agora, podes desfrutar desta aventura Pokémon clássica na Nintendo Switch e na Nintendo Switch 2!"
+                }
+            ]
+        },
+        {
+            "row": 2,
+            "entries": [
+                {
+                    "name": "EXAMPLE",
+                    "logo": "assets/images/games/fire_red.png",
+                    "color": "#35e544",
+                    "year": 9999,
+                    "generation": 67,
+                    "region": "Kanto",
+                    "description": "Special Pikachu Edition..."
+                }
+            ]
+        }
+    ]
+}

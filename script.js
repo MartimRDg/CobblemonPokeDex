@@ -3,6 +3,7 @@ const State = {
   allPokemon: [],
   allMoves: {},
   allAbilities: {},
+  allGames: [],
   currentMoveTab: 0,
   isShiny: false,
   currentPage: 1,
@@ -11,25 +12,28 @@ const State = {
 
 async function loadData() {
   try {
-    const [pokeRes, movesRes, abilitiesRes] = await Promise.all([
+    const [pokeRes, movesRes, abilitiesRes, gamesRes] = await Promise.all([
       fetch('data/pokemon.json'),
       fetch('data/moves.json'),
       fetch('data/abilities.json'),
+      fetch('data/games.json'),
     ]);
 
     if (!pokeRes.ok || !movesRes.ok) throw new Error('Failed to fetch data files');
 
-    const [pokeData, movesData, abilitiesData] = await Promise.all([
+    const [pokeData, movesData, abilitiesData, gamesData] = await Promise.all([
       pokeRes.json(), movesRes.json(),
-      abilitiesRes.ok ? abilitiesRes.json() : Promise.resolve({ abilities: {} }),
+      abilitiesRes.ok  ? abilitiesRes.json()  : Promise.resolve({ abilities: {} }),
+      gamesRes.ok      ? gamesRes.json()       : Promise.resolve({ games: [] }),
     ]);
 
     State.allPokemon   = pokeData.pokemon || [];
     State.allMoves     = movesData.moves || {};
     State.allAbilities = abilitiesData.abilities || {};
+    State.allGames     = gamesData.games || [];
     window._allMoves   = State.allMoves;
 
-    console.log('Loaded ' + State.allPokemon.length + ' Pokemon, ' + Object.keys(State.allMoves).length + ' moves, ' + Object.keys(State.allAbilities).length + ' abilities');
+    console.log('Loaded ' + State.allPokemon.length + ' Pokemon, ' + Object.keys(State.allMoves).length + ' moves, ' + State.allGames.length + ' game rows');
     return true;
   } catch (err) {
     console.error('Error loading data:', err);
@@ -1412,6 +1416,10 @@ document.addEventListener('DOMContentLoaded', async function() {
     loadComparePage();
   }
 
+  if (document.getElementById('gamesTimeline')) {
+    loadGamesPage();
+  }
+
   // Back to top visibility
   var backToTop = document.getElementById('backToTop');
   if (backToTop) {
@@ -1588,3 +1596,79 @@ window.runCalc = function() {
       '</div>' +
     '</div>';
 };
+
+
+// ====================== Games Timeline Page ======================
+var REGION_COLORS = {
+  Kanto:  '#e53935',
+  Johto:  '#fdd835',
+  Hoenn:  '#1e88e5',
+  Sinnoh: '#8e24aa',
+  Unova:  '#757575',
+  Kalos:  '#3949ab',
+  Alola:  '#fb8c00',
+  Galar:  '#6d4c41',
+  Paldea:  '#c0ca33',
+};
+
+function loadGamesPage() {
+  var container = document.getElementById('gamesTimeline');
+  if (!container) return;
+
+  var games = State.allGames;
+  if (!games.length) {
+    container.innerHTML = '<p class="moves-empty">No games data found.</p>';
+    return;
+  }
+
+  var sorted = games.slice().sort(function(a, b) { return a.row - b.row; });
+
+  var html = sorted.map(function(row, rowIndex) {
+    var cards = (row.entries || []).map(function(game) {
+      var genLabel    = game.generation ? 'Gen ' + game.generation : '';
+      var regionColor = REGION_COLORS[game.region] || '#9ca3af';
+      var gameColor   = game.color || null;
+
+      // Build inline CSS variables
+      var styleVars = '';
+      if (gameColor) {
+        styleVars += '--game-color:' + gameColor + '08;';
+        styleVars += '--game-border:' + gameColor + '60;';
+        styleVars += '--game-accent:' + gameColor + ';';
+        styleVars += '--game-gradient:linear-gradient(135deg, #080b0f 0%, ' + gameColor + '55 100%);';
+      }
+      styleVars += '--region-color:' + regionColor + ';';
+      styleVars += '--region-bg:' + regionColor + '18;';
+
+      return (
+        '<div class="game-card" style="' + styleVars + '">' +
+          '<div class="game-card-top">' +
+            (game.logo
+              ? '<img src="' + game.logo + '" alt="' + game.name + '" class="game-logo" onerror="this.style.display=\'none\'">'
+              : '<div class="game-logo-placeholder">🎮</div>') +
+            '<div class="game-badge-row">' +
+              (genLabel ? '<span class="game-badge">' + genLabel + '</span>' : '') +
+              (game.region ? '<span class="game-badge game-badge-region">' + game.region + '</span>' : '') +
+            '</div>' +
+          '</div>' +
+          '<h3 class="game-name">' + game.name + '</h3>' +
+          (game.year ? '<p class="game-year">' + game.year + '</p>' : '') +
+          (game.description ? '<p class="game-desc">' + game.description + '</p>' : '') +
+        '</div>'
+      );
+    }).join('<div class="game-same-row-divider">+</div>');
+
+    var connector = rowIndex < sorted.length - 1
+      ? '<div class="game-connector"><div class="game-connector-line"></div><div class="game-connector-arrow">▼</div></div>'
+      : '';
+
+    return (
+      '<div class="game-row">' +
+        '<div class="game-row-inner">' + cards + '</div>' +
+      '</div>' +
+      connector
+    );
+  }).join('');
+
+  container.innerHTML = html;
+}
