@@ -1420,6 +1420,10 @@ document.addEventListener('DOMContentLoaded', async function() {
     loadGamesPage();
   }
 
+  if (document.getElementById('pdexGrid')) {
+    loadPersonalPokedex();
+  }
+
   // Back to top visibility
   var backToTop = document.getElementById('backToTop');
   if (backToTop) {
@@ -1672,3 +1676,176 @@ function loadGamesPage() {
 
   container.innerHTML = html;
 }
+
+
+// ====================== Personal Pokédex ======================
+var _pdexFilter  = 'all';
+var _pdexProgress = {}; // { id: { seen: bool, captured: bool } }
+
+function loadPersonalPokedex() {
+  // Load saved progress
+  try {
+    var saved = localStorage.getItem('pdexProgress');
+    if (saved) _pdexProgress = JSON.parse(saved);
+  } catch(e) {}
+
+  var total = State.allPokemon.length;
+  document.getElementById('pdexTotal').textContent = total;
+
+  updatePdexStats();
+  renderPdexGrid();
+}
+
+function savePdexProgress() {
+  try { localStorage.setItem('pdexProgress', JSON.stringify(_pdexProgress)); } catch(e) {}
+}
+
+function updatePdexStats() {
+  var total     = State.allPokemon.length;
+  var captured  = 0;
+  var seen      = 0;
+  var legendary = 0;
+
+  State.allPokemon.forEach(function(poke) {
+    var p = _pdexProgress[poke.id] || {};
+    if (p.captured) { captured++; if (poke.legendary) legendary++; }
+    if (p.seen || p.captured) seen++;
+  });
+
+  var capPct  = total ? Math.round((captured / total) * 100) : 0;
+  var seenPct = total ? Math.round((seen     / total) * 100) : 0;
+
+  document.getElementById('capturedPct').textContent   = capPct + '%';
+  document.getElementById('capturedCount').textContent  = captured + '/' + total;
+  document.getElementById('seenPct').textContent        = seenPct + '%';
+  document.getElementById('seenCount').textContent      = seen + '/' + total;
+  document.getElementById('legendaryCount').textContent = legendary;
+
+  // Update missing button label
+  var missing = total - captured;
+  var missingBtn = document.getElementById('missingBtn');
+  if (missingBtn) missingBtn.textContent = 'Missing (' + missing + ')';
+}
+
+function renderPdexGrid() {
+  var grid = document.getElementById('pdexGrid');
+  if (!grid) return;
+
+  var list = State.allPokemon.filter(function(poke) {
+    var p = _pdexProgress[poke.id] || {};
+    switch (_pdexFilter) {
+      case 'captured':  return p.captured;
+      case 'seen':      return (p.seen || p.captured) && !p.captured ? true : p.seen && !p.captured;
+      case 'legendary': return poke.legendary;
+      case 'missing':   return !p.captured;
+      default:          return true;
+    }
+  });
+
+  if (list.length === 0) {
+    grid.innerHTML = '<p class="moves-empty" style="grid-column:1/-1">No Pokémon in this category.</p>';
+    return;
+  }
+
+  grid.innerHTML = list.map(function(poke) {
+    var p        = _pdexProgress[poke.id] || {};
+    var sprite   = poke.video || poke.sprite;
+    var num      = poke.number || String(poke.id).padStart(4, '0');
+    var isSeen   = p.seen || p.captured;
+    var isCap    = p.captured;
+
+    return (
+      '<div class="pdex-card' + (isCap ? ' pdex-captured' : isSeen ? ' pdex-seen' : '') + '">' +
+        '<div class="pdex-card-btns">' +
+          '<button class="pdex-btn pdex-btn-seen' + (isSeen ? ' active' : '') + '" onclick="toggleSeen(' + poke.id + ')" title="Mark as Seen">👁</button>' +
+          '<button class="pdex-btn pdex-btn-cap'  + (isCap  ? ' active' : '') + '" onclick="toggleCaptured(' + poke.id + ')" title="Mark as Captured">✓</button>' +
+        '</div>' +
+        '<div class="pdex-sprite-wrap">' +
+          (isSeen
+            ? buildSpriteEl(sprite, poke.name, 'pdex-sprite')
+            : '<div class="pdex-sprite-unknown">?</div>') +
+        '</div>' +
+        '<a href="pokemon.html?id=' + poke.id + '" class="pdex-num">#' + num + '</a>' +
+      '</div>'
+    );
+  }).join('');
+
+  setTimeout(playAllVideos, 100);
+}
+
+window.toggleSeen = function(id) {
+  var p = _pdexProgress[id] || {};
+  if (p.seen && !p.captured) {
+    // unsee
+    delete _pdexProgress[id];
+  } else {
+    p.seen = true;
+    _pdexProgress[id] = p;
+  }
+  savePdexProgress();
+  updatePdexStats();
+  renderPdexGrid();
+};
+
+window.toggleCaptured = function(id) {
+  var p = _pdexProgress[id] || {};
+  if (p.captured) {
+    // uncapture but keep seen
+    p.captured = false;
+    p.seen = true;
+  } else {
+    p.captured = true;
+    p.seen = true;
+  }
+  _pdexProgress[id] = p;
+  savePdexProgress();
+  updatePdexStats();
+  renderPdexGrid();
+};
+
+window.setPdexFilter = function(filter) {
+  _pdexFilter = filter;
+  document.querySelectorAll('.pdex-filter').forEach(function(btn) {
+    btn.classList.remove('active');
+    if (btn.getAttribute('onclick') === "setPdexFilter('" + filter + "')") {
+      btn.classList.add('active');
+    }
+  });
+  renderPdexGrid();
+};
+
+window.exportProgress = function() {
+  var data = JSON.stringify(_pdexProgress, null, 2);
+  var blob = new Blob([data], { type: 'application/json' });
+  var url  = URL.createObjectURL(blob);
+  var a    = document.createElement('a');
+  a.href     = url;
+  a.download = 'pokedex-progress.json';
+  a.click();
+  URL.revokeObjectURL(url);
+};
+
+window.importProgress = function(event) {
+  var file = event.target.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      _pdexProgress = JSON.parse(e.target.result);
+      savePdexProgress();
+      updatePdexStats();
+      renderPdexGrid();
+    } catch(err) {
+      alert('Invalid progress file.');
+    }
+  };
+  reader.readAsText(file);
+};
+
+window.resetProgress = function() {
+  if (!confirm('Reset all progress? This cannot be undone.')) return;
+  _pdexProgress = {};
+  savePdexProgress();
+  updatePdexStats();
+  renderPdexGrid();
+};

@@ -9,6 +9,7 @@
       "rarity": "Ultra-rare",
       "rideable": false,
       "flying": false,
+      "legendary": false,
       "abilities": ["Blaze", "Solar Power (Hidden)"],
 
       "catchRate": 45,
@@ -49,7 +50,7 @@
       "spawnLevel": "5-31",
       "spawnContext": "-",
       "spawnPreset": "Natural",
-      "spawnBiomes": ["Hills", "Volcanic"],
+      "spawnBiomes": ["Hills", "Volcanic", "Nether/Basalt"],
       "isRaining": false,
       "spawnRequirements": "N/A",
 
@@ -185,6 +186,7 @@
       "rarity": "Ultra-rare",
       "rideable": false,
       "flying": false,
+      "legendary": false,
       "abilities": ["Blaze", "Solar Power (Hidden)"],
       "baseStats": {
         "hp": 58,
@@ -221,7 +223,7 @@
       "spawnLevel": "16-40",
       "spawnContext": "-",
       "spawnPreset": "Natural",
-      "spawnBiomes": ["Hills", "Volcanic"],
+      "spawnBiomes": ["Hills", "Volcanic", "Nether/Basalt"],
       "isRaining": false,
       "spawnRequirements": "N/A",
 
@@ -359,6 +361,7 @@
       "rarity": "Ultra-rare",
       "rideable": true,
       "flying": true,
+      "legendary": false,
       "catchRate": 45,
       "shinyRate": "1/4096",
 
@@ -394,7 +397,7 @@
       "spawnLevel": "36-53",
       "spawnContext": "-",
       "spawnPreset": "Natural",
-      "spawnBiomes": ["Hills", "Volcanic"],
+      "spawnBiomes": ["Hills", "Volcanic", "Nether/Basalt"],
       "isRaining": false,
       "spawnRequirements": "N/A",
 

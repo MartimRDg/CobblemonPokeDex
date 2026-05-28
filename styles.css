@@ -2415,3 +2415,226 @@ video.cmp-sprite {
   .game-row-inner { flex-direction: column; align-items: center; }
   .game-same-row-divider { transform: rotate(90deg); }
 }
+
+/* ====================== Personal Pokédex ====================== */
+.pdex-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.pdex-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.pdex-subtitle {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-top: 0.2rem;
+}
+
+.pdex-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.pdex-action-btn {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: var(--radius-sm);
+  padding: 0.45rem 1rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.pdex-action-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.pdex-reset-btn:hover {
+  border-color: #f87171;
+  color: #f87171;
+}
+
+/* Stats */
+.pdex-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.pdex-stat-card {
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.5rem;
+  border: 1px solid transparent;
+}
+
+.pdex-stat-captured {
+  background: linear-gradient(135deg, #052e16, #0d3320);
+  border-color: #166534;
+}
+
+.pdex-stat-seen {
+  background: linear-gradient(135deg, #0c1a3a, #0f2a5a);
+  border-color: #1e40af;
+}
+
+.pdex-stat-legendary {
+  background: linear-gradient(135deg, #3b0764, #1e0030);
+  border-color: #7e22ce;
+}
+
+.pdex-stat-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 0.35rem;
+}
+
+.pdex-stat-pct {
+  font-size: 2.25rem;
+  font-weight: 900;
+  font-family: monospace;
+  color: #fff;
+  line-height: 1;
+  margin-bottom: 0.2rem;
+}
+
+.pdex-stat-count {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.5);
+}
+
+/* Filters */
+.pdex-filters {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.pdex-filter {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  border-radius: var(--radius-sm);
+  padding: 0.4rem 1rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.pdex-filter:hover { border-color: var(--accent); color: var(--text); }
+.pdex-filter.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+.pdex-filter-missing.active { background: #450a0a; border-color: #f87171; color: #f87171; }
+
+/* Grid */
+.pdex-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 0.5rem;
+}
+
+.pdex-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  position: relative;
+  transition: border-color 0.15s;
+}
+
+.pdex-card.pdex-seen     { border-color: #1e40af; background: #0c1a3a; }
+.pdex-card.pdex-captured { border-color: var(--accent); background: #052e16; }
+
+.pdex-card-btns {
+  display: flex;
+  gap: 0.2rem;
+  width: 100%;
+  justify-content: flex-end;
+}
+
+.pdex-btn {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  width: 22px;
+  height: 22px;
+  font-size: 0.6rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  color: var(--text-muted);
+}
+
+.pdex-btn-seen.active  { background: #1e40af; border-color: #3b82f6; color: #fff; }
+.pdex-btn-cap.active   { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+
+.pdex-sprite-wrap {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pdex-sprite {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+video.pdex-sprite {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+}
+
+.pdex-sprite-unknown {
+  width: 56px;
+  height: 56px;
+  background: var(--surface2);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: var(--text-dim);
+}
+
+.pdex-num {
+  font-size: 0.65rem;
+  font-family: monospace;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.pdex-num:hover { color: var(--accent); }
+
+@media (max-width: 480px) {
+  .pdex-grid {
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+  }
+}
