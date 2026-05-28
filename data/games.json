@@ -6,20 +6,20 @@
                 {
                     "name": "Pokémon FireRed",
                     "logo": "assets/games/fire_red.png",
-                    "color": "#e53935",
+                    "color": "#e3251a",
                     "year": 2004,
                     "generation": 3,
                     "region": "Kanto",
-                    "description": "Pokémon FireRed Version é um remake de Pokémon Red Version, um dos primeiros dois títulos da série de videojogos Pokémon. Este jogo para a Game Boy Advance foi lançado originalmente em 2004. Agora, podes desfrutar desta aventura Pokémon clássica na Nintendo Switch e na Nintendo Switch 2!."
+                    "description": "Pokémon FireRed Version is a remake of Pokémon Red Version, one of the first two titles in the Pokémon video game series. This Game Boy Advance game was originally released in 2004. Now, you can enjoy this classic Pokémon adventure on Nintendo Switch and Nintendo Switch 2!"
                 },
                 {
                     "name": "Pokémon LeafGreen",
                     "logo": "assets/games/leaf_green.png",
-                    "color": "#35e544",
+                    "color": "#55b419",
                     "year": 2004,
                     "generation": 3,
                     "region": "Kanto",
-                    "description": "Pokémon LeafGreen Version é um remake de Pokémon Green Version (conhecido como Pokémon Blue Version na Europa), um dos primeiros dois títulos da série de videojogos Pokémon. Este jogo para a Game Boy Advance foi lançado originalmente em 2004. Agora, podes desfrutar desta aventura Pokémon clássica na Nintendo Switch e na Nintendo Switch 2!"
+                    "description": "Pokémon LeafGreen Version is a remake of Pokémon Green Version (known as Pokémon Blue Version in Europe), one of the first two titles in the Pokémon video game series. This Game Boy Advance game was originally released in 2004. Now, you can enjoy this classic Pokémon adventure on Nintendo Switch and Nintendo Switch 2!"
                 }
             ]
         },
