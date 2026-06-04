@@ -2495,6 +2495,11 @@ video.cmp-sprite {
   border-color: #7e22ce;
 }
 
+.pdex-stat-mythical {
+  background: linear-gradient(135deg, #831843, #4c0519);
+  border-color: #be185d;
+}
+
 .pdex-stat-label {
   font-size: 0.75rem;
   font-weight: 600;

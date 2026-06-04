@@ -1705,10 +1705,15 @@ function updatePdexStats() {
   var captured  = 0;
   var seen      = 0;
   var legendary = 0;
+  var mythical  = 0;
 
   State.allPokemon.forEach(function(poke) {
     var p = _pdexProgress[poke.id] || {};
-    if (p.captured) { captured++; if (poke.legendary) legendary++; }
+    if (p.captured) {
+      captured++;
+      if (poke.legendary) legendary++;
+      if (poke.mythical)  mythical++;
+    }
     if (p.seen || p.captured) seen++;
   });
 
@@ -1720,6 +1725,8 @@ function updatePdexStats() {
   document.getElementById('seenPct').textContent        = seenPct + '%';
   document.getElementById('seenCount').textContent      = seen + '/' + total;
   document.getElementById('legendaryCount').textContent = legendary;
+  var mythEl = document.getElementById('mythicalCount');
+  if (mythEl) mythEl.textContent = mythical;
 
   // Update missing button label
   var missing = total - captured;
@@ -1737,6 +1744,7 @@ function renderPdexGrid() {
       case 'captured':  return p.captured;
       case 'seen':      return (p.seen || p.captured) && !p.captured ? true : p.seen && !p.captured;
       case 'legendary': return poke.legendary;
+      case 'mythical':  return poke.mythical;
       case 'missing':   return !p.captured;
       default:          return true;
     }

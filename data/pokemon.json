@@ -10,6 +10,7 @@
       "rideable": false,
       "flying": false,
       "legendary": false,
+      "mythical": false,
       "abilities": ["Blaze", "Solar Power (Hidden)"],
 
       "catchRate": 45,
@@ -38,7 +39,7 @@
       "shinyVideo": "assets/videos/charmander-shiny.webm",
       
       "drops": [
-  { "item": "Charcoal Stick", "chance": 10, "quantity": "1", "image": "assets/images/items/charcoal_stick.png" },
+  { "item": "Charcoal Stick", "chance": 5, "quantity": "1", "image": "assets/images/items/charcoal_stick.png" },
   { "item": "Blaze Powder", "chance": 100, "quantity": "0-1", "image": "assets/images/items/blaze_powder.png" }
 ],
 
@@ -187,6 +188,7 @@
       "rideable": false,
       "flying": false,
       "legendary": false,
+      "mythical": false,
       "abilities": ["Blaze", "Solar Power (Hidden)"],
       "baseStats": {
         "hp": 58,
@@ -197,7 +199,10 @@
         "speed": 80
       },
       "sprite": "assets/images/charmeleon.png",
+      "video": "assets/videos/charmeleon.webm",
       "shinySprite": "assets/images/charmeleon-shiny.png",
+      "shinyVideo": "assets/videos/charmeleon-shiny.webm",
+
       "drops": [
   { "item": "Charcoal Stick", "chance": 10, "quantity": "1", "image": "assets/images/items/charcoal_stick.png" },
   { "item": "Blaze Powder", "chance": 100, "quantity": "0-1", "image": "assets/images/items/blaze_powder.png" }
@@ -362,6 +367,7 @@
       "rideable": true,
       "flying": true,
       "legendary": false,
+      "mythical": false,
       "catchRate": 45,
       "shinyRate": "1/4096",
 

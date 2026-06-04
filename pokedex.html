@@ -57,6 +57,11 @@
         <p class="pdex-stat-pct" id="legendaryCount" style="font-size:2rem">0</p>
         <p class="pdex-stat-count">Captured only</p>
       </div>
+      <div class="pdex-stat-card pdex-stat-mythical">
+        <p class="pdex-stat-label">Mythicals</p>
+        <p class="pdex-stat-pct" id="mythicalCount" style="font-size:2rem">0</p>
+        <p class="pdex-stat-count">Captured only</p>
+      </div>
     </div>
 
     <!-- Filters -->
@@ -65,6 +70,7 @@
       <button class="pdex-filter" onclick="setPdexFilter('captured')">Captured</button>
       <button class="pdex-filter" onclick="setPdexFilter('seen')">Seen</button>
       <button class="pdex-filter" onclick="setPdexFilter('legendary')">Legendary</button>
+      <button class="pdex-filter" onclick="setPdexFilter('mythical')">Mythical</button>
       <button class="pdex-filter pdex-filter-missing" onclick="setPdexFilter('missing')" id="missingBtn">Missing</button>
     </div>
 
