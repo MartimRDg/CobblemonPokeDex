@@ -142,6 +142,7 @@ function renderGrid(pokemonList, resetPage) {
 
   renderPagination(pokemonList.length);
   setTimeout(playAllVideos, 100);
+  staggerGridCards();
 }
 
 function renderPagination(total) {
@@ -315,16 +316,66 @@ function buildStatBar(label, value, max) {
     hp: 'HP', attack: 'Attack', defense: 'Defense',
     spAttack: 'Sp. Atk', spDefense: 'Sp. Def', speed: 'Speed',
   };
-  var color = value >= 100 ? '#4ade80' : value >= 60 ? '#facc15' : '#f87171';
+  var color = value >= 100 ? '#3eca6e' : value >= 60 ? '#facc15' : '#f87171';
   return (
     '<div class="stat-row">' +
       '<span class="stat-label">' + (statLabels[label] || label) + '</span>' +
-      '<span class="stat-value" style="color:' + color + '">' + value + '</span>' +
+      '<span class="stat-value stat-value-anim" style="color:' + color + '" data-target="' + value + '">0</span>' +
       '<div class="stat-bar-bg">' +
-        '<div class="stat-bar-fill" style="width:' + pct + '%;background:' + color + '"></div>' +
+        '<div class="stat-bar-fill stat-bar-anim" style="width:0%;background:' + color + '" data-width="' + pct + '"></div>' +
       '</div>' +
     '</div>'
   );
+}
+
+function animateStatBars(container) {
+  var fills = (container || document).querySelectorAll('.stat-bar-anim');
+  var values = (container || document).querySelectorAll('.stat-value-anim');
+  if (!fills.length) return;
+
+  function runAnimation() {
+    var delay = 0;
+    fills.forEach(function(bar, i) {
+      var target = parseFloat(bar.getAttribute('data-width'));
+      var valueEl = values[i];
+      var targetVal = parseInt(valueEl ? valueEl.getAttribute('data-target') : 0, 10);
+      setTimeout(function() {
+        bar.style.transition = 'width 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+        bar.style.width = target + '%';
+        if (valueEl) {
+          var start = 0;
+          var duration = 700;
+          var startTime = null;
+          function countUp(ts) {
+            if (!startTime) startTime = ts;
+            var progress = Math.min((ts - startTime) / duration, 1);
+            var ease = 1 - Math.pow(1 - progress, 3);
+            valueEl.textContent = Math.round(ease * targetVal);
+            if (progress < 1) requestAnimationFrame(countUp);
+          }
+          requestAnimationFrame(countUp);
+        }
+      }, delay);
+      delay += 80;
+    });
+    fills.forEach(function(bar) { bar.classList.remove('stat-bar-anim'); });
+    values.forEach(function(v) { v.classList.remove('stat-value-anim'); });
+  }
+
+  var section = fills[0].closest('.detail-section') || fills[0].closest('section') || fills[0];
+  if ('IntersectionObserver' in window) {
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          runAnimation();
+          observer.disconnect();
+        }
+      });
+    }, { threshold: 0.25 });
+    observer.observe(section);
+  } else {
+    setTimeout(runAnimation, 100);
+  }
 }
 
 function buildTypeBadges(types, size) {
@@ -859,6 +910,14 @@ function loadPokemonDetail() {
     localStorage.setItem('recentPokemon', JSON.stringify(history.slice(0, 5)));
   } catch(e) {}
 
+  animateStatBars(container);
+  // Scroll-reveal for each section
+  container.querySelectorAll('.detail-section').forEach(function(sec, i) {
+    sec.classList.add('scroll-reveal');
+    sec.style.transitionDelay = (i * 0.07) + 's';
+  });
+  observeNewRevealTargets(container);
+  staggerBiomeTags(container);
   renderMoves(poke);
 }
 
@@ -1166,6 +1225,11 @@ function loadMoveDetail() {
   window._moveLearnerData = learnedBy;
   window._currentMoveLearnerTab = 0;
   renderMoveLearners();
+  container.querySelectorAll('.detail-section').forEach(function(sec, i) {
+    sec.classList.add('scroll-reveal');
+    sec.style.transitionDelay = (i * 0.07) + 's';
+  });
+  observeNewRevealTargets(container);
 }
 
 function renderMoveLearners() {
@@ -1217,6 +1281,7 @@ function renderMoveLearners() {
       '</table>' +
     '</div>';
 
+  staggerMoveRows(content);
   setTimeout(playAllVideos, 100);
 }
 
@@ -1371,6 +1436,99 @@ function showDataError() {
 }
 
 
+
+// ====================== Animation Engine ======================
+
+function initScrollReveal() {
+  if (!('IntersectionObserver' in window)) {
+    document.querySelectorAll('.scroll-reveal').forEach(function(el) { el.classList.add('revealed'); });
+    return;
+  }
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) { entry.target.classList.add('revealed'); io.unobserve(entry.target); }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.scroll-reveal').forEach(function(el) { io.observe(el); });
+}
+
+function observeNewRevealTargets(container) {
+  if (!('IntersectionObserver' in window)) {
+    (container || document).querySelectorAll('.scroll-reveal').forEach(function(el) { el.classList.add('revealed'); });
+    return;
+  }
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) { entry.target.classList.add('revealed'); io.unobserve(entry.target); }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  (container || document).querySelectorAll('.scroll-reveal:not(.revealed)').forEach(function(el) { io.observe(el); });
+}
+
+function staggerGridCards() {
+  document.querySelectorAll('#pokemonGrid .pokemon-card').forEach(function(card, i) {
+    card.style.setProperty('--card-index', i);
+  });
+}
+
+function staggerGameCards() {
+  document.querySelectorAll('.game-card').forEach(function(card, i) {
+    card.style.animationDelay = (i * 0.07) + 's';
+    card.style.animationFillMode = 'both';
+  });
+}
+
+function staggerPdexCards() {
+  document.querySelectorAll('.pdex-card').forEach(function(card, i) {
+    card.style.animationDelay = Math.min(i * 0.018, 0.5) + 's';
+    card.style.animationFillMode = 'both';
+  });
+}
+
+function staggerMoveRows(container) {
+  (container || document).querySelectorAll('.moves-table tbody tr').forEach(function(row, i) {
+    row.style.animationDelay = Math.min(i * 0.025, 0.6) + 's';
+    row.style.animationFillMode = 'both';
+  });
+}
+
+function staggerBiomeTags(container) {
+  (container || document).querySelectorAll('.biome-tag').forEach(function(tag, i) {
+    tag.style.animationDelay = Math.min(i * 0.03, 0.55) + 's';
+    tag.style.animationFillMode = 'both';
+  });
+}
+
+function animateCounter(el, target, duration) {
+  duration = duration || 900;
+  var start = null;
+  var isPercent = el.dataset.pct === '1';
+  function step(ts) {
+    if (!start) start = ts;
+    var p = Math.min((ts - start) / duration, 1);
+    var ease = 1 - Math.pow(1 - p, 3);
+    el.textContent = isPercent ? (ease * target).toFixed(1) + '%' : Math.round(ease * target);
+    if (p < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+function initPdexCounters() {
+  var pcts = document.querySelectorAll('.pdex-stat-pct[data-target]');
+  if (!pcts.length) return;
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        var el = entry.target;
+        var target = parseFloat(el.dataset.target);
+        if (!isNaN(target)) animateCounter(el, target, 900);
+        io.unobserve(el);
+      }
+    });
+  }, { threshold: 0.5 });
+  pcts.forEach(function(el) { io.observe(el); });
+}
+
 // ====================== Init ======================
 document.addEventListener('DOMContentLoaded', async function() {
   showLoadingState();
@@ -1422,7 +1580,10 @@ document.addEventListener('DOMContentLoaded', async function() {
 
   if (document.getElementById('pdexGrid')) {
     loadPersonalPokedex();
+    setTimeout(function() { staggerPdexCards(); initPdexCounters(); }, 50);
   }
+
+  initScrollReveal();
 
   // Back to top visibility
   var backToTop = document.getElementById('backToTop');
@@ -1516,13 +1677,13 @@ window.runCompare = function() {
       var oval  = (other.baseStats || {})[k] || 0;
       var pct   = ((val / 255) * 100).toFixed(1);
       var wins  = val > oval;
-      var color = wins ? '#4ade80' : val === oval ? '#facc15' : '#f87171';
+      var color = wins ? '#3eca6e' : val === oval ? '#facc15' : '#f87171';
       return (
         '<div class="cmp-stat-row">' +
           '<span class="stat-label">' + STAT_LABELS[k] + '</span>' +
-          '<span class="stat-value" style="color:' + color + '">' + val + '</span>' +
+          '<span class="stat-value stat-value-anim" style="color:' + color + '" data-target="' + val + '">0</span>' +
           '<div class="stat-bar-bg">' +
-            '<div class="stat-bar-fill" style="width:' + pct + '%;background:' + color + '"></div>' +
+            '<div class="stat-bar-fill stat-bar-anim" style="width:0%;background:' + color + '" data-width="' + pct + '"></div>' +
           '</div>' +
         '</div>'
       );
@@ -1553,7 +1714,9 @@ window.runCompare = function() {
       pokeCard(p2, total2, p1) +
     '</div>';
 
+  animateStatBars(result);
   setTimeout(playAllVideos, 100);
+  observeNewRevealTargets(result);
 };
 
 window.runCalc = function() {
@@ -1599,6 +1762,7 @@ window.runCalc = function() {
         (baseDmg ? '<span class="calc-chip">Estimated Power: <strong>' + baseDmg + '</strong></span>' : '') +
       '</div>' +
     '</div>';
+  staggerMoveRows(content);
 };
 
 
@@ -1720,13 +1884,16 @@ function updatePdexStats() {
   var capPct  = total ? Math.round((captured / total) * 100) : 0;
   var seenPct = total ? Math.round((seen     / total) * 100) : 0;
 
-  document.getElementById('capturedPct').textContent   = capPct + '%';
+  var capPctEl  = document.getElementById('capturedPct');
+  var seenPctEl = document.getElementById('seenPct');
+  var legEl     = document.getElementById('legendaryCount');
+  var mythEl    = document.getElementById('mythicalCount');
+  if (capPctEl)  { capPctEl.textContent  = capPct + '%';  capPctEl.dataset.target  = capPct;  capPctEl.dataset.pct = '1'; }
+  if (seenPctEl) { seenPctEl.textContent = seenPct + '%'; seenPctEl.dataset.target = seenPct; seenPctEl.dataset.pct = '1'; }
+  if (legEl)     { legEl.textContent     = legendary;     legEl.dataset.target     = legendary; }
+  if (mythEl)    { mythEl.textContent    = mythical;      mythEl.dataset.target    = mythical; }
   document.getElementById('capturedCount').textContent  = captured + '/' + total;
-  document.getElementById('seenPct').textContent        = seenPct + '%';
   document.getElementById('seenCount').textContent      = seen + '/' + total;
-  document.getElementById('legendaryCount').textContent = legendary;
-  var mythEl = document.getElementById('mythicalCount');
-  if (mythEl) mythEl.textContent = mythical;
 
   // Update missing button label
   var missing = total - captured;
@@ -1793,6 +1960,7 @@ window.toggleSeen = function(id) {
   savePdexProgress();
   updatePdexStats();
   renderPdexGrid();
+  staggerPdexCards();
 };
 
 window.toggleCaptured = function(id) {
@@ -1809,6 +1977,7 @@ window.toggleCaptured = function(id) {
   savePdexProgress();
   updatePdexStats();
   renderPdexGrid();
+  staggerPdexCards();
 };
 
 window.setPdexFilter = function(filter) {
@@ -1820,6 +1989,7 @@ window.setPdexFilter = function(filter) {
     }
   });
   renderPdexGrid();
+  staggerPdexCards();
 };
 
 window.exportProgress = function() {

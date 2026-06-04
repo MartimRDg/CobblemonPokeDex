@@ -205,7 +205,7 @@
 
       "drops": [
   { "item": "Charcoal Stick", "chance": 10, "quantity": "1", "image": "assets/images/items/charcoal_stick.png" },
-  { "item": "Blaze Powder", "chance": 100, "quantity": "0-1", "image": "assets/images/items/blaze_powder.png" }
+  { "item": "Blaze Powder", "chance": 100, "quantity": "0-2", "image": "assets/images/items/blaze_powder.png" }
 ],
 
       "weaknesses": ["Water", "Ground", "Rock"],
