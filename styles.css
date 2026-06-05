@@ -1968,3 +1968,525 @@ header h1 {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ======================================================
+   THEME SYSTEM & SETTINGS PANEL
+   ====================================================== */
+
+/* --- Theme: Light --- */
+body.theme-light {
+  --bg:        #f0f4f8;
+  --surface:   #ffffff;
+  --surface2:  #f5f7fa;
+  --surface3:  #eaeff5;
+  --border:    #d0d9e4;
+  --border-hi: #2ba155;
+  --text:      #0f1f2e;
+  --text-muted:#5a7490;
+  --text-dim:  #aabccc;
+  --accent:    #1e9e54;
+  --accent2:   #17b85e;
+  --accent-dim:#daf3e7;
+  --accent-glow: rgba(30,158,84,0.15);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+  --shadow-md: 0 8px 24px rgba(0,0,0,0.1);
+  --shadow-lg: 0 16px 48px rgba(0,0,0,0.12);
+  --shadow-accent: 0 0 32px rgba(30,158,84,0.1);
+}
+
+body.theme-light {
+  background-image: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(30,158,84,0.07) 0%, transparent 60%);
+}
+
+body.theme-light header {
+  background: linear-gradient(180deg, #e8f5ee 0%, #f0f4f8 100%);
+  border-bottom-color: rgba(30,158,84,0.2);
+}
+
+body.theme-light header h1 { color: #0f1f2e; }
+body.theme-light header h1 span { text-shadow: 0 0 20px rgba(30,158,84,0.35); }
+
+body.theme-light header::before {
+  background: radial-gradient(ellipse 60% 120% at 50% 0%, rgba(30,158,84,0.06) 0%, transparent 70%);
+}
+
+body.theme-light .site-nav {
+  background: rgba(255,255,255,0.92);
+}
+
+body.theme-light .nav-link:hover {
+  background: rgba(30,158,84,0.06);
+}
+
+body.theme-light .pokemon-card,
+body.theme-light .top5-card,
+body.theme-light .detail-hero,
+body.theme-light .detail-section,
+body.theme-light .potd-card,
+body.theme-light .cmp-card,
+body.theme-light .deck-card,
+body.theme-light .pdex-card,
+/* ---- Light mode game cards ---- */
+body.theme-light .game-card {
+  background: #ffffff;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.05);
+  /* Override the dark gradient with a light one from the CSS variable */
+  --game-gradient-base: #ffffff;
+}
+
+/* Rewrite the pseudo-element gradient for light mode */
+body.theme-light .game-card::before {
+  background: var(--game-gradient-light, transparent) !important;
+  opacity: 0.55;
+}
+
+body.theme-light .game-card {
+  border-color: var(--game-border-light, var(--border)) !important;
+}
+
+body.theme-light .game-card:hover {
+  box-shadow: 0 6px 24px rgba(0,0,0,0.1), 0 2px 6px rgba(0,0,0,0.06);
+  transform: translateY(-4px);
+  border-color: var(--game-accent, var(--accent)) !important;
+}
+
+body.theme-light .game-name  { color: #0f1f2e; }
+body.theme-light .game-year  { color: #5a7490; }
+body.theme-light .game-desc  { color: #4a6070; }
+
+body.theme-light .game-badge {
+  background: rgba(30,158,84,0.1);
+  border-color: rgba(30,158,84,0.3);
+  color: #1a7a40;
+}
+
+body.theme-light .game-connector-line { background: #d0d9e4; }
+body.theme-light .game-connector-arrow { color: #aabccc; }
+body.theme-light .game-same-row-divider { color: #aabccc; }
+
+body.theme-light .completion-fill {
+  background: linear-gradient(90deg, #15803d, var(--accent));
+}
+
+body.theme-light .pdex-stat-captured  { background: linear-gradient(135deg, #d1fae5, #a7f3d0); border-color: rgba(16,185,129,0.4); }
+body.theme-light .pdex-stat-seen      { background: linear-gradient(135deg, #dbeafe, #bfdbfe); border-color: rgba(59,130,246,0.4); }
+body.theme-light .pdex-stat-legendary { background: linear-gradient(135deg, #ede9fe, #ddd6fe); border-color: rgba(139,92,246,0.4); }
+body.theme-light .pdex-stat-mythical  { background: linear-gradient(135deg, #fce7f3, #fbcfe8); border-color: rgba(236,72,153,0.4); }
+
+body.theme-light .pdex-stat-label { color: rgba(15,31,46,0.5); }
+body.theme-light .pdex-stat-pct   { color: #0f1f2e; }
+body.theme-light .pdex-stat-count { color: rgba(15,31,46,0.45); }
+
+/* --- Theme: Forest (dark green) --- */
+body.theme-forest {
+  --bg:        #040d07;
+  --surface:   #081209;
+  --surface2:  #0d1a0f;
+  --surface3:  #132315;
+  --border:    #1a3320;
+  --border-hi: #4ade80;
+  --text:      #d4edd8;
+  --text-muted:#5a8c64;
+  --text-dim:  #2a4d30;
+  --accent:    #4ade80;
+  --accent2:   #34d058;
+  --accent-dim:#041a08;
+  --accent-glow: rgba(74,222,128,0.2);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.5);
+  --shadow-md: 0 8px 24px rgba(0,0,0,0.6);
+  --shadow-lg: 0 16px 48px rgba(0,0,0,0.7);
+  --shadow-accent: 0 0 32px rgba(74,222,128,0.14);
+}
+
+body.theme-forest {
+  background-image: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(74,222,128,0.07) 0%, transparent 60%);
+}
+
+body.theme-forest header {
+  background: linear-gradient(180deg, #061209 0%, #040d07 100%);
+}
+
+body.theme-forest .completion-fill {
+  background: linear-gradient(90deg, #14532d, #4ade80);
+}
+
+body.theme-forest .pdex-stat-captured  { background: linear-gradient(135deg, #041a08, #082e10); border-color: rgba(34,197,94,0.5); }
+body.theme-forest .pdex-stat-seen      { background: linear-gradient(135deg, #050f1f, #0a1835); border-color: rgba(59,130,246,0.4); }
+body.theme-forest .pdex-stat-legendary { background: linear-gradient(135deg, #180335, #0e0120); border-color: rgba(139,92,246,0.4); }
+body.theme-forest .pdex-stat-mythical  { background: linear-gradient(135deg, #380820, #220310); border-color: rgba(236,72,153,0.4); }
+
+/* --- Theme: Midnight (deep blue-black) --- */
+body.theme-midnight {
+  --bg:        #02040d;
+  --surface:   #080c1a;
+  --surface2:  #0e1226;
+  --surface3:  #141831;
+  --border:    #1e2547;
+  --border-hi: #6b8cff;
+  --text:      #ccd6f6;
+  --text-muted:#5b6d99;
+  --text-dim:  #2a3366;
+  --accent:    #6b8cff;
+  --accent2:   #8ba0ff;
+  --accent-dim:#080d2a;
+  --accent-glow: rgba(107,140,255,0.2);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.5);
+  --shadow-md: 0 8px 24px rgba(0,0,0,0.6);
+  --shadow-lg: 0 16px 48px rgba(0,0,0,0.7);
+  --shadow-accent: 0 0 32px rgba(107,140,255,0.14);
+}
+
+body.theme-midnight {
+  background-image: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(107,140,255,0.07) 0%, transparent 60%);
+}
+
+body.theme-midnight header {
+  background: linear-gradient(180deg, #050818 0%, #02040d 100%);
+  border-bottom-color: rgba(107,140,255,0.15);
+}
+
+body.theme-midnight header h1 span { text-shadow: 0 0 24px rgba(107,140,255,0.5); }
+
+body.theme-midnight .site-nav { background: rgba(8,12,26,0.92); }
+
+body.theme-midnight .completion-fill {
+  background: linear-gradient(90deg, #1e3a8a, #6b8cff);
+}
+
+body.theme-midnight .pdex-stat-captured  { background: linear-gradient(135deg, #071e40, #0b2d5e); border-color: rgba(59,130,246,0.5); }
+body.theme-midnight .pdex-stat-seen      { background: linear-gradient(135deg, #0a0d30, #12164a); border-color: rgba(107,140,255,0.5); }
+body.theme-midnight .pdex-stat-legendary { background: linear-gradient(135deg, #1a0a40, #0e0524); border-color: rgba(139,92,246,0.5); }
+body.theme-midnight .pdex-stat-mythical  { background: linear-gradient(135deg, #3a0a28, #240316); border-color: rgba(236,72,153,0.4); }
+
+/* Midnight accent overrides */
+body.theme-midnight .nav-link.active { color: var(--accent); border-bottom-color: var(--accent); }
+body.theme-midnight .filters-row input:focus,
+body.theme-midnight .filters-row select:focus { box-shadow: 0 0 0 3px rgba(107,140,255,0.15); }
+
+/* ====================== Theme transition ====================== */
+body, body * {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* But not animations — don't slow those down */
+body *, body *::before, body *::after {
+  transition-property: background-color, border-color, color, box-shadow, opacity, transform;
+}
+
+/* ====================== Settings Button ====================== */
+.settings-btn {
+  position: fixed;
+  bottom: 2rem;
+  left: 2rem;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 998;
+  backdrop-filter: blur(8px);
+  transition: border-color 0.2s, color 0.2s, transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s !important;
+  box-shadow: var(--shadow-sm);
+}
+
+.settings-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: var(--shadow-accent);
+}
+
+.settings-btn.open {
+  transform: rotate(90deg);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ====================== Settings Panel ====================== */
+.settings-panel {
+  position: fixed;
+  bottom: 5.5rem;
+  left: 2rem;
+  width: 280px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 1.25rem;
+  z-index: 997;
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+
+  /* hidden state */
+  opacity: 0;
+  transform: translateY(12px) scale(0.97);
+  pointer-events: none;
+  transition: opacity 0.22s ease, transform 0.22s cubic-bezier(0.34,1.56,0.64,1) !important;
+  transform-origin: bottom left;
+}
+
+.settings-panel.open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: all;
+}
+
+.settings-panel-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* ---- Setting Row ---- */
+.setting-row {
+  margin-bottom: 1.1rem;
+}
+
+.setting-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 0.55rem;
+  display: block;
+}
+
+/* ---- Theme Swatches ---- */
+.theme-swatches {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.45rem;
+}
+
+.theme-swatch {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--border);
+  background: var(--surface2);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, transform 0.15s !important;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  font-family: var(--font-base);
+}
+
+.theme-swatch:hover {
+  border-color: var(--accent);
+  color: var(--text);
+  transform: translateY(-1px);
+}
+
+.theme-swatch.active {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+  color: var(--text);
+}
+
+.theme-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 2px solid rgba(255,255,255,0.15);
+}
+
+.dot-dark     { background: radial-gradient(circle at 35% 35%, #1a2230, #050709); }
+.dot-light    { background: radial-gradient(circle at 35% 35%, #ffffff, #d0d9e4); border-color: rgba(0,0,0,0.1); }
+.dot-forest   { background: radial-gradient(circle at 35% 35%, #1a3320, #040d07); }
+.dot-midnight { background: radial-gradient(circle at 35% 35%, #141831, #02040d); }
+
+/* ---- Toggle Switch ---- */
+.setting-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.1rem 0;
+}
+
+.setting-toggle-label {
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.toggle-switch {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.toggle-track {
+  position: absolute;
+  inset: 0;
+  background: var(--surface3);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s !important;
+}
+
+.toggle-track::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  background: var(--text-muted);
+  border-radius: 50%;
+  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), background 0.2s !important;
+}
+
+.toggle-switch input:checked + .toggle-track {
+  background: var(--accent-dim);
+  border-color: var(--accent);
+}
+
+.toggle-switch input:checked + .toggle-track::after {
+  transform: translateX(16px);
+  background: var(--accent);
+}
+
+/* ---- Font Size Slider ---- */
+.font-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.font-slider {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  background: var(--surface3);
+  border-radius: 999px;
+  outline: none;
+  cursor: pointer;
+  border: none;
+}
+
+.font-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: 2px solid var(--surface);
+  box-shadow: 0 0 0 2px var(--accent);
+  transition: transform 0.15s !important;
+}
+
+.font-slider::-webkit-slider-thumb:hover { transform: scale(1.2); }
+.font-slider::-moz-range-thumb {
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--accent); cursor: pointer;
+  border: 2px solid var(--surface);
+}
+
+.font-size-label {
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  min-width: 28px;
+  text-align: right;
+}
+
+/* ---- Divider ---- */
+.settings-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 0.9rem 0;
+  border-radius: 999px;
+}
+
+/* ---- Reset button ---- */
+.settings-reset {
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  border-radius: var(--radius-sm);
+  padding: 0.45rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: var(--font-base);
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s !important;
+  letter-spacing: 0.02em;
+}
+
+.settings-reset:hover { border-color: #f87171; color: #f87171; }
+
+/* ---- Backdrop (mobile) ---- */
+.settings-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 996;
+  background: transparent;
+}
+
+.settings-backdrop.open { display: block; }
+
+@media (max-width: 768px) {
+  .settings-btn  { bottom: 1.25rem; left: 1.25rem; }
+  .settings-panel {
+    bottom: 5rem;
+    left: 1.25rem;
+    right: 1.25rem;
+    width: auto;
+  }
+}
+
+/* Font size scale classes */
+body.font-sm   { font-size: 13px; }
+body.font-md   { font-size: 15px; }
+body.font-lg   { font-size: 17px; }
+body.font-xl   { font-size: 19px; }
+
+/* Reduce motion override from settings */
+body.no-animations *, body.no-animations *::before, body.no-animations *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+/* Compact mode */
+body.compact .pokemon-card .card-inner { padding: 0.75rem 0.65rem; }
+body.compact .pokemon-sprite { width: 80px; height: 80px; }
+body.compact .pokemon-name { font-size: 0.85rem; }
+body.compact .detail-section { padding: 1.1rem 1.25rem; }
+body.compact .detail-hero { padding: 1.25rem; }
+
+
+/* Apply theme classes to <html> as well as <body> (for flash prevention) */
+html.theme-light  { background-color: #f0f4f8; }
+html.theme-forest { background-color: #040d07; }
+html.theme-midnight { background-color: #02040d; }
+html { background-color: #050709; }

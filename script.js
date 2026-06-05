@@ -1035,7 +1035,7 @@ function renderMoves(poke, filtered) {
     return (
       '<tr>' +
         (isLevelTab ? '<td class="move-level">' + (m.level || '\u2014') + '</td>' : '') +
-        '<td class="move-name"><a href="move.html?name=' + encodeURIComponent(m.name) + '&from=' + encodeURIComponent(window.location.href) + '" class="move-link">' + m.name + '</a></td>' +
+        '<td class="move-name"><a href="move.html?name=' + encodeURIComponent(m.name) + '" class="move-link">' + m.name + '</a></td>' +
         '<td>' + typeCell + '</td>' +
         '<td>' + catCell + '</td>' +
         '<td class="text-center move-power">' + (m.power || '\u2014') + '</td>' +
@@ -1144,11 +1144,19 @@ function loadMoveDetail() {
 
   var params   = new URLSearchParams(window.location.search);
   var moveName = decodeURIComponent(params.get('name') || '');
-  var fromUrl  = decodeURIComponent(params.get('from') || 'index.html');
-
-  // Update back link
+  // Use browser history for back navigation - reliable regardless of where user came from
   var backLink = document.getElementById('backLink');
-  if (backLink) backLink.href = fromUrl;
+  if (backLink) {
+    backLink.href = '#';
+    backLink.onclick = function(e) {
+      e.preventDefault();
+      if (history.length > 1) {
+        history.back();
+      } else {
+        location.href = 'index.html';
+      }
+    };
+  }
 
   var move = State.allMoves[moveName];
   if (!move) {
@@ -1302,10 +1310,15 @@ function loadAbilityDetail() {
 
   var params      = new URLSearchParams(window.location.search);
   var abilityName = decodeURIComponent(params.get('name') || '');
-  var fromUrl     = decodeURIComponent(params.get('from') || 'index.html');
 
   var backLink = document.getElementById('backLink');
-  if (backLink) backLink.href = fromUrl;
+  if (backLink) {
+    backLink.href = '#';
+    backLink.onclick = function(e) {
+      e.preventDefault();
+      if (history.length > 1) { history.back(); } else { location.href = 'index.html'; }
+    };
+  }
 
   var ability = State.allAbilities[abilityName];
 
@@ -1437,6 +1450,202 @@ function showDataError() {
 
 
 
+
+// ====================== Settings Panel ======================
+
+var SETTINGS_KEY = 'cobblemon_settings';
+
+var defaultSettings = {
+  theme: 'dark',
+  animations: true,
+  compact: false,
+  fontSize: 1,   // 0=sm, 1=md, 2=lg, 3=xl
+};
+
+var currentSettings = Object.assign({}, defaultSettings);
+
+var fontSizeClasses = ['font-sm', 'font-md', 'font-lg', 'font-xl'];
+var fontSizeLabels  = ['13px', '15px', '17px', '19px'];
+var themes = ['dark', 'light', 'forest', 'midnight'];
+
+function loadSettings() {
+  try {
+    var saved = JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}');
+    currentSettings = Object.assign({}, defaultSettings, saved);
+  } catch(e) {}
+  applySettings(false);
+}
+
+function saveSettings() {
+  try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(currentSettings)); } catch(e) {}
+}
+
+function applySettings(animate) {
+  var body = document.body;
+
+  // Theme
+  themes.forEach(function(t) { body.classList.remove('theme-' + t); });
+  if (currentSettings.theme !== 'dark') {
+    body.classList.add('theme-' + currentSettings.theme);
+  }
+
+  // Animations
+  body.classList.toggle('no-animations', !currentSettings.animations);
+
+  // Compact
+  body.classList.toggle('compact', !!currentSettings.compact);
+
+  // Font size
+  fontSizeClasses.forEach(function(c) { body.classList.remove(c); });
+  body.classList.add(fontSizeClasses[currentSettings.fontSize] || 'font-md');
+
+  // Sync panel UI if it exists
+  syncSettingsUI();
+}
+
+function syncSettingsUI() {
+  // Theme swatches
+  document.querySelectorAll('.theme-swatch').forEach(function(sw) {
+    sw.classList.toggle('active', sw.dataset.theme === currentSettings.theme);
+  });
+
+  // Toggles
+  var animToggle    = document.getElementById('settingAnimations');
+  var compactToggle = document.getElementById('settingCompact');
+  if (animToggle)    animToggle.checked = currentSettings.animations;
+  if (compactToggle) compactToggle.checked = currentSettings.compact;
+
+  // Font size slider
+  var slider    = document.getElementById('settingFontSize');
+  var sizeLabel = document.getElementById('fontSizeLabel');
+  if (slider)    slider.value = currentSettings.fontSize;
+  if (sizeLabel) sizeLabel.textContent = fontSizeLabels[currentSettings.fontSize] || '15px';
+}
+
+function buildSettingsPanel() {
+  // Backdrop
+  var backdrop = document.createElement('div');
+  backdrop.className = 'settings-backdrop';
+  backdrop.id = 'settingsBackdrop';
+  backdrop.addEventListener('click', closeSettings);
+  document.body.appendChild(backdrop);
+
+  // Button
+  var btn = document.createElement('button');
+  btn.className = 'settings-btn';
+  btn.id = 'settingsBtn';
+  btn.title = 'Settings';
+  btn.innerHTML = '⚙️';
+  btn.setAttribute('aria-label', 'Open settings');
+  btn.addEventListener('click', toggleSettings);
+  document.body.appendChild(btn);
+
+  // Panel
+  var panel = document.createElement('div');
+  panel.className = 'settings-panel';
+  panel.id = 'settingsPanel';
+  panel.setAttribute('role', 'dialog');
+  panel.setAttribute('aria-label', 'Settings');
+  panel.innerHTML =
+    '<div class="settings-panel-title">⚙️ &nbsp;Settings</div>' +
+
+    '<div class="setting-row">' +
+      '<span class="setting-label">Theme</span>' +
+      '<div class="theme-swatches">' +
+        '<button class="theme-swatch" data-theme="dark"     onclick="setTheme(\'dark\')"    ><span class="theme-dot dot-dark"></span>Dark</button>' +
+        '<button class="theme-swatch" data-theme="light"    onclick="setTheme(\'light\')"   ><span class="theme-dot dot-light"></span>Light</button>' +
+        '<button class="theme-swatch" data-theme="forest"   onclick="setTheme(\'forest\')"  ><span class="theme-dot dot-forest"></span>Forest</button>' +
+        '<button class="theme-swatch" data-theme="midnight" onclick="setTheme(\'midnight\')"><span class="theme-dot dot-midnight"></span>Midnight</button>' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="settings-divider"></div>' +
+
+    '<div class="setting-row">' +
+      '<div class="setting-toggle-row">' +
+        '<span class="setting-toggle-label">Animations</span>' +
+        '<label class="toggle-switch">' +
+          '<input type="checkbox" id="settingAnimations" onchange="setSetting(\'animations\', this.checked)">' +
+          '<span class="toggle-track"></span>' +
+        '</label>' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="setting-row">' +
+      '<div class="setting-toggle-row">' +
+        '<span class="setting-toggle-label">Compact cards</span>' +
+        '<label class="toggle-switch">' +
+          '<input type="checkbox" id="settingCompact" onchange="setSetting(\'compact\', this.checked)">' +
+          '<span class="toggle-track"></span>' +
+        '</label>' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="setting-row">' +
+      '<span class="setting-label">Font Size</span>' +
+      '<div class="font-slider-row">' +
+        '<span style="font-size:0.7rem;color:var(--text-dim)">A</span>' +
+        '<input type="range" class="font-slider" id="settingFontSize" min="0" max="3" step="1" oninput="setSetting(\'fontSize\', +this.value)">' +
+        '<span style="font-size:0.88rem;color:var(--text-dim)">A</span>' +
+        '<span class="font-size-label" id="fontSizeLabel">15px</span>' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="settings-divider"></div>' +
+
+    '<button class="settings-reset" onclick="resetSettings()">↺ Reset to defaults</button>';
+
+  document.body.appendChild(panel);
+  syncSettingsUI();
+}
+
+function toggleSettings() {
+  var panel    = document.getElementById('settingsPanel');
+  var btn      = document.getElementById('settingsBtn');
+  var backdrop = document.getElementById('settingsBackdrop');
+  if (!panel) return;
+  var isOpen = panel.classList.contains('open');
+  if (isOpen) {
+    closeSettings();
+  } else {
+    panel.classList.add('open');
+    btn.classList.add('open');
+    backdrop.classList.add('open');
+  }
+}
+
+function closeSettings() {
+  var panel    = document.getElementById('settingsPanel');
+  var btn      = document.getElementById('settingsBtn');
+  var backdrop = document.getElementById('settingsBackdrop');
+  if (panel)    panel.classList.remove('open');
+  if (btn)      btn.classList.remove('open');
+  if (backdrop) backdrop.classList.remove('open');
+}
+
+window.setTheme = function(theme) {
+  currentSettings.theme = theme;
+  saveSettings();
+  applySettings(true);
+};
+
+window.setSetting = function(key, value) {
+  currentSettings[key] = value;
+  saveSettings();
+  applySettings(true);
+};
+
+window.resetSettings = function() {
+  currentSettings = Object.assign({}, defaultSettings);
+  saveSettings();
+  applySettings(true);
+};
+
+// Close on Escape
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeSettings();
+});
+
 // ====================== Animation Engine ======================
 
 function initScrollReveal() {
@@ -1531,6 +1740,8 @@ function initPdexCounters() {
 
 // ====================== Init ======================
 document.addEventListener('DOMContentLoaded', async function() {
+  loadSettings();
+  buildSettingsPanel();
   showLoadingState();
   var ok = await loadData();
   hideLoadingState();
@@ -1801,9 +2012,14 @@ function loadGamesPage() {
       var styleVars = '';
       if (gameColor) {
         styleVars += '--game-color:' + gameColor + '08;';
-        styleVars += '--game-border:' + gameColor + '60;';
+        styleVars += '--game-border:' + gameColor + '55;';
         styleVars += '--game-accent:' + gameColor + ';';
-        styleVars += '--game-gradient:linear-gradient(135deg, #080b0f 0%, ' + gameColor + '55 100%);';
+        // Dark mode: dark base bleeding into game colour
+        styleVars += '--game-gradient:linear-gradient(135deg, #080b0f 0%, ' + gameColor + '50 100%);';
+        // Light mode: pure white base with a gentle colour tint
+        styleVars += '--game-gradient-light:linear-gradient(135deg, ' + gameColor + '18 0%, ' + gameColor + '08 100%);';
+        // Light mode border: more visible but not heavy
+        styleVars += '--game-border-light:' + gameColor + '70;';
       }
       styleVars += '--region-color:' + regionColor + ';';
       styleVars += '--region-bg:' + regionColor + '18;';

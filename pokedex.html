@@ -1,6 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>
+    (function() {
+      try {
+        var s = JSON.parse(localStorage.getItem('cobblemon_settings') || '{}');
+        var t = s.theme || 'dark';
+        if (t !== 'dark') document.documentElement.classList.add('theme-' + t);
+        var fonts = ['font-sm','font-md','font-lg','font-xl'];
+        document.documentElement.classList.add(fonts[s.fontSize != null ? s.fontSize : 1] || 'font-md');
+        if (s.compact) document.documentElement.classList.add('compact');
+        if (s.animations === false) document.documentElement.classList.add('no-animations');
+      } catch(e) {}
+    })();
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Personal Pokédex — Cobblemon</title>

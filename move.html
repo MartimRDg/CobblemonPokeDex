@@ -1,9 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>
+    (function() {
+      try {
+        var s = JSON.parse(localStorage.getItem('cobblemon_settings') || '{}');
+        var t = s.theme || 'dark';
+        if (t !== 'dark') document.documentElement.classList.add('theme-' + t);
+        var fonts = ['font-sm','font-md','font-lg','font-xl'];
+        document.documentElement.classList.add(fonts[s.fontSize != null ? s.fontSize : 1] || 'font-md');
+        if (s.compact) document.documentElement.classList.add('compact');
+        if (s.animations === false) document.documentElement.classList.add('no-animations');
+      } catch(e) {}
+    })();
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title id="pageTitle">Move — Cobblemon Pokédex</title>
+  <title>Personal Pokédex — Cobblemon</title>
   <link rel="icon" type="image/png" href="assets/images/favicon.png">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="styles.css">
@@ -19,16 +32,63 @@
         <a href="index.html" class="nav-link">📖 Pokédex</a>
         <a href="compare.html" class="nav-link">⚔️ Compare & Calc</a>
         <a href="games.html" class="nav-link">🎮 Games</a>
-        <a href="pokedex.html" class="nav-link">🗂️ My Pokédex</a>
+        <a href="pokedex.html" class="nav-link active">🗂️ My Pokédex</a>
       </div>
     </div>
   </nav>
 
-  <div class="container" style="margin-top: 2rem; padding-bottom: 4rem;">
+  <div class="container" style="margin-top:2rem;padding-bottom:4rem;">
 
-    <a id="backLink" href="index.html" class="back-link">← Back</a>
+    <!-- Header -->
+    <div class="pdex-header">
+      <div>
+        <h2 class="pdex-title">Personal Pokédex</h2>
+        <p class="pdex-subtitle">Track your own progress across <span id="pdexTotal">0</span> implemented species.</p>
+      </div>
+      <div class="pdex-actions">
+        <button class="pdex-action-btn" onclick="exportProgress()">Export</button>
+        <button class="pdex-action-btn" onclick="document.getElementById('importFile').click()">Import</button>
+        <input type="file" id="importFile" accept=".json" style="display:none" onchange="importProgress(event)">
+        <button class="pdex-action-btn pdex-reset-btn" onclick="resetProgress()">Reset</button>
+      </div>
+    </div>
 
-    <div id="moveDetail"></div>
+    <!-- Stats -->
+    <div class="pdex-stats">
+      <div class="pdex-stat-card pdex-stat-captured">
+        <p class="pdex-stat-label">Captured</p>
+        <p class="pdex-stat-pct" id="capturedPct">0%</p>
+        <p class="pdex-stat-count" id="capturedCount">0/0</p>
+      </div>
+      <div class="pdex-stat-card pdex-stat-seen">
+        <p class="pdex-stat-label">Seen</p>
+        <p class="pdex-stat-pct" id="seenPct">0%</p>
+        <p class="pdex-stat-count" id="seenCount">0/0</p>
+      </div>
+      <div class="pdex-stat-card pdex-stat-legendary">
+        <p class="pdex-stat-label">Legendaries</p>
+        <p class="pdex-stat-pct" id="legendaryCount" style="font-size:2rem">0</p>
+        <p class="pdex-stat-count">Captured only</p>
+      </div>
+      <div class="pdex-stat-card pdex-stat-mythical">
+        <p class="pdex-stat-label">Mythicals</p>
+        <p class="pdex-stat-pct" id="mythicalCount" style="font-size:2rem">0</p>
+        <p class="pdex-stat-count">Captured only</p>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="pdex-filters">
+      <button class="pdex-filter active" onclick="setPdexFilter('all')">All</button>
+      <button class="pdex-filter" onclick="setPdexFilter('captured')">Captured</button>
+      <button class="pdex-filter" onclick="setPdexFilter('seen')">Seen</button>
+      <button class="pdex-filter" onclick="setPdexFilter('legendary')">Legendary</button>
+      <button class="pdex-filter" onclick="setPdexFilter('mythical')">Mythical</button>
+      <button class="pdex-filter pdex-filter-missing" onclick="setPdexFilter('missing')" id="missingBtn">Missing</button>
+    </div>
+
+    <!-- Grid -->
+    <div id="pdexGrid" class="pdex-grid"></div>
 
   </div>
 
