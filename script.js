@@ -363,16 +363,15 @@ function animateStatBars(container) {
   }
 
   var section = fills[0].closest('.detail-section') || fills[0].closest('section') || fills[0];
+  // Use a one-shot observer for stat bars
   if ('IntersectionObserver' in window) {
-    var observer = new IntersectionObserver(function(entries) {
-      entries.forEach(function(entry) {
-        if (entry.isIntersecting) {
-          runAnimation();
-          observer.disconnect();
-        }
-      });
-    }, { threshold: 0.25 });
-    observer.observe(section);
+    var _statIO = new IntersectionObserver(function(entries) {
+      if (entries[0].isIntersecting) {
+        runAnimation();
+        _statIO.disconnect();
+      }
+    }, { threshold: 0.2, rootMargin: '0px 0px -20px 0px' });
+    _statIO.observe(section);
   } else {
     setTimeout(runAnimation, 100);
   }
@@ -1652,35 +1651,51 @@ document.addEventListener('keydown', function(e) {
 
 // ====================== Animation Engine ======================
 
+// Shared IntersectionObserver for scroll-reveal — single instance for whole page
+var _revealObserver = null;
+function getRevealObserver() {
+  if (!_revealObserver && 'IntersectionObserver' in window) {
+    _revealObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          _revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -32px 0px' });
+  }
+  return _revealObserver;
+}
+
 function initScrollReveal() {
-  if (!('IntersectionObserver' in window)) {
+  var io = getRevealObserver();
+  if (!io) {
     document.querySelectorAll('.scroll-reveal').forEach(function(el) { el.classList.add('revealed'); });
     return;
   }
-  var io = new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry) {
-      if (entry.isIntersecting) { entry.target.classList.add('revealed'); io.unobserve(entry.target); }
-    });
-  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
   document.querySelectorAll('.scroll-reveal').forEach(function(el) { io.observe(el); });
 }
 
 function observeNewRevealTargets(container) {
-  if (!('IntersectionObserver' in window)) {
+  var io = getRevealObserver();
+  if (!io) {
     (container || document).querySelectorAll('.scroll-reveal').forEach(function(el) { el.classList.add('revealed'); });
     return;
   }
-  var io = new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry) {
-      if (entry.isIntersecting) { entry.target.classList.add('revealed'); io.unobserve(entry.target); }
-    });
-  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
   (container || document).querySelectorAll('.scroll-reveal:not(.revealed)').forEach(function(el) { io.observe(el); });
 }
 
 function staggerGridCards() {
-  document.querySelectorAll('#pokemonGrid .pokemon-card').forEach(function(card, i) {
-    card.style.setProperty('--card-index', i);
+  // Only animate cards in the first 2 rows (visible viewport) — rest appear instantly
+  var cards = document.querySelectorAll('#pokemonGrid .pokemon-card');
+  var VISIBLE_BATCH = 12; // ~2 rows on any screen size
+  cards.forEach(function(card, i) {
+    if (i < VISIBLE_BATCH) {
+      card.style.setProperty('--card-index', i);
+    } else {
+      card.style.animation = 'none';
+      card.style.opacity = '1';
+    }
   });
 }
 
@@ -1692,16 +1707,26 @@ function staggerGameCards() {
 }
 
 function staggerPdexCards() {
+  // Only animate first 24 cards - rest appear instantly to avoid lag on large grids
   document.querySelectorAll('.pdex-card').forEach(function(card, i) {
-    card.style.animationDelay = Math.min(i * 0.018, 0.5) + 's';
-    card.style.animationFillMode = 'both';
+    if (i < 24) {
+      card.style.animation = 'pdexCardPop 0.3s cubic-bezier(0.34,1.56,0.64,1) ' + (i * 0.018) + 's both';
+    } else {
+      card.style.animation = 'none';
+      card.style.opacity = '1';
+    }
   });
 }
 
 function staggerMoveRows(container) {
+  // Only animate first 12 rows for perf
   (container || document).querySelectorAll('.moves-table tbody tr').forEach(function(row, i) {
-    row.style.animationDelay = Math.min(i * 0.025, 0.6) + 's';
-    row.style.animationFillMode = 'both';
+    if (i < 12) {
+      row.style.animation = 'slideRight 0.28s ease ' + (i * 0.022) + 's both';
+    } else {
+      row.style.animation = 'none';
+      row.style.opacity = '1';
+    }
   });
 }
 
@@ -1767,9 +1792,18 @@ document.addEventListener('DOMContentLoaded', async function() {
     var searchInput = document.getElementById('searchInput');
     var typeFilter  = document.getElementById('typeFilter');
     var genFilter   = document.getElementById('genFilter');
-    if (searchInput) searchInput.addEventListener('input',  function() { filterPokemon(); setTimeout(playAllVideos, 100); });
-    if (typeFilter)  typeFilter.addEventListener('change',  function() { filterPokemon(); setTimeout(playAllVideos, 100); });
-    if (genFilter)   genFilter.addEventListener('change',   function() { filterPokemon(); setTimeout(playAllVideos, 100); });
+    if (searchInput) {
+      var _searchDebounce;
+      searchInput.addEventListener('input', function() {
+        clearTimeout(_searchDebounce);
+        _searchDebounce = setTimeout(function() {
+          filterPokemon();
+          setTimeout(playAllVideos, 100);
+        }, 160);
+      });
+    }
+    if (typeFilter)  typeFilter.addEventListener('change',  function() { filterPokemon(); setTimeout(playAllVideos, 100); }, { passive: true });
+    if (genFilter)   genFilter.addEventListener('change',   function() { filterPokemon(); setTimeout(playAllVideos, 100); }, { passive: true });
   }
 
   if (document.getElementById('pokemonDetail')) {
@@ -1803,9 +1837,16 @@ document.addEventListener('DOMContentLoaded', async function() {
   // Back to top visibility
   var backToTop = document.getElementById('backToTop');
   if (backToTop) {
+    var _scrollTick = false;
     window.addEventListener('scroll', function() {
-      backToTop.classList.toggle('visible', window.scrollY > 400);
-    });
+      if (!_scrollTick) {
+        _scrollTick = true;
+        requestAnimationFrame(function() {
+          backToTop.classList.toggle('visible', window.scrollY > 400);
+          _scrollTick = false;
+        });
+      }
+    }, { passive: true });
   }
 });
 

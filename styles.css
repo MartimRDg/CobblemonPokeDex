@@ -188,6 +188,8 @@ header h1 span {
   flex-shrink: 0;
   position: relative;
   transition: border-color 0.25s, transform 0.25s cubic-bezier(.34,1.56,.64,1), box-shadow 0.25s;
+  will-change: transform;
+  contain: layout style;
 }
 
 .top5-card:hover {
@@ -305,6 +307,8 @@ header h1 span {
   transition: transform 0.22s cubic-bezier(.34,1.56,.64,1), border-color 0.2s, box-shadow 0.2s;
   outline: none;
   position: relative;
+  will-change: transform;
+  contain: layout style;
 }
 
 .pokemon-card::before {
@@ -510,6 +514,7 @@ header h1 span {
   image-rendering: pixelated;
   filter: drop-shadow(0 8px 32px rgba(0,0,0,0.6));
   transition: transform 0.3s ease, filter 0.3s ease;
+  will-change: transform;
 }
 
 .detail-sprite:hover {
@@ -973,9 +978,12 @@ header h1 span {
 .deck-strength-bar-bg { height: 5px; background: var(--surface3); border-radius: 999px; overflow: hidden; }
 .deck-strength-bar-fill { height: 100%; border-radius: 999px; transition: width 0.6s ease; }
 
-video.pokemon-sprite, video.detail-sprite, video.top5-sprite, video.deck-sprite {
+video.pokemon-sprite, video.detail-sprite, video.top5-sprite, video.deck-sprite,
+video.potd-sprite, video.evo-sprite, video.cmp-sprite, video.pdex-sprite, video.learner-sprite {
   object-fit: contain;
   background: transparent;
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 .evo-chain {
@@ -1594,6 +1602,9 @@ video.cmp-sprite { width: 96px; height: 96px; object-fit: contain; }
   gap: 0.25rem;
   position: relative;
   transition: border-color 0.15s;
+  contain: layout style;
+  content-visibility: auto;
+  contain-intrinsic-size: 78px 100px;
 }
 
 .pdex-card.pdex-seen     { border-color: rgba(30,64,175,0.5); background: rgba(6,13,34,0.6); }
@@ -1760,7 +1771,7 @@ header h1 {
   animation: fadeIn 0.5s ease 0.2s both;
 }
 .detail-sprite:not(:hover) {
-  animation: fadeIn 0.5s ease 0.2s both, spriteFloat 4s ease-in-out 1s infinite;
+  animation: fadeIn 0.5s ease 0.2s both;
 }
 
 /* --- Detail name & number --- */
@@ -1793,10 +1804,12 @@ header h1 {
   opacity: 0;
   transform: translateY(24px);
   transition: opacity 0.6s cubic-bezier(0.22,1,0.36,1), transform 0.6s cubic-bezier(0.22,1,0.36,1);
+  will-change: opacity, transform;
 }
 .scroll-reveal.revealed {
   opacity: 1;
   transform: translateY(0);
+  will-change: auto;
 }
 
 /* stagger siblings */
@@ -1840,16 +1853,8 @@ header h1 {
   animation: fadeUp 0.55s cubic-bezier(0.22,1,0.36,1) 0.1s both;
 }
 
-/* POTD shimmer accent */
-.potd-card::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(105deg, transparent 40%, rgba(62,202,110,0.06) 50%, transparent 60%);
-  background-size: 200% 100%;
-  animation: shimmerSlide 3.5s ease-in-out 1s infinite;
-  pointer-events: none;
-}
+/* POTD shimmer accent - removed infinite animation for perf */
+.potd-card::after { display: none; }
 
 /* --- Completion bar fill on load --- */
 .completion-fill {
@@ -1872,10 +1877,8 @@ header h1 {
   animation: gameCardDrop 0.45s cubic-bezier(0.22,1,0.36,1) both;
 }
 
-/* --- Pdex cards pop in --- */
-.pdex-card {
-  animation: pdexCardPop 0.35s cubic-bezier(0.34,1.56,0.64,1) both;
-}
+/* --- Pdex cards: no CSS animation, JS handles stagger selectively --- */
+/* .pdex-card animation removed - JS applies only to visible batch */
 
 /* --- Pdex stat cards --- */
 .pdex-stat-card {
@@ -1893,9 +1896,9 @@ header h1 {
 .cmp-card:nth-child(1) { animation-delay: 0.05s; }
 .cmp-card:nth-child(3) { animation-delay: 0.15s; }
 
-/* winner glow pulse */
+/* winner card - no infinite glow for perf */
 .cmp-card.cmp-winner {
-  animation: scaleIn 0.45s cubic-bezier(0.22,1,0.36,1) 0.05s both, glowPulse 2.5s ease-in-out 0.8s infinite;
+  animation: scaleIn 0.45s cubic-bezier(0.22,1,0.36,1) 0.05s both;
 }
 
 /* --- Move detail hero --- */
@@ -1966,10 +1969,8 @@ header h1 {
 .decks-list .deck-card:nth-child(3) { animation-delay: 0.19s; }
 .decks-list .deck-card:nth-child(4) { animation-delay: 0.26s; }
 
-/* --- Moves table rows fade in --- */
-.moves-table tbody tr {
-  animation: slideRight 0.3s ease both;
-}
+/* --- Moves table rows: animation applied by JS with stagger --- */
+/* Global CSS animation removed to prevent all rows animating at once */
 
 /* --- Biome tags pop in --- */
 .biome-tag {
@@ -2180,13 +2181,18 @@ body.theme-midnight .filters-row input:focus,
 body.theme-midnight .filters-row select:focus { box-shadow: 0 0 0 3px rgba(107,140,255,0.15); }
 
 /* ====================== Theme transition ====================== */
-body, body * {
-  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+/* Only transition theme-sensitive properties, not on every element */
+body {
+  transition: background-color 0.3s ease;
 }
-
-/* But not animations — don't slow those down */
-body *, body *::before, body *::after {
-  transition-property: background-color, border-color, color, box-shadow, opacity, transform;
+.site-nav, .detail-section, .pokemon-card, .top5-card, .potd-card,
+.deck-card, .pdex-card, .pdex-stat-card, .completion-inner,
+.meta-card, .effectiveness-card, .mount-card, .game-card,
+.cmp-card, .settings-panel, .settings-btn, .back-to-top,
+.filters-row input, .filters-row select, .compare-picker,
+.move-filter-input, .move-filter-select, .theme-swatch,
+.pdex-action-btn, .pdex-filter, .page-btn {
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.2s ease;
 }
 
 /* ====================== Settings Button ====================== */
