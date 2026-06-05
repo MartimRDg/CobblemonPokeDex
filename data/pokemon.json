@@ -408,7 +408,9 @@
       "spawnRequirements": "N/A",
 
       "sprite": "assets/images/charizard.png",
+      "video": "assets/videos/charizard.webm",
       "shinySprite": "assets/images/charizard-shiny.png",
+      "shinyVideo":"assets/videos/charizard-shiny.webm",
 
       "riding": {
        "ground": {

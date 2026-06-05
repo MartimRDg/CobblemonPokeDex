@@ -523,10 +523,11 @@ function resolveFormVideo(poke, version) {
   if (v === 'Shiny')  return poke.shinyVideo || null;
   var megas = poke.megaEvolutions || [];
   for (var i = 0; i < megas.length; i++) {
-    if (v === megas[i].name)           return megas[i].video || null;
+    if (v === megas[i].name)            return megas[i].video || null;
     if (v === megas[i].name + ' Shiny') return megas[i].shinyVideo || null;
   }
-  return null;
+  // Unknown version (e.g. pokemon name used as version) — fall back to Normal
+  return poke.video || null;
 }
 
 
@@ -555,6 +556,7 @@ function resolveFormSprite(poke, version) {
     }
   }
 
+  // Unknown version — fall back to Normal sprite
   return poke.sprite;
 }
 
@@ -1495,8 +1497,10 @@ function applySettings(animate) {
   // Compact
   body.classList.toggle('compact', !!currentSettings.compact);
 
-  // Font size
-  fontSizeClasses.forEach(function(c) { body.classList.remove(c); });
+  // Font size — applied to <html> so rem units cascade from :root
+  var html = document.documentElement;
+  fontSizeClasses.forEach(function(c) { body.classList.remove(c); html.classList.remove(c); });
+  html.classList.add(fontSizeClasses[currentSettings.fontSize] || 'font-md');
   body.classList.add(fontSizeClasses[currentSettings.fontSize] || 'font-md');
 
   // Sync panel UI if it exists

@@ -982,9 +982,13 @@ video.pokemon-sprite, video.detail-sprite, video.top5-sprite, video.deck-sprite 
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 0;
   margin-top: 1.25rem;
+  overflow-x: auto;
+  padding: 0.5rem 0.25rem 0.75rem;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
 }
 
 .evo-card {
@@ -998,7 +1002,8 @@ video.pokemon-sprite, video.detail-sprite, video.top5-sprite, video.deck-sprite 
   text-decoration: none;
   color: var(--text);
   transition: border-color 0.2s, background 0.2s, transform 0.2s;
-  min-width: 96px;
+  min-width: 0;
+  flex-shrink: 0;
 }
 
 .evo-card:hover { border-color: rgba(62,202,110,0.4); background: var(--surface2); transform: translateY(-4px); }
@@ -1089,20 +1094,27 @@ video.evo-sprite { width: 78px; height: 78px; object-fit: contain; }
   .stat-row { grid-template-columns: 75px 40px 1fr; }
   .effectiveness-grid { grid-template-columns: 1fr; }
   .spawn-grid { grid-template-columns: 1fr; }
-  .evo-chain { gap: 0.2rem; }
-  .evo-card { padding: 0.6rem 0.7rem; min-width: 72px; }
-  .evo-sprite-wrap { width: 58px; height: 58px; }
-  .evo-sprite, video.evo-sprite { width: 58px; height: 58px; }
-  .evo-arrow-line { width: 18px; }
+  .evo-chain { gap: 0; padding-bottom: 0.75rem; }
+  .evo-card { padding: 0.6rem 0.6rem; min-width: 80px; flex-shrink: 0; }
+  .evo-sprite-wrap { width: 62px; height: 62px; }
+  .evo-sprite, video.evo-sprite { width: 62px; height: 62px; }
+  .evo-arrow-line { width: 20px; }
+  .evo-arrow { flex-shrink: 0; }
   .mount-grid { grid-template-columns: 1fr; }
   .move-tab { padding: 0.5rem 0.8rem; font-size: 0.78rem; }
   .moves-table th, .moves-table td { padding: 0.45rem 0.4rem; font-size: 0.76rem; }
-  .deck-card { flex-direction: column; align-items: flex-start; gap: 0.8rem; }
-  .deck-sprite-wrap { width: 68px; height: 68px; align-self: center; }
-  .deck-moves { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 0.4rem; }
-  .deck-move { width: 100%; }
+  .deck-card { flex-direction: column; align-items: center; gap: 0.75rem; padding: 1rem; }
+  .deck-sprite-wrap { width: 72px; height: 72px; flex-shrink: 0; align-self: center; }
+  .deck-sprite, video.deck-sprite { width: 72px; height: 72px; }
+  .deck-info { gap: 0.45rem; min-width: 0; width: 100%; align-items: center; }
+  .deck-header { justify-content: center; }
+  .deck-name { font-size: 0.9rem; text-align: center; }
+  .deck-game { font-size: 0.64rem; }
+  .deck-moves { display: flex !important; flex-wrap: wrap !important; gap: 0.35rem !important; justify-content: center; }
+  .deck-move { flex: 1 1 calc(50% - 0.35rem); min-width: 130px; }
   .deck-move-name { font-size: 0.73rem; }
-  .deck-move-stats { flex-wrap: wrap; gap: 0.25rem; font-size: 0.63rem; }
+  .deck-move-stats { flex-wrap: wrap; gap: 0.2rem; font-size: 0.62rem; }
+  .deck-strength { width: 100%; }
   .detail-section { padding: 1.25rem 1rem; }
   .form-btns { max-width: 100%; }
   .back-to-top { bottom: 1.25rem; right: 1.25rem; width: 38px; height: 38px; font-size: 0.95rem; }
@@ -1118,8 +1130,8 @@ video.evo-sprite { width: 78px; height: 78px; object-fit: contain; }
   .potd-name { font-size: 1.45rem; }
   .potd-sprite-wrap { width: 96px; height: 96px; }
   .potd-sprite, video.potd-sprite { width: 115px; height: 115px; }
-  .cmp-divider { padding-top: 0; }
-  .cmp-result { flex-direction: column; }
+  .cmp-result { flex-direction: row !important; align-items: stretch; gap: 0.5rem; }
+  .cmp-divider { padding: 0; font-size: 0.68rem; writing-mode: horizontal-tb; }
   .move-hero-top { flex-direction: column; }
   .move-stat-blocks { width: 100%; justify-content: space-between; }
   .move-stat-block { flex: 1; }
@@ -1134,14 +1146,18 @@ video.evo-sprite { width: 78px; height: 78px; object-fit: contain; }
   #pokemonGrid { grid-template-columns: repeat(2, 1fr) !important; }
   .pokemon-sprite { width: 80px; height: 80px; }
   .pokemon-name { font-size: 0.85rem; }
-  .evo-chain { flex-direction: column; align-items: center; }
-  .evo-arrow { flex-direction: row; padding: 0.2rem 0; gap: 0.3rem; }
-  .evo-arrow-line { width: 15px; height: 1px; }
-  .evo-arrow-tip { transform: rotate(90deg); }
+  /* evo-chain stays horizontal with scroll on all sizes */
+  .evo-card { min-width: 72px; padding: 0.5rem; }
+  .evo-sprite-wrap { width: 54px; height: 54px; }
+  .evo-sprite, video.evo-sprite { width: 54px; height: 54px; }
+  .evo-name { font-size: 0.68rem; }
   .stat-row { grid-template-columns: 62px 34px 1fr; gap: 0.35rem; }
   .detail-section { padding: 1rem 0.85rem; }
   .section-title { font-size: 1rem; }
-  .deck-moves { grid-template-columns: 1fr !important; }
+  .deck-card { padding: 0.75rem; gap: 0.5rem; }
+  .deck-sprite-wrap { width: 60px; height: 60px; }
+  .deck-sprite, video.deck-sprite { width: 60px; height: 60px; }
+  .deck-move { flex: 1 1 100%; }
   .pdex-grid { grid-template-columns: repeat(auto-fill, minmax(68px, 1fr)); }
 }
 
@@ -1381,7 +1397,7 @@ video.potd-sprite { width: 160px; height: 160px; object-fit: contain; }
 .compare-picker:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(62,202,110,0.1); }
 .compare-vs { font-size: 1rem; font-weight: 800; color: var(--text-dim); flex-shrink: 0; letter-spacing: 0.05em; }
 
-.cmp-result { display: flex; gap: 0.85rem; align-items: flex-start; flex-wrap: wrap; }
+.cmp-result { display: flex; gap: 0.85rem; align-items: stretch; flex-wrap: wrap; }
 
 .cmp-card {
   flex: 1;
@@ -1420,7 +1436,7 @@ video.cmp-sprite { width: 96px; height: 96px; object-fit: contain; }
 .cmp-stats { margin: 0.75rem 0; text-align: left; }
 .cmp-stat-row { display: grid; grid-template-columns: 68px 38px 1fr; align-items: center; gap: 0.45rem; margin-bottom: 0.35rem; }
 .cmp-total { font-size: 0.88rem; font-weight: 800; font-family: var(--font-mono); margin-top: 0.7rem; }
-.cmp-divider { font-size: 1.1rem; font-weight: 800; color: var(--text-dim); display: flex; align-items: center; padding-top: 6rem; }
+.cmp-divider { font-size: 0.78rem; font-weight: 800; color: var(--text-dim); display: flex; align-items: center; justify-content: center; padding: 0; letter-spacing: 0.1em; flex-shrink: 0; }
 
 /* ====================== Damage Calculator ====================== */
 .calc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.85rem; margin-bottom: 1.5rem; }
@@ -2465,10 +2481,16 @@ body *, body *::before, body *::after {
 }
 
 /* Font size scale classes */
-body.font-sm   { font-size: 13px; }
-body.font-md   { font-size: 15px; }
-body.font-lg   { font-size: 17px; }
-body.font-xl   { font-size: 19px; }
+/* Font size: target :root so rem units cascade correctly */
+body.font-sm,   body.font-sm   :root { font-size: 13px; }
+body.font-md,   body.font-md   :root { font-size: 15px; }
+body.font-lg,   body.font-lg   :root { font-size: 17px; }
+body.font-xl,   body.font-xl   :root { font-size: 19px; }
+
+html.font-sm { font-size: 13px; }
+html.font-md { font-size: 15px; }
+html.font-lg { font-size: 17px; }
+html.font-xl { font-size: 19px; }
 
 /* Reduce motion override from settings */
 body.no-animations *, body.no-animations *::before, body.no-animations *::after {
@@ -2490,3 +2512,189 @@ html.theme-light  { background-color: #f0f4f8; }
 html.theme-forest { background-color: #040d07; }
 html.theme-midnight { background-color: #02040d; }
 html { background-color: #050709; }
+
+/* ======================================================
+   MOBILE OVERHAUL — comprehensive fixes
+   ====================================================== */
+
+/* ---- Global mobile base ---- */
+@media (max-width: 768px) {
+
+  /* Prevent horizontal overflow everywhere */
+  body { overflow-x: hidden; }
+  .container { max-width: 100%; overflow-x: hidden; }
+
+  /* Header tighter */
+  header h1 { font-size: 1.3rem; }
+
+  /* Nav scrolls horizontally, smaller text */
+  .nav-link { font-size: 0.72rem; padding: 0.6rem 0.75rem; gap: 0.25rem; }
+
+  /* Back link */
+  .back-link { font-size: 0.8rem; margin-bottom: 1.25rem; }
+
+  /* Completion bar */
+  .completion-inner { padding: 0.7rem 1rem; }
+
+  /* ---- Pokémon grid ---- */
+  #pokemonGrid { gap: 0.55rem !important; }
+  .card-inner { padding: 0.9rem 0.6rem 0.85rem; }
+  .pokemon-sprite { width: 86px; height: 86px; }
+  .pokemon-name { font-size: 0.82rem; }
+  .pokemon-number { font-size: 0.7rem; }
+
+  /* ---- Detail hero ---- */
+  .detail-number { font-size: 0.78rem; }
+  .detail-name { font-size: 1.75rem; }
+  .detail-hero { border-radius: var(--radius-lg); }
+  .detail-sprite { width: 140px; height: 140px; }
+  video.detail-sprite { width: 140px; height: 140px; }
+  .shiny-btn { font-size: 0.68rem; padding: 0.28rem 0.6rem; }
+
+  /* ---- Meta grid: 2 columns on tablet ---- */
+  .detail-meta-grid { grid-template-columns: 1fr 1fr; }
+
+  /* ---- Stats ---- */
+  .stat-label { font-size: 0.72rem; }
+  .stat-value { font-size: 0.78rem; }
+
+  /* ---- Type effectiveness ---- */
+  .effectiveness-grid { gap: 0.6rem; }
+  .effectiveness-card { padding: 0.8rem 1rem; }
+  .effectiveness-card h3 { font-size: 0.65rem; }
+
+  /* ---- Moves table: hide PP column ---- */
+  .moves-table th:last-child,
+  .moves-table td:last-child { display: none; }
+  .moves-table { font-size: 0.78rem; }
+  .moves-table th, .moves-table td { padding: 0.4rem 0.35rem; }
+  .move-tabs { gap: 0; }
+  .move-tab { font-size: 0.72rem; padding: 0.45rem 0.65rem; }
+
+  /* ---- Evo chain horizontal scroll instead of column ---- */
+  .evo-chain { flex-direction: row !important; overflow-x: auto; justify-content: flex-start; padding: 0.5rem 0.25rem 0.75rem; gap: 0 !important; }
+  .evo-card { min-width: 80px; padding: 0.6rem 0.5rem; }
+  .evo-name { font-size: 0.72rem; }
+
+  /* ---- Deck card ---- */
+  .deck-card { padding: 0.9rem; gap: 0.75rem; border-radius: var(--radius-md); }
+  .deck-name { font-size: 0.88rem; }
+  .deck-game { font-size: 0.65rem; }
+
+  /* ---- POTD ---- */
+  .potd-card { border-radius: var(--radius-lg); gap: 0.5rem; padding: 1rem; }
+  .potd-name { font-size: 1.25rem; }
+
+  /* ---- Compare ---- */
+  .cmp-card { padding: 0.75rem 0.6rem; flex: 1; min-width: 0; width: auto; }
+  .cmp-name { font-size: 0.8rem; }
+  .cmp-stat-row { grid-template-columns: 52px 28px 1fr; gap: 0.25rem; }
+  .cmp-sprite-wrap { width: 72px; height: 72px; }
+  .cmp-sprite, video.cmp-sprite { width: 72px; height: 72px; }
+  .cmp-total { font-size: 0.78rem; }
+  .stat-bar-bg { height: 5px; }
+
+  /* ---- Pagination ---- */
+  .pagination { gap: 0.5rem; }
+  .page-btn { padding: 0.45rem 0.85rem; font-size: 0.78rem; }
+  .page-info { font-size: 0.72rem; min-width: 80px; }
+
+  /* ---- Personal Pokédex ---- */
+  .pdex-header { flex-direction: column; gap: 0.75rem; }
+  .pdex-title { font-size: 1.2rem; }
+  .pdex-stats { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+  .pdex-stat-card { padding: 0.9rem 1rem; }
+  .pdex-stat-pct { font-size: 1.65rem; }
+  .pdex-filters { gap: 0.3rem; }
+  .pdex-filter { padding: 0.32rem 0.7rem; font-size: 0.74rem; }
+  .pdex-grid { grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 0.4rem; }
+
+  /* ---- Settings ---- */
+  .settings-btn { width: 38px; height: 38px; font-size: 0.9rem; }
+
+  /* ---- Games ---- */
+  .game-card { border-radius: var(--radius-md); }
+  .game-name { font-size: 0.88rem; }
+  .game-desc { font-size: 0.74rem; }
+
+  /* ---- Move detail page ---- */
+  .move-stat-block { padding: 0.6rem 0.75rem; }
+  .move-stat-value { font-size: 1.1rem; }
+  .move-description { font-size: 0.84rem; }
+
+  /* ---- Spawn section ---- */
+  .biome-tags { gap: 0.25rem; }
+  .biome-tag { font-size: 0.65rem; padding: 0.2rem 0.45rem; }
+
+  /* ---- Drops ---- */
+  .drop-name { font-size: 0.8rem; }
+  .drop-meta { font-size: 0.68rem; }
+
+  /* ---- Ability tooltip: prevent overflow ---- */
+  .ability-tooltip {
+    left: 0;
+    transform: none;
+    width: calc(100vw - 2rem);
+    max-width: 260px;
+  }
+}
+
+/* ---- Small phones (≤ 390px) ---- */
+@media (max-width: 390px) {
+  .nav-link { font-size: 0.65rem; padding: 0.55rem 0.55rem; }
+  header h1 { font-size: 1.1rem; }
+  #pokemonGrid { grid-template-columns: repeat(2, 1fr) !important; gap: 0.4rem !important; }
+  .card-inner { padding: 0.75rem 0.5rem 0.7rem; }
+  .pokemon-sprite { width: 72px; height: 72px; }
+  .detail-name { font-size: 1.5rem; }
+  .detail-sprite { width: 120px; height: 120px; }
+  video.detail-sprite { width: 120px; height: 120px; }
+  .detail-meta-grid { grid-template-columns: 1fr; }
+  .pdex-stats { grid-template-columns: 1fr 1fr; }
+  .pdex-grid { grid-template-columns: repeat(auto-fill, minmax(62px, 1fr)); }
+  .pdex-sprite-wrap { width: 44px; height: 44px; }
+  .pdex-sprite, video.pdex-sprite { width: 44px; height: 44px; }
+  .cmp-result { gap: 0.3rem; }
+  .cmp-card { padding: 0.6rem 0.45rem; }
+  .cmp-stat-row { grid-template-columns: 42px 24px 1fr; gap: 0.2rem; font-size: 0.65rem; }
+  .cmp-sprite-wrap { width: 58px; height: 58px; }
+  .cmp-sprite, video.cmp-sprite { width: 58px; height: 58px; }
+  .cmp-name { font-size: 0.72rem; }
+  .settings-panel { left: 0.75rem; right: 0.75rem; }
+  .move-tab { font-size: 0.65rem; padding: 0.4rem 0.5rem; }
+  .moves-table th, .moves-table td { font-size: 0.7rem; padding: 0.35rem 0.25rem; }
+  /* Also hide accuracy on very small screens */
+  .moves-table th:nth-last-child(2),
+  .moves-table td:nth-last-child(2) { display: none; }
+}
+
+/* ---- Landscape mobile ---- */
+@media (max-width: 768px) and (orientation: landscape) {
+  header { padding: 0.6rem 0; }
+  .detail-hero { flex-direction: row !important; text-align: left !important; }
+  .detail-types { justify-content: flex-start !important; }
+  .detail-sprite { width: 110px; height: 110px; }
+  video.detail-sprite { width: 110px; height: 110px; }
+  .detail-meta-grid { grid-template-columns: repeat(2, 1fr); }
+  /* evo chain stays horizontal scroll in landscape too */
+  .evo-chain { flex-direction: row !important; flex-wrap: nowrap !important; }
+}
+
+/* ---- Touch improvements ---- */
+@media (hover: none) and (pointer: coarse) {
+  /* Larger tap targets */
+  .nav-link { padding: 0.75rem 0.9rem; }
+  .pdex-btn { width: 24px; height: 24px; }
+  .page-btn { padding: 0.6rem 1rem; }
+  .pdex-filter { padding: 0.45rem 0.9rem; }
+  .move-tab { padding: 0.6rem 0.85rem; }
+  .form-btn { padding: 0.45rem 1rem; }
+  .theme-swatch { padding: 0.75rem; }
+
+  /* Remove hover animations that look broken on touch */
+  .pokemon-card:hover { transform: none; }
+  .top5-card:hover { transform: none; }
+  .potd-card:hover { transform: none; }
+  .evo-card:hover { transform: none; }
+  .deck-card:hover { transform: none; }
+}
