@@ -405,6 +405,124 @@ function buildDrops(drops) {
 
 
 // ====================== Evolution Section ======================
+
+// ====================== Spawn Carousel ======================
+
+function buildSpawnSection(poke) {
+  // Normalise: support both legacy flat fields and future spawnOptions array
+  var options = poke.spawnOptions || [];
+  if (!options.length) {
+    // Build single option from flat fields
+    options = [{
+      bucket:       poke.spawnBucket       || null,
+      level:        poke.spawnLevel        || null,
+      context:      poke.spawnContext      || null,
+      preset:       poke.spawnPreset       || null,
+      biomes:       poke.spawnBiomes       || [],
+      isRaining:    poke.isRaining         || false,
+      requirements: poke.spawnRequirements || null,
+      label:        null
+    }];
+  }
+
+  var total = options.length;
+
+  function buildSlide(opt, idx) {
+    var biomeHTML = (opt.biomes || []).map(function(b) {
+      var isNether = b.toLowerCase().indexOf('nether') !== -1;
+      return '<span class="biome-tag ' + (isNether ? 'biome-nether' : 'biome-normal') + '">' + b + '</span>';
+    }).join('') || '<span class="spawn-empty">Unknown</span>';
+
+    var reqLines = [];
+    if (opt.isRaining === true)  reqLines.push({ label: 'Raining', value: 'Required' });
+    if (opt.isRaining === false) reqLines.push({ label: 'Raining', value: 'Must not be raining' });
+    if (opt.requirements && opt.requirements !== 'N/A') reqLines.push({ label: 'Other', value: opt.requirements });
+    var reqHTML = reqLines.length
+      ? '<div class="spawn-card"><h3 class="spawn-card-title">Requirements</h3><ul class="spawn-detail-list">' +
+          reqLines.map(function(r) { return '<li><span>' + r.label + ':</span> ' + r.value + '</li>'; }).join('') +
+        '</ul></div>'
+      : '<div class="spawn-card"><h3 class="spawn-card-title">Requirements</h3><p class="spawn-empty">None</p></div>';
+
+    return (
+      '<div class="spawn-slide" data-index="' + idx + '" style="display:' + (idx === 0 ? 'flex' : 'none') + '">' +
+        '<div class="spawn-card">' +
+          '<h3 class="spawn-card-title">Spawning Details</h3>' +
+          '<ul class="spawn-detail-list">' +
+            (opt.context && opt.context !== '-' ? '<li><span>Context:</span> ' + opt.context + '</li>' : '') +
+            (opt.bucket   ? '<li><span>Bucket:</span> '  + opt.bucket  + '</li>' : '') +
+            (opt.level    ? '<li><span>Level:</span> '   + opt.level   + '</li>' : '') +
+            (opt.preset   ? '<li><span>Preset:</span> '  + opt.preset  + '</li>' : '') +
+          '</ul>' +
+        '</div>' +
+        reqHTML +
+        '<div class="spawn-card spawn-card-biomes">' +
+          '<h3 class="spawn-card-title">Biomes</h3>' +
+          '<p class="spawn-biome-label">WILL SPAWN IN BIOMES:</p>' +
+          '<div class="biome-tags">' + biomeHTML + '</div>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  var slidesHTML = options.map(function(opt, i) { return buildSlide(opt, i); }).join('');
+
+  var dotsHTML = total > 1
+    ? options.map(function(_, i) {
+        return '<button class="spawn-dot' + (i === 0 ? ' active' : '') + '" onclick="goSpawnSlide(' + i + ')" aria-label="Spawn option ' + (i+1) + '"></button>';
+      }).join('')
+    : '';
+
+  var navHTML = total > 1
+    ? '<div class="spawn-nav">' +
+        '<button class="spawn-nav-btn" onclick="prevSpawnSlide()" aria-label="Previous">&#8249;</button>' +
+        '<div class="spawn-dots">' + dotsHTML + '</div>' +
+        '<button class="spawn-nav-btn" onclick="nextSpawnSlide()" aria-label="Next">&#8250;</button>' +
+      '</div>'
+    : '';
+
+  var counterHTML = total > 1
+    ? '<span class="spawn-counter" id="spawnCounter">1 / ' + total + '</span>'
+    : '';
+
+  return (
+    '<section class="detail-section spawn-section">' +
+      '<div class="spawn-header">' +
+        '<div>' +
+          '<p class="spawn-label">SPAWNING</p>' +
+          '<h2 class="spawn-title">Where does ' + poke.name + ' spawn in Cobblemon?</h2>' +
+        '</div>' +
+        counterHTML +
+      '</div>' +
+      navHTML +
+      '<div class="spawn-slides" id="spawnSlides">' +
+        slidesHTML +
+      '</div>' +
+    '</section>'
+  );
+}
+
+window._spawnIndex = 0;
+
+function goSpawnSlide(idx) {
+  var slides = document.querySelectorAll('.spawn-slide');
+  var dots   = document.querySelectorAll('.spawn-dot');
+  var counter = document.getElementById('spawnCounter');
+  if (!slides.length) return;
+  idx = Math.max(0, Math.min(idx, slides.length - 1));
+
+  slides.forEach(function(s, i) {
+    s.style.display = i === idx ? 'flex' : 'none';
+    s.style.animation = i === idx ? 'spawnSlideIn 0.3s cubic-bezier(0.22,1,0.36,1) both' : '';
+  });
+  dots.forEach(function(d, i) { d.classList.toggle('active', i === idx); });
+  if (counter) counter.textContent = (idx + 1) + ' / ' + slides.length;
+  window._spawnIndex = idx;
+}
+
+window.nextSpawnSlide = function() { goSpawnSlide(window._spawnIndex + 1); };
+window.prevSpawnSlide = function() { goSpawnSlide(window._spawnIndex - 1); };
+window.goSpawnSlide   = goSpawnSlide;
+
 function buildEvolutionSection(poke) {
   if (!poke.evolutions || !poke.evolutions.length) return '';
 
@@ -741,10 +859,6 @@ function loadPokemonDetail() {
     ? Object.entries(poke.baseStats).map(function(e) { return buildStatBar(e[0], e[1]); }).join('')
     : '<p class="text-yellow-400 text-sm">No stats available</p>';
 
-  var biomeHTML = (poke.spawnBiomes || []).map(function(b) {
-    return '<span class="biome-tag">' + b + '</span>';
-  }).join('') || '<span class="text-gray-500 text-sm">Unknown</span>';
-
   var typeBadgesLg = buildTypeBadges(poke.types, 'type-lg');
 
   var shinyBtn = poke.shinySprite
@@ -849,26 +963,7 @@ function loadPokemonDetail() {
         '</div>' +
       '</section>' +
 
-      '<section class="detail-section">' +
-        '<h2 class="section-title">Spawn Info</h2>' +
-        '<p class="section-subtitle">' + (poke.spawnBiomes || []).length + ' biome(s) where ' + poke.name + ' can appear</p>' +
-        '<div class="spawn-grid">' +
-          '<div class="meta-card">' +
-            '<h3 class="meta-title">Details</h3>' +
-            '<table class="spawn-table">' +
-              '<tr><td>Bucket</td><td>' + (poke.spawnBucket || '\u2014') + '</td></tr>' +
-              '<tr><td>Level</td><td>'  + (poke.spawnLevel  || '\u2014') + '</td></tr>' +
-              '<tr><td>Context</td><td>' + (poke.spawnContext || 'Natural') + '</td></tr>' +
-              '<tr><td>Preset</td><td>' + (poke.spawnPreset  || '\u2014') + '</td></tr>' +
-              '<tr><td>Raining</td><td>' + (poke.isRaining ? 'Yes' : 'No') + '</td></tr>' +
-            '</table>' +
-          '</div>' +
-          '<div class="meta-card biome-card">' +
-            '<h3 class="meta-title">Biomes</h3>' +
-            '<div class="biome-tags">' + biomeHTML + '</div>' +
-          '</div>' +
-        '</div>' +
-      '</section>' +
+      buildSpawnSection(poke) +
 
       buildEvolutionSection(poke) +
 

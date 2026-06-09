@@ -2704,3 +2704,214 @@ html { background-color: #050709; }
   .evo-card:hover { transform: none; }
   .deck-card:hover { transform: none; }
 }
+
+/* ======================================================
+   SPAWN CAROUSEL
+   ====================================================== */
+
+@keyframes spawnSlideIn {
+  from { opacity: 0; transform: translateX(12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.spawn-section {
+  padding: 1.75rem 2rem;
+}
+
+/* --- Header --- */
+.spawn-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.spawn-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  margin-bottom: 0.35rem;
+}
+
+.spawn-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  color: var(--text);
+}
+
+.spawn-counter {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  font-family: var(--font-mono);
+  white-space: nowrap;
+  padding-top: 0.25rem;
+  flex-shrink: 0;
+}
+
+/* --- Nav dots + arrows --- */
+.spawn-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.spawn-nav-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+  flex-shrink: 0;
+}
+
+.spawn-nav-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-dim);
+}
+
+.spawn-dots {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.spawn-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--surface3);
+  border: 1.5px solid var(--border);
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, transform 0.2s;
+  padding: 0;
+}
+
+.spawn-dot.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  transform: scale(1.3);
+}
+
+.spawn-dot:hover:not(.active) {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+
+/* --- Slides --- */
+.spawn-slides { width: 100%; }
+
+.spawn-slide {
+  display: flex;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+  animation: spawnSlideIn 0.3s cubic-bezier(0.22,1,0.36,1) both;
+}
+
+/* --- Cards inside slide --- */
+.spawn-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1.1rem 1.25rem;
+  flex: 1;
+  min-width: 160px;
+}
+
+.spawn-card-biomes {
+  flex: 2;
+  min-width: 200px;
+}
+
+.spawn-card-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  margin-bottom: 0.85rem;
+  letter-spacing: -0.01em;
+}
+
+/* --- Detail list --- */
+.spawn-detail-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.spawn-detail-list li {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.spawn-detail-list li span {
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* --- Requirements --- */
+.spawn-req-text {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* --- Biomes sub-label --- */
+.spawn-biome-label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  margin-bottom: 0.65rem;
+}
+
+.spawn-empty {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+/* Biome tag colour variants */
+.biome-normal {
+  background: rgba(62,202,110,0.12);
+  color: #4ade80;
+  border-color: rgba(62,202,110,0.35);
+}
+
+.biome-nether {
+  background: rgba(239,68,68,0.12);
+  color: #f87171;
+  border-color: rgba(239,68,68,0.35);
+}
+
+/* --- Mobile --- */
+@media (max-width: 768px) {
+  .spawn-section { padding: 1.25rem 1rem; }
+  .spawn-title { font-size: 1.15rem; }
+  .spawn-header { gap: 0.5rem; }
+  .spawn-slide { gap: 0.6rem; }
+  .spawn-card { min-width: 140px; padding: 0.9rem 1rem; }
+  .spawn-card-biomes { min-width: 100%; }
+}
+
+@media (max-width: 480px) {
+  .spawn-slide { flex-direction: column; }
+  .spawn-card { min-width: unset; }
+  .spawn-title { font-size: 1rem; }
+}

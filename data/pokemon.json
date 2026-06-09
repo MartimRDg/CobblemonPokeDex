@@ -14,7 +14,6 @@
       "abilities": ["Blaze", "Solar Power (Hidden)"],
 
       "catchRate": 45,
-      "shinyRate": "1/8192",
 
       "evYield": {
         "speed": 1
@@ -47,13 +46,27 @@
       "resistances": ["Fire", "Grass", "Ice", "Bug", "Steel", "Fairy"],
       "immunities": ["None"],
       
-      "spawnBucket": "Ultra-rare",
-      "spawnLevel": "5-31",
-      "spawnContext": "-",
-      "spawnPreset": "Natural",
-      "spawnBiomes": ["Hills", "Volcanic", "Nether/Basalt"],
+      "spawnOptions": [
+    {
+      "label": "Any",
+      "bucket": "Ultra-rare",
+      "level": "5-31",
+      "context": "Grounded",
+      "preset": "",
+      "biomes": ["Hills", "Volcanic"],
       "isRaining": false,
-      "spawnRequirements": "N/A",
+      "requirements": "N/A"
+    },
+    {
+      "label": "Any",
+      "bucket": "Ultra-rare",
+      "level": "5-31",
+      "context": "Grounded",
+      "preset": "",
+      "biomes": ["Nether/Basalt"],
+      "requirements": "N/A"
+    }
+  ],
 
       "evolutions": [
   { "id": 4, "name": "Charmander", "level": null },
@@ -224,13 +237,27 @@
   { "item": "None", "chance": "-", "image": "-" }
 ],
 
-      "spawnBucket": "Ultra-rare",
-      "spawnLevel": "16-40",
-      "spawnContext": "-",
-      "spawnPreset": "Natural",
-      "spawnBiomes": ["Hills", "Volcanic", "Nether/Basalt"],
+      "spawnOptions": [
+    {
+      "label": "Any",
+      "bucket": "Ultra-rare",
+      "level": "16-41",
+      "context": "Grounded",
+      "preset": "",
+      "biomes": ["Hills", "Volcanic"],
       "isRaining": false,
-      "spawnRequirements": "N/A",
+      "requirements": "N/A"
+    },
+    {
+      "label": "Any",
+      "bucket": "Ultra-rare",
+      "level": "16-41",
+      "context": "Grounded",
+      "preset": "",
+      "biomes": ["Nether/Basalt"],
+      "requirements": "N/A"
+    }
+  ],
 
       "evolutions": [
   { "id": 4, "name": "Charmander", "level": null },
@@ -399,13 +426,27 @@
       "resistances": ["Grass", "Fighting", "Bug", "Fire", "Steel", "Fairy"],
       "immunities": ["Ground"],
       
-      "spawnBucket": "Ultra-rare",
-      "spawnLevel": "36-53",
-      "spawnContext": "-",
-      "spawnPreset": "Natural",
-      "spawnBiomes": ["Hills", "Volcanic", "Nether/Basalt"],
-      "isRaining": false,
-      "spawnRequirements": "N/A",
+      "spawnOptions": [
+        {
+         "label": "Any",
+         "bucket": "Ultra-rare",
+         "level": "36-53",
+         "context": "Grounded",
+         "preset": "",
+         "biomes": ["Hills", "Volcanic"],
+         "isRaining": false,
+         "requirements": "N/A"
+        },
+        {
+         "label": "Any",
+         "bucket": "Ultra-rare",
+         "level": "36-53",
+         "context": "Grounded",
+         "preset": "",
+         "biomes": ["Nether/Basalt"],
+         "requirements": "N/A"
+        }
+      ],
 
       "sprite": "assets/images/charizard.png",
       "video": "assets/videos/charizard.webm",
@@ -414,17 +455,17 @@
 
       "riding": {
        "ground": {
-         "acceleration": { "min": 56, "max": 65 },
+         "acceleration": { "min": 50, "max": 75 },
          "jump":         { "min": 15, "max": 25 },
-         "skill":        { "min": 10, "max": 25 },
-         "speed":        { "min": 25, "max": 40 },
+         "skill":        { "min": 50, "max": 70 },
+         "speed":        { "min": 45, "max": 65 },
          "stamina":      { "min": 20, "max": 30 }
         },
        "air": {
-         "acceleration": { "min": 45, "max": 75 },
+         "acceleration": { "min": 80, "max": 100 },
          "jump":         { "min": 30, "max": 65 },
-         "skill":        { "min": 55, "max": 85 },
-         "speed":        { "min": 30, "max": 65 },
+         "skill":        { "min": 75, "max": 95 },
+         "speed":        { "min": 95, "max": 115 },
          "stamina":      { "min": 45, "max": 75 }
         }
       },
