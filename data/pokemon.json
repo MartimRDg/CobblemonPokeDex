@@ -32,10 +32,8 @@
         "speed": 65
       },
 
-      "sprite": "assets/images/charmander.png",
-      "video": "assets/videos/charmander.webm",
-      "shinySprite": "assets/images/charmander-shiny.png",
-      "shinyVideo": "assets/videos/charmander-shiny.webm",
+      "video": "assets/videos/charmander.gif",
+      "shinyVideo": "assets/videos/charmander-shiny.gif",
       
       "drops": [
   { "item": "Charcoal Stick", "chance": 5, "quantity": "1", "image": "assets/images/items/charcoal_stick.png" },
@@ -211,10 +209,9 @@
         "spDefense": 65,
         "speed": 80
       },
-      "sprite": "assets/images/charmeleon.png",
-      "video": "assets/videos/charmeleon.webm",
-      "shinySprite": "assets/images/charmeleon-shiny.png",
-      "shinyVideo": "assets/videos/charmeleon-shiny.webm",
+
+      "video": "assets/videos/charmeleon.gif",
+      "shinyVideo": "assets/videos/charmeleon-shiny.gif",
 
       "drops": [
   { "item": "Charcoal Stick", "chance": 10, "quantity": "1", "image": "assets/images/items/charcoal_stick.png" },
@@ -396,7 +393,6 @@
       "legendary": false,
       "mythical": false,
       "catchRate": 45,
-      "shinyRate": "1/4096",
 
       "abilities": ["Blaze", "Solar Power (Hidden)"],
 
@@ -448,10 +444,8 @@
         }
       ],
 
-      "sprite": "assets/images/charizard.png",
-      "video": "assets/videos/charizard.webm",
-      "shinySprite": "assets/images/charizard-shiny.png",
-      "shinyVideo":"assets/videos/charizard-shiny.webm",
+      "video": "assets/videos/charizard.gif",
+      "shinyVideo":"assets/videos/charizard-shiny.gif",
 
       "riding": {
        "ground": {
@@ -474,11 +468,18 @@
 
       "decks": [
         {
-         "name": "",
+         "name": "Original",
          "game": "Pokemon Fire Red Version",
          "version": "Charizard",
-         "logo": "assets/images/games/pokemon.png",
+         "logo": "assets/games/fire_red.png",
          "moves": ["Cut", "Flamethrower", "Wing Attack", "Dragon Rage"]
+        },
+        {
+         "name": "",
+         "game": "Cobbleverse",
+         "version": "Mega Charizard X",
+         "logo": "assets/games/cobbleverse.png",
+         "moves": ["Flamethrower", "Wing Attack", "Dragon Claw", "Shadow Claw"]
         }
       ],
 
@@ -514,8 +515,9 @@
         "immunities": ["Ground"]
       },
       {
-        "name": "Charizard Gigantamax",
+        "name": "Gigantamax Charizard",
         "sprite": "assets/images/charizard-gmax.png",
+        "shinySprite":"assets/images/charizard-gmax-shiny.png",
         "abilities": [" G-Max Wildfire"],
         "types": ["Fire", "Flying"],
 

@@ -861,8 +861,8 @@ function loadPokemonDetail() {
 
   var typeBadgesLg = buildTypeBadges(poke.types, 'type-lg');
 
-  var shinyBtn = poke.shinySprite
-    ? '<button id="shinyBtn" onclick="toggleShiny()" class="shiny-btn" title="Toggle Shiny">&#10024; <span id="shinyLabel">SHINY</span></button>'
+  var shinyBtn = (poke.shinySprite || poke.shinyVideo)
+    ? '<button id="shinyBtn" onclick="toggleShiny()" class="shiny-btn" title="Toggle shiny form"><span id="shinyLabel">Shiny</span></button>'
     : '';
 
   var abilitiesHTML = (poke.abilities || []).map(function(a) {
@@ -910,9 +910,9 @@ function loadPokemonDetail() {
       '<div class="detail-hero">' +
         '<div class="sprite-container">' +
           '<div class="sprite-wrap">' +
-          buildSpriteEl(poke.video || poke.sprite, poke.name, 'detail-sprite', 'assets/images/placeholder.png') +
+            buildSpriteEl(poke.video || poke.sprite, poke.name, 'detail-sprite', 'assets/images/placeholder.png') +
+          '</div>' +
           shinyBtn +
-        '</div>' +
           megaButtons +
         '</div>' +
 
@@ -1023,30 +1023,43 @@ window.switchForm = function(index) {
   d.formIndex = index;
   d.isShiny   = false;
 
-  var form = index === 0
+  var isNormal = index === 0;
+  var form = isNormal
     ? {
-        sprite: d.poke.sprite,
+        name:        d.poke.name,
+        sprite:      d.poke.sprite,
         shinySprite: d.poke.shinySprite,
-        abilities: d.poke.abilities,
-        types: d.poke.types,
-        weaknesses: d.poke.weaknesses,
+        shinyVideo:  d.poke.shinyVideo,
+        video:       d.poke.video,
+        abilities:   d.poke.abilities,
+        types:       d.poke.types,
+        weaknesses:  d.poke.weaknesses,
         resistances: d.poke.resistances,
-        immunities: d.poke.immunities,
+        immunities:  d.poke.immunities,
       }
     : d.poke.megaEvolutions[index - 1];
 
   // Sprite — swap video or image
   var spriteWrap = document.querySelector('.sprite-wrap');
   if (spriteWrap) {
-    var newSrc = resolveFormVideo(d.poke, form.name || (index === 0 ? 'Normal' : '')) || form.sprite;
+    var newSrc = resolveFormVideo(d.poke, isNormal ? 'Normal' : form.name) || form.video || form.sprite;
     var existing = spriteWrap.querySelector('video, img');
     if (existing) existing.remove();
-    spriteWrap.insertAdjacentHTML('afterbegin', buildSpriteEl(newSrc, d.poke.name, 'detail-sprite', 'assets/images/placeholder.png'));
+    spriteWrap.insertAdjacentHTML('afterbegin', buildSpriteEl(newSrc, form.name || d.poke.name, 'detail-sprite', 'assets/images/placeholder.png'));
   }
+
+  // Update page title + detail-name heading
+  var displayName = form.name || d.poke.name;
+  var nameEl = document.querySelector('.detail-name');
+  if (nameEl) nameEl.textContent = displayName;
+  document.title = displayName + ' (#' + (d.poke.number || d.poke.id) + ') — Cobblemon Pokédex';
+
+  // Shiny button — show if any shiny asset exists for this form
+  var hasShiny = !!(form.shinySprite || form.shinyVideo);
   var btn   = document.getElementById('shinyBtn');
   var label = document.getElementById('shinyLabel');
-  if (btn) { btn.classList.remove('active'); btn.style.display = form.shinySprite ? '' : 'none'; }
-  if (label) label.textContent = 'SHINY';
+  if (btn) { btn.classList.remove('active'); btn.style.display = hasShiny ? '' : 'none'; }
+  if (label) label.textContent = 'Shiny';
 
   // Abilities
   var abilitiesEl = document.getElementById('pokemonAbilities');
@@ -1212,7 +1225,7 @@ window.toggleShiny = function() {
     ? { sprite: d.poke.sprite, shinySprite: d.poke.shinySprite, shinyVideo: d.poke.shinyVideo }
     : d.poke.megaEvolutions[d.formIndex - 1];
 
-  if (!form.shinySprite && !form.shinyVideo) return;
+  if (!form.shinySprite && !form.shinyVideo) { return; }
   d.isShiny = !d.isShiny;
 
   var src = d.isShiny
