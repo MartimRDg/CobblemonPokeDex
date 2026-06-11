@@ -501,7 +501,16 @@
 
         "weaknesses": ["Water", "Ground", "Rock", "Dragon", "Fairy"],
         "resistances": ["Fire", "Grass", "Bug", "Steel", "Electric"],
-        "immunities": ["None"]
+        "immunities": ["None"],
+
+        "baseStats": {
+        "hp": 78,
+        "attack": 130,
+        "defense": 111,
+        "spAttack": 130,
+        "spDefense": 85,
+        "speed": 100
+       }
       },
       {
         "name": "Mega Charizard Y",
@@ -512,7 +521,16 @@
 
         "weaknesses": ["Electric", "Ice", "Rock", "Water"],
         "resistances": ["Grass", "Fighting", "Bug", "Fire", "Steel", "Fairy"],
-        "immunities": ["Ground"]
+        "immunities": ["Ground"],
+
+        "baseStats": {
+        "hp": 78,
+        "attack": 104,
+        "defense": 78,
+        "spAttack": 159,
+        "spDefense": 115,
+        "speed": 100
+       }
       },
       {
         "name": "Gigantamax Charizard",
@@ -523,7 +541,16 @@
 
         "weaknesses": ["Electric", "Ice", "Rock", "Water"],
         "resistances": ["Grass", "Fighting", "Bug", "Fire", "Steel", "Fairy"],
-        "immunities": ["Ground"]
+        "immunities": ["Ground"],
+
+        "baseStats": {
+        "hp": 78,
+        "attack": 84,
+        "defense": 78,
+        "spAttack": 109,
+        "spDefense": 85,
+        "speed": 100
+       }
       } 
     ],
 

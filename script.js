@@ -123,7 +123,10 @@ function renderGrid(pokemonList, resetPage) {
 
   grid.innerHTML = page.map(function(poke) {
     var typeBadges = (poke.types || [])
-      .map(function(t) { return '<span class="type-badge type-' + t.toLowerCase() + '">' + t + '</span>'; })
+      .map(function(t) {
+        var tl = t.toLowerCase();
+        return '<span class="type-badge type-' + tl + '"><img src="assets/images/elements/' + tl + '.png" class="type-icon" alt="" onerror="this.style.display=\'none\'">' + t + '</span>';
+      })
       .join('');
     var num = poke.number || String(poke.id).padStart(4, '0');
     return (
@@ -240,7 +243,8 @@ function renderRecentlyViewed() {
     var sprite = poke.video || poke.sprite;
     var num    = poke.number || String(poke.id).padStart(4, '0');
     var types  = (poke.types || []).map(function(t) {
-      return '<span class="type-badge type-' + t.toLowerCase() + ' type-xs">' + t + '</span>';
+      var tl = t.toLowerCase();
+      return '<span class="type-badge type-' + tl + ' type-xs"><img src="assets/images/elements/' + tl + '.png" class="type-icon" alt="" onerror="this.style.display=\'none\'">' + t + '</span>';
     }).join('');
     return (
       '<a href="pokemon.html?id=' + poke.id + '" class="top5-card" style="text-decoration:none;color:inherit;min-width:140px;">' +
@@ -380,7 +384,11 @@ function animateStatBars(container) {
 function buildTypeBadges(types, size) {
   size = size || '';
   return (types || [])
-    .map(function(t) { return '<span class="type-badge type-' + t.toLowerCase() + ' ' + size + '">' + t + '</span>'; })
+    .map(function(t) {
+      var tl = t.toLowerCase();
+      var icon = '<img src="assets/images/elements/' + tl + '.png" class="type-icon" alt="" onerror="this.style.display=\'none\'">';
+      return '<span class="type-badge type-' + tl + ' ' + size + '">' + icon + t + '</span>';
+    })
     .join('');
 }
 
@@ -706,7 +714,7 @@ function buildDecksSection(poke) {
         '<div class="deck-move">' +
           '<div class="deck-move-top">' +
             '<span class="deck-move-name">' + moveName + '</span>' +
-            (typeLabel ? '<span class="type-badge ' + typeClass + ' type-xs">' + typeLabel + '</span>' : '') +
+            (typeLabel ? '<span class="type-badge ' + typeClass + ' type-xs"><img src="assets/images/elements/' + move.type.toLowerCase() + '.png" class="type-icon" alt="" onerror="this.style.display=\'none\'">' + typeLabel + '</span>' : '') +
           '</div>' +
           '<div class="deck-move-stats">' +
             '<span title="Power">Pwr: ' + power + '</span>' +
@@ -1048,6 +1056,15 @@ window.switchForm = function(index) {
     spriteWrap.insertAdjacentHTML('afterbegin', buildSpriteEl(newSrc, form.name || d.poke.name, 'detail-sprite', 'assets/images/placeholder.png'));
   }
 
+  // Update stats if this form has its own baseStats
+  var statsGrid = document.querySelector('.stats-grid');
+  var statsSource = (form.baseStats && Object.keys(form.baseStats).length) ? form.baseStats : d.poke.baseStats;
+  if (statsGrid && statsSource) {
+    var newStats = Object.entries(statsSource).map(function(e) { return buildStatBar(e[0], e[1]); }).join('');
+    statsGrid.innerHTML = newStats;
+    animateStatBars(statsGrid.closest('.detail-section') || statsGrid);
+  }
+
   // Update page title + detail-name heading
   var displayName = form.name || d.poke.name;
   var nameEl = document.querySelector('.detail-name');
@@ -1135,7 +1152,7 @@ function renderMoves(poke, filtered) {
 
   var rows = moves.map(function(m) {
     var typeCell = m.type
-      ? '<span class="type-badge type-' + m.type.toLowerCase() + ' type-xs">' + m.type + '</span>'
+      ? '<span class="type-badge type-' + m.type.toLowerCase() + ' type-xs"><img src="assets/images/elements/' + m.type.toLowerCase() + '.png" class="type-icon" alt="" onerror="this.style.display=\'none\'">' + m.type + '</span>'
       : '\u2014';
     var catColor = categoryColors[m.category] || '#9ca3af';
     var catCell  = m.category
@@ -1320,7 +1337,7 @@ function loadMoveDetail() {
           '<div>' +
             '<h1 class="move-hero-name">' + moveName + '</h1>' +
             '<div class="move-hero-badges">' +
-              '<span class="type-badge type-' + (move.type || 'normal').toLowerCase() + ' type-lg">' + (move.type || '—') + '</span>' +
+              '<span class="type-badge type-' + (move.type || 'normal').toLowerCase() + ' type-lg"><img src="assets/images/elements/' + (move.type || 'normal').toLowerCase() + '.png" class="type-icon" alt="" onerror="this.style.display=\'none\'">' + (move.type || '—') + '</span>' +
               '<span class="move-category-badge" style="background:' + catColor + '20;border-color:' + catColor + ';color:' + catColor + '">' + (move.category || '—') + '</span>' +
             '</div>' +
           '</div>' +
