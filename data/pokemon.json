@@ -709,6 +709,408 @@
          { "name": "Twister" }
        ]
      }
+    },
+    {
+      "_comment": "Base Stats",
+
+      "id": 833,
+      "name": "Chewtle",
+      "number": "0833",
+      "types": ["Water"],
+      "generation": 8,
+      "rarity": "Common",
+      "rideable": false,
+      "flying": false,
+      "legendary": false,
+      "mythical": false,
+      "catchRate": 255,
+
+      "abilities": ["Strong Jaw", "Shell Armor", "Swift Swim (Hidden)"],
+
+      "baseStats": {
+        "hp": 50,
+        "attack": 64,
+        "defense": 50,
+        "spAttack": 38,
+        "spDefense": 85,
+        "speed": 44
+       },
+
+       "evYield": {
+        "attack": 1
+       },
+
+       "drops": [
+        { "item": "Turtle Scute", "chance": 100, "quantity": "0-1", "image": "assets/images/items/turtle_scute.png"},
+        { "item": "Rindo Berry", "chance": 2.5, "quantity": "1", "image": "assets/images/items/rindo_berry.png"}
+       ],
+
+      "weaknesses": ["Electric", "Grass"],
+      "resistances": ["Fire", "Water", "Ice", "Steel"],
+      "immunities": ["None"],
+      
+      "spawnOptions": [
+        {
+         "label": "Any",
+         "bucket": "Common",
+         "level": "3-28",
+         "context": "Fishing",
+         "preset": "",
+         "biomes": ["Arid", "Fresh Water", "Hills", "Jungle", "Temperate"],
+         "notbiomes": ["Freezing"],
+         "seeSky": true,
+         "requirements": "N/A"
+        },
+        {
+         "label": "Any",
+         "bucket": "Common",
+         "level": "3-28",
+         "context": "Fishing",
+         "preset": "",
+         "biomes": ["Arid", "Fresh Water", "Hills", "Jungle", "Temperate"],
+         "notBiomes": ["Freezing"],
+         "seeSky": false,
+         "requirements": "N/A"
+        },
+        {
+         "label": "Any",
+         "bucket": "Common",
+         "level": "3-28",
+         "context": "Grounded",
+         "preset": "",
+         "biomes": ["Fresh Water"],
+         "notBiomes": ["Freezing"],
+         "requirements": "N/A"
+        },
+        {
+         "label": "Any",
+         "bucket": "Common",
+         "level": "3-28",
+         "context": "Seafloor",
+         "preset": "",
+         "biomes": ["Fresh Water"],
+         "notBiomes": ["Freezing"],
+         "seeSky": true,
+         "requirements": "N/A"
+        }
+      ],
+
+      "video": "assets/videos/chewtle.gif",
+      "shinyVideo":"assets/videos/chewtle-shiny.gif",
+
+      "_comment2": "Evolutions",
+      
+      "evolutions": [
+       { "id": 833, "name": "Chewtle", "level": null },
+       { "id": 834, "name": "Drednaw", "level": 22 }
+      ],
+
+      "_comment3": "Movesets",
+
+      "moves": {
+        "level": [
+         { "level": 1, "name": "Tackle" },
+         { "level": 1, "name": "Water Gun" },
+         { "level": 7, "name": "Bite" },
+         { "level": 14, "name": "Protect" },
+         { "level": 21, "name": "Headbutt" },
+         { "level": 28, "name": "Counter" },
+         { "level": 35, "name": "Jaw Lock" },
+         { "level": 42, "name": "Liquidation" },
+         { "level": 49, "name": "Body Slam" }
+        ],
+        "tm": [
+         { "name": "Assurance" },
+         { "name": "Body Slam" },
+         { "name": "Chilling Water" },
+         { "name": "Crunch" },
+         { "name": "Dive" },  
+         { "name": "Dragon Tail" },
+         { "name": "Endure" },
+         { "name": "Facade" },
+         { "name": "False Swipe" },
+         { "name": "Gastro Acid" },
+         { "name": "Headbutt" },
+         { "name": "Hydro Pump" },
+         { "name": "Ice Fang" },
+         { "name": "Liquidation" },
+         { "name": "Mud Shot" },
+         { "name": "Payback" },
+         { "name": "Poison Jab" },
+         { "name": "Protect" },
+         { "name": "Rain Dance" },
+         { "name": "Rest" },
+         { "name": "Revenge" },
+         { "name": "Scary Face" },
+         { "name": "Skitter Smack" },
+         { "name": "Sleep Talk" },
+         { "name": "Stomping Tantrum" },
+         { "name": "Substitute" },
+         { "name": "Surf" },
+         { "name": "Take Down" },
+         { "name": "Tera Blast" },
+         { "name": "Waterfall" },
+         { "name": "Water Pulse" },
+         { "name": "Whirlpool" }
+        ],
+        "egg": [
+         { "name": "Dragon Tail" },
+         { "name": "Gastro Acid" },
+         { "name": "Shell Smash" },
+         { "name": "Skull Bash" }
+        ],
+        "tutor": [
+         { "name": "Dive" },
+         { "name": "False Swipe" },
+         { "name": "Gastro Acid" },
+         { "name": "Ice Fang" },
+         { "name": "Liquidation" },
+         { "name": "Poison Jab" },
+         { "name": "Rest" },
+         { "name": "Skitter Smack" },
+         { "name": "Sleep Talk" },
+         { "name": "Stomping Tantrum" },
+         { "name": "Water Pulse" }
+       ]
+     }
+    },
+    {
+      "_comment": "Base Stats",
+
+      "id": 834,
+      "name": "Drednaw",
+      "number": "0834",
+      "types": ["Water", "Rock"],
+      "generation": 8,
+      "rarity": "Common",
+      "rideable": false,
+      "flying": false,
+      "legendary": false,
+      "mythical": false,
+      "catchRate": 75,
+
+      "abilities": ["Strong Jaw", "Shell Armor", "Swift Swim (Hidden)"],
+
+      "baseStats": {
+        "hp": 90,
+        "attack": 115,
+        "defense": 90,
+        "spAttack": 48,
+        "spDefense": 68,
+        "speed": 74
+       },
+
+       "evYield": {
+        "attack": 2
+       },
+
+       "drops": [
+        { "item": "Turtle Scute", "chance": 100, "quantity": "0-2", "image": "assets/images/items/turtle_scute.png"},
+        { "item": "Rindo Berry", "chance": 5, "quantity": "1", "image": "assets/images/items/rindo_berry.png"}
+       ],
+
+      "weaknesses": ["Electric", "Grass", "Water", "Fighting", "Ground", "Steel"],
+      "resistances": ["Fire", "Ice", "Normal", "Poison", "Flying"],
+      "immunities": ["None"],
+      
+      "spawnOptions": [
+        {
+         "label": "Any",
+         "bucket": "Common",
+         "level": "22-49",
+         "context": "Fishing",
+         "preset": "",
+         "biomes": ["Arid", "Fresh Water", "Hills", "Jungle", "Temperate"],
+         "notBiomes": ["Freezing"],
+         "seeSky": true,
+         "requirements": "N/A"
+        },
+        {
+         "label": "Any",
+         "bucket": "Common",
+         "level": "22-49",
+         "context": "Fishing",
+         "preset": "",
+         "biomes": ["Arid", "Fresh Water", "Hills", "Jungle", "Temperate"],
+         "notBiomes": ["Freezing"],
+         "seeSky": false,
+         "requirements": "N/A"
+        },
+        {
+         "label": "Any",
+         "bucket": "Common",
+         "level": "22-49",
+         "context": "Grounded",
+         "preset": "",
+         "biomes": ["Fresh Water"],
+         "notBiomes": ["Freezing"],
+         "requirements": "N/A"
+        },
+        {
+         "label": "Any",
+         "bucket": "Common",
+         "level": "22-49",
+         "context": "Seafloor",
+         "preset": "",
+         "biomes": ["Fresh Water"],
+         "notBiomes": ["Freezing"],
+         "seeSky": true,
+         "requirements": "N/A"
+        }
+      ],
+
+      "video": "assets/videos/drednaw.gif",
+      "shinyVideo":"assets/videos/drednaw-shiny.gif",
+
+      "_comment2": "Evolutions",
+      
+      "evolutions": [
+       { "id": 833, "name": "Chewtle", "level": null },
+       { "id": 834, "name": "Drednaw", "level": 22 }
+      ],
+
+      "megaEvolutions": [
+       {
+         "name": "Gigantamax Drednaw",
+         "video": "assets/videos/drednaw-gmax.gif",
+         "shinyVideo":"assets/videos/drednaw-gmax-shiny.gif",
+         "abilities": [" G-Max Stonesurge"],
+         "types": ["Water", "Rock"],
+
+         "weaknesses": ["Electric", "Grass", "Water", "Fighting", "Ground", "Steel"],
+         "resistances": ["Fire", "Ice", "Normal", "Poison", "Flying"],
+         "immunities": ["None"],
+
+         "baseStats": {
+          "hp": 90,
+          "attack": 115,
+          "defense": 90,
+          "spAttack": 48,
+          "spDefense": 68,
+          "speed": 74
+       }
+      } 
+    ],
+
+      "_comment3": "Movesets",
+
+      "moves": {
+        "level": [
+         { "level": 1, "name": "Rock Tomb" },
+         { "level": 1, "name": "Razor Shell" },
+         { "level": 1, "name": "Crunch" },
+         { "level": 1, "name": "Rock Polish" },
+         { "level": 1, "name": "Tackle" },
+         { "level": 1, "name": "Water Gun" },
+         { "level": 1, "name": "Bite" },
+         { "level": 1, "name": "Protect" },
+         { "level": 21, "name": "Headbutt" },
+         { "level": 30, "name": "Counter" },
+         { "level": 39, "name": "Jaw Lock" },
+         { "level": 48, "name": "Liquidation" },
+         { "level": 57, "name": "Body Slam" },
+         { "level": 66, "name": "Head Smash" }
+        ],
+        "tm": [
+         { "name": "Assurance" },
+         { "name": "Blizzard" },
+         { "name": "Body Press" }, 
+         { "name": "Body Slam" },
+         { "name": "Bulldoze" },
+         { "name": "Chilling Water" },
+         { "name": "Crunch" },
+         { "name": "Dig" },
+         { "name": "Dive" },
+         { "name": "Double-Edge" },
+         { "name": "Dragon Tail" },
+         { "name": "Earth Power" },
+         { "name": "Earthquake" },
+         { "name": "Endure" },
+         { "name": "Facade" },
+         { "name": "False Swipe" },
+         { "name": "Gastro Acid" },
+         { "name": "Giga Impact" },
+         { "name": "Headbutt" },
+         { "name": "High Horsepower" },
+         { "name": "Hydro Pump" },
+         { "name": "Hyper Beam" },
+         { "name": "Ice Fang" },
+         { "name": "Ice Spinner" },
+         { "name": "Iron Defense" },
+         { "name": "Iron Tail" },
+         { "name": "Liquidation" },
+         { "name": "Megahorn" },
+         { "name": "Meteor Beam" },
+         { "name": "Muddy Water" },
+         { "name": "Mud Shot" },
+         { "name": "Payback" },
+         { "name": "Poison Jab" },
+         { "name": "Protect" },
+         { "name": "Rain Dance" },
+         { "name": "Razor Shell" },
+         { "name": "Rest" },
+         { "name": "Revenge" },
+         { "name": "Rock Blast" },
+         { "name": "Rock Polish" },
+         { "name": "Rock Slide" },
+         { "name": "Rock Tomb" },
+         { "name": "Sandstorm" },
+         { "name": "Sand Tomb" },
+         { "name": "Scary Face" },
+         { "name": "Skitter Smack" },
+         { "name": "Sleep Talk" },
+         { "name": "Smart Strike" },
+         { "name": "Stealth Rock" },
+         { "name": "Stomping Tantrum" },
+         { "name": "Stone Edge" },
+         { "name": "Substitute" },
+         { "name": "Super Fang" },
+         { "name": "Superpower" },
+         { "name": "Surf" },
+         { "name": "Swords Dance" },
+         { "name": "Take Down" },
+         { "name": "Tera Blast" },
+         { "name": "Throat Chop" },
+         { "name": "Waterfall" },
+         { "name": "Water Pulse" },
+         { "name": "Whirlpool" }
+        ],
+        "egg": [
+         { "name": "Dragon Tail" },
+         { "name": "Gastro Acid" },
+         { "name": "Shell Smash" },
+         { "name": "Skull Bash" }
+        ],
+        "tutor": [
+         { "name": "Bulldoze" },
+         { "name": "Dive" },
+         { "name": "Earth Power" },
+         { "name": "False Swipe" },
+         { "name": "Gastro Acid" },
+         { "name": "Giga Impact" },
+         { "name": "High Horsepower" },
+         { "name": "Hyper Beam" },
+         { "name": "Ice Beam" },
+         { "name": "Ice Fang" },
+         { "name": "Iron Defense" },
+         { "name": "Iron Tail" },
+         { "name": "Liquidation" },
+         { "name": "Megahorn" },
+         { "name": "Meteor Beam" },
+         { "name": "Poison Jab" },
+         { "name": "Rest" },
+         { "name": "Rock Slide" },
+         { "name": "Skitter Smack" },
+         { "name": "Sleep Talk" },
+         { "name": "Stealth Rock" },
+         { "name": "Stomping Tantrum" },
+         { "name": "Stone Edge" },
+         { "name": "Super Fang" },
+         { "name": "Superpower" },
+         { "name": "Throat Chop" },
+         { "name": "Water Pulse" }
+       ]
+     }
     }
   ]
 }

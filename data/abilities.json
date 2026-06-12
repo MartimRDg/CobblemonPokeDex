@@ -14,6 +14,15 @@
     },
       "G-Max Wildfire": {
       "description": "G-Max Wildfire is a G-Max Move from Pokemon Sword and Shield, exclusive to Charizard. Fire type moves turn into G-Max Wildfire during Gigantamax."
+    },
+     "Strong Jaw": {
+      "description": "The Pokémon's strong jaw boosts the power of its biting moves."
+    },
+    "Shell Armor": {
+      "description": "A hard shell protects the Pokémon from critical hits."
+    },
+    "Swift Swim": {
+      "description": "Boosts the Pokémon's Speed stat in rain."
     }
   }
 }

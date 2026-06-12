@@ -2973,3 +2973,421 @@ html { background-color: #050709; }
   .spawn-card { min-width: unset; }
   .spawn-title { font-size: 1rem; }
 }
+
+/* ======================================================
+   BIOME TOOLTIPS & "WON'T SPAWN" TAGS
+   ====================================================== */
+
+.spawn-biome-label-not {
+  margin-top: 0.85rem;
+  color: #f87171 !important;
+}
+
+.biome-not {
+  background: rgba(239,68,68,0.08);
+  color: #fca5a5;
+  border-color: rgba(239,68,68,0.25);
+  text-decoration: line-through;
+  text-decoration-color: rgba(248,113,113,0.5);
+}
+
+/* Biome tag with related-biomes tooltip */
+.biome-tag.has-tooltip {
+  position: relative;
+  cursor: help;
+  border-bottom: 1px dashed currentColor;
+}
+
+.biome-tooltip {
+  display: none;
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--surface3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 0.7rem 0.75rem;
+  /* extra bottom padding + negative margin creates a hover "bridge"
+     so the cursor can travel from the tag to the popover without it closing */
+  margin-bottom: 10px;
+  text-align: left;
+  text-decoration: none;
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 500;
+  z-index: 60;
+  pointer-events: auto;
+  box-shadow: var(--shadow-lg);
+  white-space: normal;
+  width: 260px;
+  max-width: 80vw;
+}
+
+/* Invisible bridge between the tag and the popover */
+.biome-tooltip::before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 10px;
+}
+
+.biome-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--border);
+}
+
+.biome-tag.has-tooltip:hover .biome-tooltip,
+.biome-tooltip:hover {
+  display: block;
+}
+
+.biome-tooltip-title {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.biome-tooltip-count {
+  background: var(--accent-dim);
+  color: var(--accent);
+  border-radius: 999px;
+  padding: 0.05rem 0.4rem;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.biome-tooltip-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  max-height: 180px;
+  overflow-y: auto;
+  padding-right: 0.2rem;
+}
+
+.biome-related-chip {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.2rem 0.5rem;
+  font-size: 0.66rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  white-space: nowrap;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+/* ---- Namespace colour coding ---- */
+.biome-related-chip.ns-minecraft {
+  background: rgba(156,163,175,0.12);
+  border-color: rgba(156,163,175,0.35);
+  color: #d1d5db;
+}
+.biome-related-chip.ns-c {
+  background: rgba(96,165,250,0.12);
+  border-color: rgba(96,165,250,0.35);
+  color: #93c5fd;
+}
+.biome-related-chip.ns-terralith {
+  background: rgba(74,222,128,0.12);
+  border-color: rgba(74,222,128,0.35);
+  color: #86efac;
+}
+.biome-related-chip.ns-darkerdepths {
+  background: rgba(12, 12, 12, 0.12);
+  border-color: rgba(87, 85, 85, 0.35);
+  color: #f4f7f5;
+}
+.biome-related-chip.ns-betternether {
+  background: rgba(19, 0, 0, 0.12);
+  border-color: rgba(151, 2, 2, 0.35);
+  color: #f82702;
+}
+.biome-related-chip.ns-wythers {
+  background: rgba(251,191,36,0.12);
+  border-color: rgba(251,191,36,0.35);
+  color: #fde68a;
+}
+.biome-related-chip.ns-biomesoplenty {
+  background: rgba(236,72,153,0.12);
+  border-color: rgba(236,72,153,0.35);
+  color: #fbcfe8;
+}
+.biome-related-chip.ns-other {
+  background: rgba(168,85,247,0.12);
+  border-color: rgba(168,85,247,0.35);
+  color: #d8b4fe;
+}
+.biome-related-chip.ns-cinderscapes {
+  background: rgba(34, 1, 65, 0.12);
+  border-color: rgba(70, 3, 133, 0.35);
+  color: #7805f3;
+}
+.biome-related-chip.ns-incendium {
+  background: rgba(53, 23, 23, 0.12);
+  border-color: rgba(131, 55, 55, 0.35);
+  color: #f77193;
+}
+.biome-related-chip.ns-clifftree {
+  background: #30202e;
+  border-color: #92588d;
+  color: #faaef4;
+}
+.biome-related-chip.ns-blooming_biosphere {
+  background: #283b13;
+  border-color: #78a544;
+  color: #bbfd6f;
+}
+
+/* ---- Legend ---- */
+.biome-tooltip-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.65rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--border);
+}
+
+.biome-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.biome-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+.biome-legend-dot.ns-minecraft     { background: #d1d5db; }
+.biome-legend-dot.ns-c             { background: #93c5fd; }
+.biome-legend-dot.ns-terralith     { background: #86efac; }
+.biome-legend-dot.ns-wythers       { background: #fde68a; }
+.biome-legend-dot.ns-biomesoplenty { background: #fbcfe8; }
+.biome-legend-dot.ns-betternether { background: #f30202; }
+.biome-legend-dot.ns-darkerdepths { background: #272627; }
+.biome-legend-dot.ns-biomesoplenty { background: #fbcfe8; }
+.biome-legend-dot.ns-other         { background: #d8b4fe; }
+.biome-legend-dot.ns-cinderscapes         { background: #7902f8; }
+.biome-legend-dot.ns-incendium         { background: #f56186; }
+.biome-legend-dot.ns-clifftree         { background: #faaef4; }
+.biome-legend-dot.ns-blooming_biosphere   { background: #bbfd6f; }
+
+@media (max-width: 480px) {
+  .biome-tooltip { width: 220px; }
+  .biome-tooltip-chips { max-height: 140px; }
+  .biome-related-chip { font-size: 0.62rem; }
+}
+
+/* ======================================================
+   MEGA EVOLUTION / GIGANTAMAX BUTTON ANIMATIONS
+   ====================================================== */
+
+.form-btn {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.form-btn-label {
+  position: relative;
+  z-index: 2;
+}
+
+/* ---- Mega X — dark, cold pulse ---- */
+@keyframes megaXPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(76, 29, 149, 0); }
+  50%       { box-shadow: 0 0 14px 2px rgba(76, 29, 149, 0.45); }
+}
+
+.form-btn-mega-x {
+  border-color: rgba(76,29,149,0.4) !important;
+  background: linear-gradient(135deg, #1a0a2e, #0d0517) !important;
+  color: #c4b5fd !important;
+}
+
+.form-btn-mega-x::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 120%, rgba(124,58,237,0.35), transparent 70%);
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.form-btn-mega-x:hover {
+  animation: megaXPulse 1.4s ease-in-out infinite;
+  border-color: #7c3aed !important;
+  color: #ddd6fe !important;
+}
+
+.form-btn-mega-x:hover::before { opacity: 1; }
+
+.form-btn-mega-x.active {
+  border-color: #7c3aed !important;
+  background: linear-gradient(135deg, #2e1065, #150733) !important;
+  color: #ede9fe !important;
+  box-shadow: 0 0 16px rgba(124,58,237,0.3);
+}
+
+/* ---- Mega Y — light, warm shimmer ---- */
+@keyframes megaYShimmer {
+  0%   { background-position: -150% 0; }
+  100% { background-position: 250% 0; }
+}
+
+.form-btn-mega-y {
+  border-color: rgba(251,191,36,0.4) !important;
+  background: linear-gradient(135deg, #3f2a05, #1a1004) !important;
+  color: #fde68a !important;
+}
+
+.form-btn-mega-y::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 30%, rgba(253,224,71,0.35) 50%, transparent 70%);
+  background-size: 250% 100%;
+  z-index: 1;
+  opacity: 0;
+}
+
+.form-btn-mega-y:hover {
+  border-color: #fbbf24 !important;
+  color: #fef9c3 !important;
+}
+
+.form-btn-mega-y:hover::before {
+  opacity: 1;
+  animation: megaYShimmer 1.1s ease-in-out infinite;
+}
+
+.form-btn-mega-y.active {
+  border-color: #fbbf24 !important;
+  background: linear-gradient(135deg, #78350f, #2d1605) !important;
+  color: #fef3c7 !important;
+  box-shadow: 0 0 16px rgba(251,191,36,0.25);
+}
+
+/* ---- Generic Mega (single mega evolution, no X/Y) ---- */
+.form-btn-mega {
+  border-color: rgba(167,139,250,0.4) !important;
+  background: linear-gradient(135deg, #2a1448, #160a26) !important;
+  color: #ddd6fe !important;
+}
+
+.form-btn-mega:hover {
+  border-color: #a78bfa !important;
+  box-shadow: 0 0 14px rgba(167,139,250,0.3);
+}
+
+.form-btn-mega.active {
+  border-color: #a78bfa !important;
+  box-shadow: 0 0 16px rgba(167,139,250,0.3);
+}
+
+/* ---- Gigantamax — fire effect ---- */
+@keyframes gmaxFlicker {
+  0%   { background-position: 0% 100%; opacity: 0.85; }
+  50%  { background-position: 100% 0%; opacity: 1; }
+  100% { background-position: 0% 100%; opacity: 0.85; }
+}
+
+@keyframes gmaxEmber {
+  0%   { transform: translateY(0) scale(1); opacity: 0.7; }
+  100% { transform: translateY(-14px) scale(0.4); opacity: 0; }
+}
+
+.form-btn-gmax {
+  border-color: rgba(239,68,68,0.45) !important;
+  background: linear-gradient(135deg, #3d0a0a, #1a0303) !important;
+  color: #fed7aa !important;
+}
+
+.form-btn-gmax::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(0deg, #dc2626 0%, #f97316 35%, #fde047 60%, transparent 100%);
+  background-size: 100% 200%;
+  z-index: 0;
+  opacity: 0;
+  filter: blur(4px);
+}
+
+.form-btn-gmax:hover {
+  border-color: #f97316 !important;
+  color: #fff7ed !important;
+}
+
+.form-btn-gmax:hover::before {
+  opacity: 0.5;
+  animation: gmaxFlicker 0.9s ease-in-out infinite;
+}
+
+/* Floating embers on hover */
+.form-btn-gmax::after {
+  content: '🔥';
+  position: absolute;
+  font-size: 0.6rem;
+  left: 20%;
+  bottom: 0;
+  opacity: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.form-btn-gmax:hover::after {
+  opacity: 1;
+  animation: gmaxEmber 1.2s ease-out infinite;
+}
+
+.form-btn-gmax.active {
+  border-color: #f97316 !important;
+  background: linear-gradient(135deg, #7c2d12, #1a0303) !important;
+  color: #fff7ed !important;
+  box-shadow: 0 0 18px rgba(249,115,22,0.35);
+}
+
+.form-btn-gmax.active::before {
+  opacity: 0.4;
+  animation: gmaxFlicker 1.6s ease-in-out infinite;
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .form-btn-mega-x:hover,
+  .form-btn-mega-y:hover::before,
+  .form-btn-gmax:hover::before,
+  .form-btn-gmax:hover::after,
+  .form-btn-gmax.active::before {
+    animation: none !important;
+  }
+}

@@ -416,6 +416,94 @@ function buildDrops(drops) {
 
 // ====================== Spawn Carousel ======================
 
+// Biome group definitions — used to show related biomes on hover
+var BIOME_GROUPS = {
+  'hills':          ['#minecraft:hill', 'highlands', '#c:hill', '#c:mountain/slope', '#c:windswept', 'biomesoplenty:jade_cliffs', 'biomesoplenty:mediterranean_forest', 'terralith:blooming_valley', 'terralith:forested_highlands', 'terralith:lavender_valley', 'terralith:lush_valley', 'terralith:moonlight_valley', 'terralith:sakura_valley', 'terralith:savanna_slopes', 'terralith:temperate_highlands', 'terralith:yosemite_lowlands', 'wythers:autumnal_crags', 'wythers:ayers_rock', 'wythers:icy_crags', 'wythers:old_growth_taiga_crags', 'wythers:taiga_crags', 'wythers:temperate_rainforest_crags', 'wythers:thermal_taiga_crags', 'wythers:windswept_jungle'],
+  'volcanic':       ['biomesoplenty:volcanic_plains', 'biomesoplenty:volcano', 'darkerdepths:molten_cavern', 'terralith:cave/mantle_caves', "terralith:volcanic_crater", "terralith:volcanic_peaks", "wythers:icy_volcano", "wythers:tropical_volcano", "wythers:volcano", "wythers:volcanic_chamber", "wythers:volcanic_crater"],
+  'nether/basalt':  ['minecraft:basalt_deltas', 'betternether:flooded_deltas', 'cinderscapes:blackstone_shales', 'incendium:ash_barrens', 'incendium:volcanic_deltas', "incendium:withered_forest"],
+  'freezing':       ['minecraft:frozen_river', 'minecraft:jagged_peaks', 'minecraft:snowy_beach', 'minecraft:snowy_plains', 'minecraft:snowy_slopes', 'frozen_ocean', 'glacial', 'snowy', '#c:snowy', "clifftree:frozen_caves", "terralith:emerald_peaks", "terralith:scarlet_mountains", "terralith:skylands_winter", "terralith:snowy_badlands", "wythers:crimson_tundra", "wythers:frozen_island", "wythers:snowy_bog", "wythers:snowy_canyon", "wythers:snowy_peaks", "wythers:snowy_tundra"],
+  'arid':           ['badlands', 'desert', 'savanna'],
+  'fresh water':    ['river', 'swamp', 'wythers:desert_lakes', 'wythers:guelta', 'wythers:tropical_forest_river'],
+  'jungle':         ['#minecraft:jungle', '#c:jungle', 'terralith:cave/underground_jungle', 'biomesoplenty:floodplain', 'biomesoplenty:rainforest', 'blooming_biosphere:rainforest', 'clifftree:tropical_river', 'wythers:dripleaf_swamp', 'wythers:eucalyptus_deanei_forest', 'wythers:highland_tropical_rainforest', 'wythers:humid_tropical_grassland', 'wythers:jungle_canyon', 'wythers:subtropical_forest', 'wythers:subtropical_forest_edge', 'wythers:subtropical_grassland', 'wythers:tropical_forest', 'wythers:tropical_forest_canyon', 'wythers:tropical_grassland', 'wythers:tropical_island', 'wythers:tropical_rainforest'],
+  'temperate':      ['forest', 'plains']
+};
+
+function getBiomeGroupTooltip(biomeName) {
+  var key = biomeName.toLowerCase().trim();
+  var related = BIOME_GROUPS[key];
+  if (!related) return null;
+  return related;
+}
+
+// Turn raw tag strings like "terralith:blooming_valley" or "#c:is_hill"
+// into readable labels like "Blooming Valley" / "Is Hill"
+function formatBiomeTagName(raw) {
+  var s = raw.replace(/^#/, '');           // strip leading #
+  var parts = s.split(':');
+  var name = parts[parts.length - 1];      // take part after namespace
+  name = name.replace(/\//g, ' / ');       // slashes -> spaces around slash
+  name = name.replace(/_/g, ' ');          // underscores -> spaces
+  name = name.replace(/\s+/g, ' ').trim();
+  // Title case each word
+  name = name.split(' ').map(function(w) {
+    if (!w) return w;
+    if (w === '/') return w;
+    return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
+  }).join(' ');
+  return name;
+}
+
+// Map a raw tag's namespace/prefix to a colour key + display label
+function getBiomeTagNamespace(raw) {
+  var s = raw.replace(/^#/, '');
+  if (s.indexOf(':') !== -1) {
+    var ns = s.split(':')[0].toLowerCase();
+    return ns; // e.g. 'terralith', 'wythers', 'biomesoplenty', 'minecraft', 'c'
+  }
+  return 'other';
+}
+
+var NAMESPACE_LABELS = {
+  'minecraft':     'Vanilla',
+  'c':             'Common Tag',
+  'terralith':     'Terralith',
+  'wythers':       'Wythers',
+  'biomesoplenty': 'Biomes O\' Plenty',
+  'darkerdepths': 'Darker Depths',
+  'betternether': 'Better Nether',
+  'cinderscapes': 'Cinderscapes',
+  'incendium': 'Incendium',
+  'clifftree': 'CliffTree',
+  'blooming_biosphere': 'Blooming Biosphere',
+  'other':         'Other'
+};
+
+// Build a compact, scrollable popover listing related biome tags as colour-coded chips,
+// with a legend showing which colour maps to which mod/namespace
+function buildBiomeRelatedPopover(related) {
+  if (!related || !related.length) return '';
+
+  var seenNamespaces = {};
+  var chips = related.map(function(r) {
+    var ns = getBiomeTagNamespace(r);
+    seenNamespaces[ns] = true;
+    return '<span class="biome-related-chip ns-' + ns + '">' + formatBiomeTagName(r) + '</span>';
+  }).join('');
+
+  var legendItems = Object.keys(seenNamespaces).sort().map(function(ns) {
+    var label = NAMESPACE_LABELS[ns] || (ns.charAt(0).toUpperCase() + ns.slice(1));
+    return '<span class="biome-legend-item"><span class="biome-legend-dot ns-' + ns + '"></span>' + label + '</span>';
+  }).join('');
+
+  return (
+    '<div class="biome-tooltip">' +
+      '<div class="biome-tooltip-title">Related biomes <span class="biome-tooltip-count">' + related.length + '</span></div>' +
+      '<div class="biome-tooltip-chips">' + chips + '</div>' +
+      '<div class="biome-tooltip-legend">' + legendItems + '</div>' +
+    '</div>'
+  );
+}
+
 function buildSpawnSection(poke) {
   // Normalise: support both legacy flat fields and future spawnOptions array
   var options = poke.spawnOptions || [];
@@ -427,23 +515,43 @@ function buildSpawnSection(poke) {
       context:      poke.spawnContext      || null,
       preset:       poke.spawnPreset       || null,
       biomes:       poke.spawnBiomes       || [],
-      isRaining:    poke.isRaining         || false,
+      notBiomes:    poke.notBiomes || poke.notbiomes || [],
+      isRaining:    poke.isRaining,
+      seeSky:       poke.seeSky,
       requirements: poke.spawnRequirements || null,
       label:        null
     }];
+  } else {
+    // Normalise each provided spawnOption — JSON may use 'notbiomes' (lowercase)
+    options = options.map(function(opt) {
+      return Object.assign({}, opt, {
+        notBiomes: opt.notBiomes || opt.notbiomes || []
+      });
+    });
   }
 
   var total = options.length;
 
-  function buildSlide(opt, idx) {
-    var biomeHTML = (opt.biomes || []).map(function(b) {
+  function buildBiomeTags(biomes, variant) {
+    return (biomes || []).map(function(b) {
       var isNether = b.toLowerCase().indexOf('nether') !== -1;
-      return '<span class="biome-tag ' + (isNether ? 'biome-nether' : 'biome-normal') + '">' + b + '</span>';
-    }).join('') || '<span class="spawn-empty">Unknown</span>';
+      var colorClass = variant === 'not' ? 'biome-not' : (isNether ? 'biome-nether' : 'biome-normal');
+      var related = getBiomeGroupTooltip(b);
+      var tooltip = related ? buildBiomeRelatedPopover(related) : '';
+      return '<span class="biome-tag ' + colorClass + (related ? ' has-tooltip' : '') + '">' + b + tooltip + '</span>';
+    }).join('') || '<span class="spawn-empty">' + (variant === 'not' ? 'None' : 'Unknown') + '</span>';
+  }
+
+  function buildSlide(opt, idx) {
+    var biomeHTML    = buildBiomeTags(opt.biomes, 'normal');
+    var notBiomeHTML = buildBiomeTags(opt.notBiomes, 'not');
+    var hasNotBiomes = (opt.notBiomes || []).length > 0;
 
     var reqLines = [];
     if (opt.isRaining === true)  reqLines.push({ label: 'Raining', value: 'Required' });
     if (opt.isRaining === false) reqLines.push({ label: 'Raining', value: 'Must not be raining' });
+    if (opt.seeSky === true)     reqLines.push({ label: 'See sky', value: 'Required' });
+    if (opt.seeSky === false)    reqLines.push({ label: 'See sky', value: 'Must not see sky' });
     if (opt.requirements && opt.requirements !== 'N/A') reqLines.push({ label: 'Other', value: opt.requirements });
     var reqHTML = reqLines.length
       ? '<div class="spawn-card"><h3 class="spawn-card-title">Requirements</h3><ul class="spawn-detail-list">' +
@@ -467,6 +575,10 @@ function buildSpawnSection(poke) {
           '<h3 class="spawn-card-title">Biomes</h3>' +
           '<p class="spawn-biome-label">WILL SPAWN IN BIOMES:</p>' +
           '<div class="biome-tags">' + biomeHTML + '</div>' +
+          (hasNotBiomes ?
+            '<p class="spawn-biome-label spawn-biome-label-not">WON\'T SPAWN IN BIOMES:</p>' +
+            '<div class="biome-tags">' + notBiomeHTML + '</div>'
+          : '') +
         '</div>' +
       '</div>'
     );
@@ -907,7 +1019,13 @@ function loadPokemonDetail() {
     megaButtons = '<div class="form-btns">' +
       '<button class="form-btn active" onclick="switchForm(0)">Normal</button>' +
       poke.megaEvolutions.map(function(mega, i) {
-        return '<button class="form-btn" onclick="switchForm(' + (i + 1) + ')">' + mega.name + '</button>';
+        var name = mega.name || '';
+        var variantClass = '';
+        if (/mega.*x\b/i.test(name))      variantClass = 'form-btn-mega-x';
+        else if (/mega.*y\b/i.test(name)) variantClass = 'form-btn-mega-y';
+        else if (/gigantamax|gmax/i.test(name)) variantClass = 'form-btn-gmax';
+        else if (/mega/i.test(name))      variantClass = 'form-btn-mega';
+        return '<button class="form-btn ' + variantClass + '" onclick="switchForm(' + (i + 1) + ')"><span class="form-btn-label">' + name + '</span></button>';
       }).join('') +
     '</div>';
   }

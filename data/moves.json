@@ -807,6 +807,358 @@
       "accuracy": 100,
       "pp": 20,
       "description": "The user whips up a violent, twisting wind to tear into the target. This may also make the target flinch."
+    },
+    "Tackle": {
+      "type": "Normal",
+      "category": "Physical",
+      "power": 40,
+      "accuracy": 100,
+      "pp": 35,
+      "description": "A physical attack in which the user charges and slams into the target with its whole body."
+    },
+     "Water Gun": {
+      "type": "Water",
+      "category": "Special",
+      "power": 40,
+      "accuracy": 100,
+      "pp": 25,
+      "description": "The target is blasted with a forceful shot of water."
+    },
+     "Jaw Lock": {
+      "type": "Dark",
+      "category": "Physical",
+      "power": 80,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "This move prevents the user and the target from switching out until either of them faints. The effect goes away if either of the Pokémon leaves the field."
+    },
+      "Liquidation": {
+      "type": "Water",
+      "category": "Physical",
+      "power": 85,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user slams into the target using a full-force blast of water. This may also lower the target's Defense stat."
+    },
+    "Assurance": {
+      "type": "Dark",
+      "category": "Physical",
+      "power": 60,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "This move's power is doubled if the target has already taken some damage in the same turn."
+    },
+     "Chilling Water": {
+      "type": "Water",
+      "category": "Special",
+      "power": 50,
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user attacks the target by showering it with water that's so cold it saps the target's power. This also lowers the target's Attack stat."
+    },
+      "Dive": {
+      "type": "Water",
+      "category": "Physical",
+      "power": 80,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user dives on the first turn, then floats up and attacks on the next turn."
+    },
+      "Gastro Acid": {
+      "type": "Poison",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user hurls up its stomach acids on the target. The fluid eliminates the effect of the target's Ability."
+    },
+      "Hydro Pump": {
+      "type": "Water",
+      "category": "Special",
+      "power": 110,
+      "accuracy": 80,
+      "pp": 5,
+      "description": "The target is blasted by a huge volume of water launched under great pressure."
+    },
+     "Ice Fang": {
+      "type": "Ice",
+      "category": "Physical",
+      "power": 65,
+      "accuracy": 95,
+      "pp": 15,
+      "description": "The user bites with cold-infused fangs. This may also make the target flinch or leave it frozen."
+    },
+      "Mud Shot": {
+      "type": "Ground",
+      "category": "Special",
+      "power": 55,
+      "accuracy": 95,
+      "pp": 15,
+      "description": "The user attacks by hurling a blob of mud at the target. This also lowers the target's Speed stat."
+    },
+      "Payback": {
+      "type": "Dark",
+      "category": "Physical",
+      "power": 50,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user stores power, then attacks. This move's power is doubled if the user moves after the target."
+    },
+      "Poison Jab": {
+      "type": "Poison",
+      "category": "Physical",
+      "power": 80,
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The target is stabbed with a tentacle, an arm, or the like steeped in poison. This may also poison the target."
+    },
+      "Rain Dance": {
+      "type": "Water",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 5,
+      "description": "The user summons a heavy rain that falls for five turns, powering up Water-type attacks. The rain also lowers the power of Fire-type attacks."
+    },
+      "Revenge": {
+      "type": "Fighting",
+      "category": "Physical",
+      "power": 60,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "This attack move's power is doubled if the user has been hurt by the opponent in the same turn."
+    },
+      "Skitter Smack": {
+      "type": "Bug",
+      "category": "Physical",
+      "power": 70,
+      "accuracy": 90,
+      "pp": 10,
+      "description": "The user skitters behind the target to attack. This also lowers the target's Sp. Atk stat."
+    },
+      "Stomping Tantrum": {
+      "type": "Ground",
+      "category": "Physical",
+      "power": 75,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "Driven by frustration, the user attacks the target. This move's power is doubled if the user's previous move failed."
+    },
+     "Surf": {
+      "type": "Water",
+      "category": "Special",
+      "power": 90,
+      "accuracy": 100,
+      "pp": 15,
+      "description": "The user attacks everything around it by swamping its surroundings with a giant wave."
+    },
+     "Waterfall": {
+      "type": "Water",
+      "category": "Physical",
+      "power": 80,
+      "accuracy": 100,
+      "pp": 15,
+      "description": "The user charges at the target and may make it flinch."
+    },
+     "Water Pulse": {
+      "type": "Water",
+      "category": "Special",
+      "power": 60,
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user attacks the target with a pulsing blast of water. This may also confuse the target."
+    },
+    "Whirlpool": {
+      "type": "Water",
+      "category": "Special",
+      "power": 35,
+      "accuracy": 85,
+      "pp": 15,
+      "description": "The user traps the target inside a violent, swirling whirlpool that inflicts damage for four to five turns."
+    },
+    "Shell Smash": {
+      "type": "Normal",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 15,
+      "description": "The user breaks its shell, which lowers its Defense and Sp. Def stats but sharply boosts its Attack, Sp. Atk, and Speed stats."
+    },
+     "Skull Bash": {
+      "type": "Normal",
+      "category": "Physical",
+      "power": 130,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user tucks in its head to raise its Defense stat on the first turn, then rams the target on the next turn."
+    },
+      "Razor Shell": {
+      "type": "Water",
+      "category": "Physical",
+      "power": 75,
+      "accuracy": 95,
+      "pp": 10,
+      "description": "The user cuts the target with sharp shells to inflict damage. This may also lower the target's Defense stat."
+    },
+      "Rock Polish": {
+      "type": "Rock",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user polishes its body to reduce drag. This sharply boosts the user's Speed stat."
+    },
+      "Head Smash": {
+      "type": "Rock",
+      "category": "Physical",
+      "power": 150,
+      "accuracy": 80,
+      "pp": 5,
+      "description": "The user attacks the target with a hazardous full-power headbutt. This also damages the user terribly."
+    },
+       "Blizzard": {
+      "type": "Ice",
+      "category": "Special",
+      "power": 110,
+      "accuracy": 70,
+      "pp": 5,
+      "description": "A howling blizzard is summoned to strike opposing Pokémon. This may also leave the opposing Pokémon frozen."
+    },
+      "Body Press": {
+      "type": "Fighting",
+      "category": "Physical",
+      "power": 80,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user attacks by slamming its body into the target. The higher the user's Defense stat, the greater the damage this move deals."
+    },
+     "Earth Power": {
+      "type": "Ground",
+      "category": "Special",
+      "power": 90,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user makes the ground under the target erupt with power. This may also lower the target's Sp. Def stat."
+    },
+      "High Horsepower": {
+      "type": "Ground",
+      "category": "Physical",
+      "power": 95,
+      "accuracy": 95,
+      "pp": 10,
+      "description": "The user fiercely attacks the target using its entire body."
+    },
+      "Ice Spinner": {
+      "type": "Ice",
+      "category": "Physical",
+      "power": 80,
+      "accuracy": 100,
+      "pp": 15,
+      "description": "The user covers its feet in thin ice and twirls around, slamming into the target. This move's spinning motion also destroys the terrain."
+    },
+      "Iron Defense": {
+      "type": "Steel",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 15,
+      "description": "The user hardens its body's surface like iron, sharply boosting its Defense stat."
+    },
+      "Megahorn": {
+      "type": "Bug",
+      "category": "Physical",
+      "power": 120,
+      "accuracy": 85,
+      "pp": 10,
+      "description": "Using its tough and impressive horn, the user rams into the target with no letup."
+    },
+      "Meteor Beam": {
+      "type": "Rock",
+      "category": "Special",
+      "power": 120,
+      "accuracy": 90,
+      "pp": 10,
+      "description": "The user gathers energy from space and boosts its Sp. Atk stat on the first turn, then attacks on the next turn."
+    },
+      "Muddy Water": {
+      "type": "Water",
+      "category": "Special",
+      "power": 90,
+      "accuracy": 85,
+      "pp": 10,
+      "description": "The user attacks by shooting muddy water at opposing Pokémon. This may also lower their accuracy."
+    },
+      "Rock Blast": {
+      "type": "Rock",
+      "category": "Physical",
+      "power": 25,
+      "accuracy": 90,
+      "pp": 10,
+      "description": "The user attacks by hurling hard rocks at the target. This move hits two to five times in a row."
+    },
+      "Sand Tomb": {
+      "type": "Ground",
+      "category": "Physical",
+      "power": 35,
+      "accuracy": 85,
+      "pp": 15,
+      "description": "The user traps the target inside a harshly raging sandstorm that inflicts damage for four to five turns."
+    },
+      "Smart Strike": {
+      "type": "Steel",
+      "category": "Physical",
+      "power": 70,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user stabs the target with a sharp horn. This attack never misses."
+    },
+      "Stealth Rock": {
+      "type": "Rock",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user lays a trap of levitating stones around the opposing team. The trap damages opposing Pokémon that switch into battle."
+    },
+      "Stone Edge": {
+      "type": "Rock",
+      "category": "Physical",
+      "power": 100,
+      "accuracy": 80,
+      "pp": 5,
+      "description": "The user stabs the target with sharpened stones. This move has a heightened chance of landing a critical hit."
+    },
+      "Super Fang": {
+      "type": "Normal",
+      "category": "Physical",
+      "power": 0,
+      "accuracy": 90,
+      "pp": 10,
+      "description": "The user chomps hard on the target with its sharp front fangs. This cuts the target's HP in half."
+    },
+      "Superpower": {
+      "type": "Fighting",
+      "category": "Physical",
+      "power": 120,
+      "accuracy": 100,
+      "pp": 5,
+      "description": "The user attacks the target with great power. This also lowers the user's Attack and Defense stats."
+    },
+      "Throat Chop": {
+      "type": "Dark",
+      "category": "Physical",
+      "power": 80,
+      "accuracy": 100,
+      "pp": 15,
+      "description": "The user attacks the target's throat, and the resultant suffering prevents the target from using sound-based moves for two turns."
+    },
+     "Ice Beam": {
+      "type": "Ice",
+      "category": "Special",
+      "power": 90,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The target is struck with an icy-cold beam of energy. This may also leave the target frozen."
     }
   }
 }
