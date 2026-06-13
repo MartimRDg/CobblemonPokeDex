@@ -713,6 +713,260 @@
     {
       "_comment": "Base Stats",
 
+      "id": 741,
+      "name": "Oricorio Baile",
+      "number": "0741",
+      "types": ["Fire", "Flying"],
+      "generation": 7,
+      "rarity": "Uncommon",
+      "rideable": false,
+      "flying": false,
+      "legendary": false,
+      "mythical": false,
+      "catchRate": 45,
+
+      "abilities": ["Dancer", "Dancer (Hidden)"],
+
+      "baseStats": {
+        "hp": 75,
+        "attack": 70,
+        "defense": 70,
+        "spAttack": 98,
+        "spDefense": 70,
+        "speed": 93
+       },
+
+       "evYield": {
+        "spAttack": 2
+       },
+
+       "drops": [
+        { "item": "Feather", "chance": 100, "quantity": "0-2", "image": "assets/images/items/feather.png"},
+        { "item": "Raw Chicken", "chance": 100, "quantity": "1", "image": "assets/images/items/raw_chicken.png"},
+        { "item": "Honey Bottle", "chance": 5, "quantity": "1", "image": "assets/images/items/honey_bottle.png"},
+        { "item": "Pinap Berry", "chance": 5, "quantity": "1", "image": "assets/images/items/pinap_berrypng"}
+       ],
+
+      "weaknesses": ["Water", "Rock", "Electric", "Ice"],
+      "resistances": ["Fire", "Grass", "Bug", "Steel", "Fairy", "Fighting"],
+      "immunities": ["Ground"],
+      
+      "spawnOptions": [
+        {
+         "label": "Day",
+         "bucket": "Uncommon",
+         "level": "15-36",
+         "context": "",
+         "preset": "",
+         "biomes": ["Mountain", "Sky"],
+         "seeSky": true,
+         "requirements": "N/A"
+        },
+        {
+         "label": "Day",
+         "bucket": "Common",
+         "level": "15-36",
+         "context": "",
+         "preset": "",
+         "biomes": ["Spooky"],
+         "seeSky": true,
+         "requirements": "N/A"
+        },
+        {
+         "label": "Day",
+         "bucket": "Common",
+         "level": "15-36",
+         "context": "",
+         "preset": "",
+         "biomes": ["Badlands", "Plateau"],
+         "seeSky": true,
+         "requirements": "N/A"
+        },
+        {
+         "label": "Day",
+         "bucket": "Common",
+         "level": "15-36",
+         "context": "",
+         "preset": "",
+         "biomes": ["Magical"],
+         "seeSky": true,
+         "requirements": "N/A"
+        }
+      ],
+
+      "sprite": "assets/images/oricorio.png",
+      "shinySprite":"assets/images/oricorio-shiny.png",
+
+      "_comment2": "Evolutions",
+      
+      "evolutions": [
+       { "id": 741, "name": "Oricorio", "level": null }
+      ],
+
+      "variants": [
+       {
+         "name": "Oricorio Pom Pom",
+         "video": "assets/videos/oricorio-pom-pom.gif",
+         "shinyVideo":"assets/videos/oricorio-pom-pom-shiny.gif",
+         "abilities": ["Dancer", "Dancer (Hidden)"],
+         "types": ["Electric", "Flying"],
+
+         "weaknesses": ["Ice", "Rock"],
+         "resistances": ["Flying", "Steel", "Grass", "Fighting", "Bug"],
+         "immunities": ["Ground"],
+
+         "baseStats": {
+           "hp": 75,
+           "attack": 70,
+           "defense": 70,
+           "spAttack": 98,
+           "spDefense": 70,
+        "speed": 93
+       }
+      },
+      {
+         "name": "Oricorio Pau",
+         "video": "assets/videos/oricorio-pau.gif",
+         "shinyVideo":"assets/videos/oricorio-pau-shiny.gif",
+         "abilities": ["Dancer", "Dancer (Hidden)"],
+         "types": ["Psychic", "Flying"],
+
+         "weaknesses": ["Ghost", "Dark", "Electric", "Ice", "Rock"],
+         "resistances": ["Fighting", "Psychic", "Grass"],
+         "immunities": ["Ground"],
+
+         "baseStats": {
+           "hp": 75,
+           "attack": 70,
+           "defense": 70,
+           "spAttack": 98,
+           "spDefense": 70,
+        "speed": 93
+       }
+      },
+      {
+         "name": "Oricorio Sensu",
+         "video": "assets/videos/oricorio-sensu.gif",
+         "shinyVideo":"assets/videos/oricorio-sensu-shiny.gif",
+         "abilities": ["Dancer", "Dancer (Hidden)"],
+         "types": ["Ghost", "Flying"],
+
+         "weaknesses": ["Ghost", "Dark", "Electric", "Ice", "Rock"],
+         "resistances": ["Poison", "Bug", "Grass"],
+         "immunities": ["Normal", "Fighting", "Ground"],
+
+         "baseStats": {
+           "hp": 75,
+           "attack": 70,
+           "defense": 70,
+           "spAttack": 98,
+           "spDefense": 70,
+        "speed": 93
+       }
+      } 
+    ],
+
+      "_comment3": "Movesets",
+
+      "moves": {
+        "level": [
+         { "level": 1, "name": "Pound" },
+         { "level": 1, "name": "Double Slap" },
+         { "level": 1, "name": "Mirror Move" },
+         { "level": 4, "name": "Growl" },
+         { "level": 6, "name": "Peck" },
+         { "level": 10, "name": "Helping Hand" },
+         { "level": 13, "name": "Air Cutter" },
+         { "level": 16, "name": "Baton Pass" },
+         { "level": 20, "name": "Feather Dance" },
+         { "level": 23, "name": "Acrobatics" },
+         { "level": 26, "name": "Teeter Dance" },
+         { "level": 30, "name": "Roost" },
+         { "level": 33, "name": "Flatter" },
+         { "level": 36, "name": "Air Slash" },
+         { "level": 40, "name": "Revelation Dance" },
+         { "level": 43, "name": "Agility" },
+         { "level": 47, "name": "Hurricane" }
+        ],
+        "tm": [
+         { "name": "Acrobatics" },
+         { "name": "Aerial Ace" },
+         { "name": "Agility" },
+         { "name": "Air Cutter" },
+         { "name": "Air Slash" },  
+         { "name": "Alluring Voice" },
+         { "name": "Attract" },
+         { "name": "Baton Pass" },
+         { "name": "Calm Mind" },
+         { "name": "Captivate" },
+         { "name": "Charm" },
+         { "name": "Covet" },
+         { "name": "Defog" },
+         { "name": "Dual Wingbeat" },
+         { "name": "Embargo" },
+         { "name": "Endure" },
+         { "name": "Facade" },
+         { "name": "Feather Dance" },
+         { "name": "Fly" },
+         { "name": "Helping Hand" },
+         { "name": "Hurricane" },
+         { "name": "Icy Wind" },
+         { "name": "Pluck" },
+         { "name": "Protect" },
+         { "name": "Psych Up" },
+         { "name": "Quash" },
+         { "name": "Rain Dance" },
+         { "name": "Rest" },
+         { "name": "Reversal" },
+         { "name": "Role Play" },
+         { "name": "Roost" },
+         { "name": "Safeguard" },
+         { "name": "Sandstorm" },
+         { "name": "Sky Attack" },
+         { "name": "Sleep Talk" },
+         { "name": "Steel Wing" },
+         { "name": "Substitute" },
+         { "name": "Sunny Day" },
+         { "name": "Swift" },
+         { "name": "Swords Dance" },
+         { "name": "Tailwind" },
+         { "name": "Take Down" },
+         { "name": "Taunt" },
+         { "name": "Tera Blast" },
+         { "name": "Trailblaze" },
+         { "name": "U-turn" },
+         { "name": "Work Up" }
+        ],
+        "egg": [
+         { "name": "Attract" },
+         { "name": "Captivate"},
+         { "name": "Defog" },
+         { "name": "Pluck" },
+         { "name": "Quiver Dance" },
+         { "name": "Safeguard" }
+        ],
+        "tutor": [
+         { "name": "Aerial Ace" },
+         { "name": "Air Cutter" },
+         { "name": "Calm Mind" },
+         { "name": "Covet" },
+         { "name": "Defog" },
+         { "name": "Dual Wingbeat" },
+         { "name": "Helping Hand" },
+         { "name": "Icy Wind" },
+         { "name": "Rest" },
+         { "name": "Role Play" },
+         { "name": "Roost"},
+         { "name": "Sky Attack"},
+         { "name": "Sleep Talk"},
+         { "name": "Swift"},
+         { "name": "Tailwind"}
+       ]
+     }
+    },
+    {
+      "_comment": "Base Stats",
+
       "id": 833,
       "name": "Chewtle",
       "number": "0833",
@@ -883,7 +1137,7 @@
       "types": ["Water", "Rock"],
       "generation": 8,
       "rarity": "Common",
-      "rideable": false,
+      "rideable": true,
       "flying": false,
       "legendary": false,
       "mythical": false,
@@ -961,6 +1215,23 @@
 
       "video": "assets/videos/drednaw.gif",
       "shinyVideo":"assets/videos/drednaw-shiny.gif",
+
+      "riding": {
+       "ground": {
+         "acceleration": { "min": 25, "max": 30 },
+         "jump":         { "min": 20, "max": 40 },
+         "skill":        { "min": 30, "max": 50 },
+         "speed":        { "min": 30, "max": 45 },
+         "stamina":      { "min": 45, "max": 80 }
+        },
+        "Swimming": {
+         "acceleration": { "min": 35, "max": 55 },
+         "jump":         { "min": 20, "max": 35 },
+         "skill":        { "min": 35, "max": 60 },
+         "speed":        { "min": 40, "max": 65 },
+         "stamina":      { "min": 45, "max": 80 }
+        }
+      },
 
       "_comment2": "Evolutions",
       

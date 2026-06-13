@@ -3110,16 +3110,6 @@ html { background-color: #050709; }
   border-color: rgba(74,222,128,0.35);
   color: #86efac;
 }
-.biome-related-chip.ns-darkerdepths {
-  background: rgba(12, 12, 12, 0.12);
-  border-color: rgba(87, 85, 85, 0.35);
-  color: #f4f7f5;
-}
-.biome-related-chip.ns-betternether {
-  background: rgba(19, 0, 0, 0.12);
-  border-color: rgba(151, 2, 2, 0.35);
-  color: #f82702;
-}
 .biome-related-chip.ns-wythers {
   background: rgba(251,191,36,0.12);
   border-color: rgba(251,191,36,0.35);
@@ -3134,26 +3124,6 @@ html { background-color: #050709; }
   background: rgba(168,85,247,0.12);
   border-color: rgba(168,85,247,0.35);
   color: #d8b4fe;
-}
-.biome-related-chip.ns-cinderscapes {
-  background: rgba(34, 1, 65, 0.12);
-  border-color: rgba(70, 3, 133, 0.35);
-  color: #7805f3;
-}
-.biome-related-chip.ns-incendium {
-  background: rgba(53, 23, 23, 0.12);
-  border-color: rgba(131, 55, 55, 0.35);
-  color: #f77193;
-}
-.biome-related-chip.ns-clifftree {
-  background: #30202e;
-  border-color: #92588d;
-  color: #faaef4;
-}
-.biome-related-chip.ns-blooming_biosphere {
-  background: #283b13;
-  border-color: #78a544;
-  color: #bbfd6f;
 }
 
 /* ---- Legend ---- */
@@ -3190,14 +3160,7 @@ html { background-color: #050709; }
 .biome-legend-dot.ns-terralith     { background: #86efac; }
 .biome-legend-dot.ns-wythers       { background: #fde68a; }
 .biome-legend-dot.ns-biomesoplenty { background: #fbcfe8; }
-.biome-legend-dot.ns-betternether { background: #f30202; }
-.biome-legend-dot.ns-darkerdepths { background: #272627; }
-.biome-legend-dot.ns-biomesoplenty { background: #fbcfe8; }
 .biome-legend-dot.ns-other         { background: #d8b4fe; }
-.biome-legend-dot.ns-cinderscapes         { background: #7902f8; }
-.biome-legend-dot.ns-incendium         { background: #f56186; }
-.biome-legend-dot.ns-clifftree         { background: #faaef4; }
-.biome-legend-dot.ns-blooming_biosphere   { background: #bbfd6f; }
 
 @media (max-width: 480px) {
   .biome-tooltip { width: 220px; }
@@ -3391,3 +3354,118 @@ html { background-color: #050709; }
     animation: none !important;
   }
 }
+
+/* ======================================================
+   VARIANT FORM BUTTONS — own space below mega/gmax
+   ====================================================== */
+
+.variant-btns {
+  margin-top: 0.6rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--border);
+}
+
+.form-btn-variant {
+  border-color: rgba(96,165,250,0.35) !important;
+  background: linear-gradient(135deg, var(--surface2), var(--surface3)) !important;
+  color: #93c5fd !important;
+}
+
+.form-btn-variant:hover {
+  border-color: #60a5fa !important;
+  color: #bfdbfe !important;
+  box-shadow: 0 0 12px rgba(96,165,250,0.25);
+}
+
+.form-btn-variant.active {
+  border-color: #60a5fa !important;
+  background: linear-gradient(135deg, rgba(37,99,235,0.25), rgba(29,78,216,0.15)) !important;
+  color: #dbeafe !important;
+  box-shadow: 0 0 16px rgba(96,165,250,0.3);
+}
+
+/* ======================================================
+   VARIANT TRACKER (Pokémon detail page sidebar)
+   ====================================================== */
+
+.variant-tracker-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.variant-tracker-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.variant-tracker-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  background: var(--surface3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.45rem 0.65rem;
+}
+
+.variant-tracker-name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.variant-tracker-btns {
+  display: flex;
+  gap: 0.25rem;
+  flex-shrink: 0;
+}
+
+/* ======================================================
+   VARIANT FORMS GRID (Personal Pokédex page)
+   ====================================================== */
+
+.pdex-variant-section {
+  border-top: 1px solid var(--border);
+  padding-top: 0.5rem;
+}
+
+.pdex-variant-card {
+  border-style: dashed;
+}
+
+.pdex-variant-card.pdex-captured,
+.pdex-variant-card.pdex-seen {
+  border-style: solid;
+}
+
+.pdex-variant-name {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  text-align: center;
+  line-height: 1.25;
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: break-word;
+  hyphens: none;
+  padding: 0 0.15rem;
+}
+
+.pdex-variant-name-main {
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: var(--text);
+  word-break: normal;
+}
+
+.pdex-variant-name-sub {
+  font-size: 0.55rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.pdex-variant-name:hover .pdex-variant-name-main { color: var(--accent); }

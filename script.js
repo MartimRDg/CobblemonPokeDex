@@ -418,14 +418,21 @@ function buildDrops(drops) {
 
 // Biome group definitions — used to show related biomes on hover
 var BIOME_GROUPS = {
-  'hills':          ['#minecraft:hill', 'highlands', '#c:hill', '#c:mountain/slope', '#c:windswept', 'biomesoplenty:jade_cliffs', 'biomesoplenty:mediterranean_forest', 'terralith:blooming_valley', 'terralith:forested_highlands', 'terralith:lavender_valley', 'terralith:lush_valley', 'terralith:moonlight_valley', 'terralith:sakura_valley', 'terralith:savanna_slopes', 'terralith:temperate_highlands', 'terralith:yosemite_lowlands', 'wythers:autumnal_crags', 'wythers:ayers_rock', 'wythers:icy_crags', 'wythers:old_growth_taiga_crags', 'wythers:taiga_crags', 'wythers:temperate_rainforest_crags', 'wythers:thermal_taiga_crags', 'wythers:windswept_jungle'],
-  'volcanic':       ['biomesoplenty:volcanic_plains', 'biomesoplenty:volcano', 'darkerdepths:molten_cavern', 'terralith:cave/mantle_caves', "terralith:volcanic_crater", "terralith:volcanic_peaks", "wythers:icy_volcano", "wythers:tropical_volcano", "wythers:volcano", "wythers:volcanic_chamber", "wythers:volcanic_crater"],
-  'nether/basalt':  ['minecraft:basalt_deltas', 'betternether:flooded_deltas', 'cinderscapes:blackstone_shales', 'incendium:ash_barrens', 'incendium:volcanic_deltas', "incendium:withered_forest"],
-  'freezing':       ['minecraft:frozen_river', 'minecraft:jagged_peaks', 'minecraft:snowy_beach', 'minecraft:snowy_plains', 'minecraft:snowy_slopes', 'frozen_ocean', 'glacial', 'snowy', '#c:snowy', "clifftree:frozen_caves", "terralith:emerald_peaks", "terralith:scarlet_mountains", "terralith:skylands_winter", "terralith:snowy_badlands", "wythers:crimson_tundra", "wythers:frozen_island", "wythers:snowy_bog", "wythers:snowy_canyon", "wythers:snowy_peaks", "wythers:snowy_tundra"],
-  'arid':           ['badlands', 'desert', 'savanna'],
-  'fresh water':    ['river', 'swamp', 'wythers:desert_lakes', 'wythers:guelta', 'wythers:tropical_forest_river'],
-  'jungle':         ['#minecraft:jungle', '#c:jungle', 'terralith:cave/underground_jungle', 'biomesoplenty:floodplain', 'biomesoplenty:rainforest', 'blooming_biosphere:rainforest', 'clifftree:tropical_river', 'wythers:dripleaf_swamp', 'wythers:eucalyptus_deanei_forest', 'wythers:highland_tropical_rainforest', 'wythers:humid_tropical_grassland', 'wythers:jungle_canyon', 'wythers:subtropical_forest', 'wythers:subtropical_forest_edge', 'wythers:subtropical_grassland', 'wythers:tropical_forest', 'wythers:tropical_forest_canyon', 'wythers:tropical_grassland', 'wythers:tropical_island', 'wythers:tropical_rainforest'],
-  'temperate':      ['forest', 'plains']
+  'hills':          ['#minecraft:is_hill', 'is_highlands', '#c:is_hill', '#c:is_mountain/slope', '#c:is_windswept', 'biomesoplenty:jade_cliffs', 'biomesoplenty:mediterranean_forest', 'terralith:blooming_valley', 'terralith:forested_highlands', 'terralith:lavender_valley', 'terralith:lush_valley', 'terralith:moonlight_valley', 'terralith:sakura_valley', 'terralith:savanna_slopes', 'terralith:temperate_highlands', 'terralith:yosemite_lowlands', 'wythers:autumnal_crags', 'wythers:ayers_rock', 'wythers:icy_crags', 'wythers:old_growth_taiga_crags', 'wythers:taiga_crags', 'wythers:temperate_rainforest_crags', 'wythers:thermal_taiga_crags', 'wythers:windswept_jungle'],
+  'volcanic':       ['Basalt Deltas', 'Volcanic Peaks', 'Crimson Forest', 'Warped Forest'],
+  'nether/basalt':  ['Nether Wastes', 'Basalt Deltas', 'Soul Sand Valley', 'Crimson Forest', 'Warped Forest'],
+  'freezing':       ['Snowy Plains', 'Ice Spikes', 'Frozen Peaks', 'Jagged Peaks', 'Snowy Slopes', 'Grove', 'Frozen River', 'Frozen Ocean', 'Deep Frozen Ocean'],
+  'forest':         ['Forest', 'Flower Forest', 'Birch Forest', 'Old Growth Birch Forest', 'Dark Forest'],
+  'plains':         ['Plains', 'Sunflower Plains', 'Meadow'],
+  'desert':         ['Desert'],
+  'jungle':         ['Jungle', 'Sparse Jungle', 'Bamboo Jungle'],
+  'swamp':          ['Swamp', 'Mangrove Swamp'],
+  'ocean':          ['Ocean', 'Deep Ocean', 'Warm Ocean', 'Lukewarm Ocean', 'Cold Ocean', 'Deep Lukewarm Ocean', 'Deep Cold Ocean'],
+  'savanna':        ['Savanna', 'Savanna Plateau', 'Windswept Savanna'],
+  'mesa':           ['Badlands', 'Eroded Badlands', 'Wooded Badlands'],
+  'taiga':          ['Taiga', 'Old Growth Pine Taiga', 'Old Growth Spruce Taiga', 'Snowy Taiga'],
+  'mountain':       ['Meadow', 'Grove', 'Snowy Slopes', 'Jagged Peaks', 'Frozen Peaks', 'Stony Peaks', 'Windswept Hills', 'Windswept Gravelly Hills'],
+  'cave':           ['Dripstone Caves', 'Lush Caves', 'Deep Dark']
 };
 
 function getBiomeGroupTooltip(biomeName) {
@@ -469,12 +476,6 @@ var NAMESPACE_LABELS = {
   'terralith':     'Terralith',
   'wythers':       'Wythers',
   'biomesoplenty': 'Biomes O\' Plenty',
-  'darkerdepths': 'Darker Depths',
-  'betternether': 'Better Nether',
-  'cinderscapes': 'Cinderscapes',
-  'incendium': 'Incendium',
-  'clifftree': 'CliffTree',
-  'blooming_biosphere': 'Blooming Biosphere',
   'other':         'Other'
 };
 
@@ -721,9 +722,12 @@ function buildMountCard(title, stats) {
     );
   }).join('');
 
-  var icon = title === 'Air Mount'
-    ? '<img src="assets/images/air_mount.png" alt="Air Mount" class="mount-icon">'
-    : '<img src="assets/images/ground_mount.png" alt="Ground Mount" class="mount-icon">';
+  var icons = {
+    'Air Mount':      'assets/images/air_mount.png',
+    'Ground Mount':   'assets/images/ground_mount.png',
+    'Swimming Mount': 'assets/images/swimming_mount.png'
+  };
+  var icon = '<img src="' + (icons[title] || 'assets/images/ground_mount.png') + '" alt="' + title + '" class="mount-icon">';
 
   return (
     '<div class="mount-card">' +
@@ -733,12 +737,28 @@ function buildMountCard(title, stats) {
   );
 }
 
+// Case-insensitive lookup for riding sub-objects (JSON may use 'Swimming', 'swimming', etc.)
+function getRidingKey(riding, key) {
+  if (!riding) return null;
+  if (riding[key]) return riding[key];
+  var lower = key.toLowerCase();
+  for (var k in riding) {
+    if (k.toLowerCase() === lower) return riding[k];
+  }
+  return null;
+}
+
 function buildRidingSection(poke) {
   if (!poke.rideable) return '';
 
-  var hasAir = poke.flying && poke.riding && poke.riding.air;
-  var ground = buildMountCard('Ground Mount', poke.riding ? poke.riding.ground : null);
-  var air    = hasAir ? buildMountCard('Air Mount', poke.riding.air) : '';
+  var riding = poke.riding || {};
+  var hasAir      = poke.flying && getRidingKey(riding, 'air');
+  var groundData  = getRidingKey(riding, 'ground');
+  var swimData    = getRidingKey(riding, 'swimming');
+
+  var ground   = buildMountCard('Ground Mount', groundData);
+  var air      = hasAir ? buildMountCard('Air Mount', getRidingKey(riding, 'air')) : '';
+  var swimming = swimData ? buildMountCard('Swimming Mount', swimData) : '';
 
   return (
     '<section class="detail-section riding-section">' +
@@ -747,6 +767,7 @@ function buildRidingSection(poke) {
       '<div class="mount-grid">' +
         ground +
         air +
+        swimming +
       '</div>' +
     '</section>'
   );
@@ -758,10 +779,10 @@ function resolveFormVideo(poke, version) {
   var v = version || 'Normal';
   if (v === 'Normal') return poke.video || null;
   if (v === 'Shiny')  return poke.shinyVideo || null;
-  var megas = poke.megaEvolutions || [];
-  for (var i = 0; i < megas.length; i++) {
-    if (v === megas[i].name)            return megas[i].video || null;
-    if (v === megas[i].name + ' Shiny') return megas[i].shinyVideo || null;
+  var forms = (poke.megaEvolutions || []).concat(poke.variants || []);
+  for (var i = 0; i < forms.length; i++) {
+    if (v === forms[i].name)            return forms[i].video || null;
+    if (v === forms[i].name + ' Shiny') return forms[i].shinyVideo || null;
   }
   // Unknown version (e.g. pokemon name used as version) — fall back to Normal
   return poke.video || null;
@@ -781,21 +802,110 @@ function resolveFormSprite(poke, version) {
     return poke.sprite;
   }
 
-  // Mega / Gigantamax forms
-  var megas = poke.megaEvolutions || [];
-  for (var i = 0; i < megas.length; i++) {
-    var mega = megas[i];
-    if (v === mega.name) {
-      return mega.sprite;
+  // Mega / Gigantamax / Variant forms
+  var forms = (poke.megaEvolutions || []).concat(poke.variants || []);
+  for (var i = 0; i < forms.length; i++) {
+    var f = forms[i];
+    if (v === f.name) {
+      return f.sprite;
     }
-    if (v === mega.name + ' Shiny') {
-      return mega.shinySprite || mega.sprite;
+    if (v === f.name + ' Shiny') {
+      return f.shinySprite || f.sprite;
     }
   }
 
   // Unknown version — fall back to Normal sprite
   return poke.sprite;
 }
+
+
+// ====================== Variant Progress Tracker ======================
+// Variants are tracked separately from base Pokémon, keyed as "id:VariantName"
+var _variantProgress = {}; // { "id:VariantName": { seen: bool, captured: bool } }
+
+function loadVariantProgress() {
+  try {
+    var saved = localStorage.getItem('variantProgress');
+    if (saved) _variantProgress = JSON.parse(saved);
+  } catch(e) {}
+}
+
+function saveVariantProgress() {
+  try { localStorage.setItem('variantProgress', JSON.stringify(_variantProgress)); } catch(e) {}
+}
+
+function variantKey(pokeId, variantName) {
+  return pokeId + ':' + variantName;
+}
+
+// Build the "Variant Tracker" meta-card shown on a Pokémon's detail page
+function buildVariantTrackerCard(poke) {
+  if (!poke.variants || !poke.variants.length) return '';
+
+  loadVariantProgress();
+
+  // "Normal" form counts as a variant too — shown first
+  var allEntries = [{ name: poke.name, _isBase: true }].concat(poke.variants);
+
+  var rows = allEntries.map(function(variant) {
+    var key = variantKey(poke.id, variant.name);
+    var p   = _variantProgress[key] || {};
+    var isSeen = p.seen || p.captured;
+    var isCap  = p.captured;
+
+    return (
+      '<div class="variant-tracker-row">' +
+        '<span class="variant-tracker-name">' + variant.name + '</span>' +
+        '<div class="variant-tracker-btns">' +
+          '<button class="pdex-btn pdex-btn-seen' + (isSeen ? ' active' : '') + '" ' +
+            'onclick="toggleVariantSeen(' + poke.id + ', \'' + variant.name.replace(/'/g, "\\'") + '\')" title="Mark as Seen">\uD83D\uDC41</button>' +
+          '<button class="pdex-btn pdex-btn-cap' + (isCap ? ' active' : '') + '" ' +
+            'onclick="toggleVariantCaptured(' + poke.id + ', \'' + variant.name.replace(/'/g, "\\'") + '\')" title="Mark as Captured">\u2713</button>' +
+        '</div>' +
+      '</div>'
+    );
+  }).join('');
+
+  return (
+    '<div class="meta-card variant-tracker-card">' +
+      '<h3 class="meta-title">Variant Forms</h3>' +
+      '<div class="variant-tracker-list">' + rows + '</div>' +
+    '</div>'
+  );
+}
+
+window.toggleVariantSeen = function(pokeId, variantName) {
+  var key = variantKey(pokeId, variantName);
+  var p = _variantProgress[key] || {};
+  if (p.seen && !p.captured) {
+    delete _variantProgress[key];
+  } else {
+    p.seen = !p.seen;
+    if (!p.seen) p.captured = false;
+    _variantProgress[key] = p;
+  }
+  saveVariantProgress();
+  // Re-render the tracker card in place
+  var card = document.querySelector('.variant-tracker-card');
+  if (card) {
+    var poke = window._shinyData ? window._shinyData.poke : null;
+    if (poke) card.outerHTML = buildVariantTrackerCard(poke);
+  }
+};
+
+window.toggleVariantCaptured = function(pokeId, variantName) {
+  var key = variantKey(pokeId, variantName);
+  var p = _variantProgress[key] || {};
+  p.captured = !p.captured;
+  if (p.captured) p.seen = true;
+  _variantProgress[key] = p;
+  saveVariantProgress();
+  var card = document.querySelector('.variant-tracker-card');
+  if (card) {
+    var poke = window._shinyData ? window._shinyData.poke : null;
+    if (poke) card.outerHTML = buildVariantTrackerCard(poke);
+  }
+};
 
 function buildDecksSection(poke) {
   if (!poke.decks || !poke.decks.length) return '';
@@ -1014,10 +1124,12 @@ function loadPokemonDetail() {
     );
   }).join('');
 
+  var megaCount = (poke.megaEvolutions || []).length;
+
   var megaButtons = '';
-  if (poke.megaEvolutions && poke.megaEvolutions.length > 0) {
+  if (megaCount > 0) {
     megaButtons = '<div class="form-btns">' +
-      '<button class="form-btn active" onclick="switchForm(0)">Normal</button>' +
+      '<button class="form-btn active" onclick="switchForm(0)">' + poke.name + '</button>' +
       poke.megaEvolutions.map(function(mega, i) {
         var name = mega.name || '';
         var variantClass = '';
@@ -1026,6 +1138,18 @@ function loadPokemonDetail() {
         else if (/gigantamax|gmax/i.test(name)) variantClass = 'form-btn-gmax';
         else if (/mega/i.test(name))      variantClass = 'form-btn-mega';
         return '<button class="form-btn ' + variantClass + '" onclick="switchForm(' + (i + 1) + ')"><span class="form-btn-label">' + name + '</span></button>';
+      }).join('') +
+    '</div>';
+  }
+
+  // Variants — own button group, own space, indexed after mega evolutions
+  var variantButtons = '';
+  if (poke.variants && poke.variants.length > 0) {
+    variantButtons = '<div class="form-btns variant-btns">' +
+      (megaCount === 0 ? '<button class="form-btn active" onclick="switchForm(0)">' + poke.name + '</button>' : '') +
+      poke.variants.map(function(variant, i) {
+        var name = variant.name || '';
+        return '<button class="form-btn form-btn-variant" onclick="switchForm(' + (megaCount + i + 1) + ')"><span class="form-btn-label">' + name + '</span></button>';
       }).join('') +
     '</div>';
   }
@@ -1040,6 +1164,7 @@ function loadPokemonDetail() {
           '</div>' +
           shinyBtn +
           megaButtons +
+          variantButtons +
         '</div>' +
 
         '<div class="detail-info">' +
@@ -1061,6 +1186,7 @@ function loadPokemonDetail() {
               '<h3 class="meta-title">Dropped Items</h3>' +
               buildDrops(poke.drops) +
             '</div>' +
+            buildVariantTrackerCard(poke) +
           '</div>' +
         '</div>' +
       '</div>' +
@@ -1150,6 +1276,10 @@ window.switchForm = function(index) {
   d.isShiny   = false;
 
   var isNormal = index === 0;
+  var megas    = d.poke.megaEvolutions || [];
+  var variants = d.poke.variants || [];
+  var allForms = megas.concat(variants);
+
   var form = isNormal
     ? {
         name:        d.poke.name,
@@ -1163,7 +1293,7 @@ window.switchForm = function(index) {
         resistances: d.poke.resistances,
         immunities:  d.poke.immunities,
       }
-    : d.poke.megaEvolutions[index - 1];
+    : allForms[index - 1];
 
   // Sprite — swap video or image
   var spriteWrap = document.querySelector('.sprite-wrap');
@@ -1241,10 +1371,30 @@ window.switchForm = function(index) {
     }).join('');
   }
 
-  // Active form tab
-  document.querySelectorAll('.form-btn').forEach(function(b, i) {
-    b.classList.toggle('active', i === index);
-  });
+  // Active form tab — handle separate mega/variant button groups
+  var megaGroup    = document.querySelector('.form-btns:not(.variant-btns)');
+  var variantGroup = document.querySelector('.form-btns.variant-btns');
+
+  if (megaGroup) {
+    var megaBtns = megaGroup.querySelectorAll('.form-btn');
+    megaBtns.forEach(function(b, i) {
+      b.classList.toggle('active', i === index);
+    });
+  }
+
+  if (variantGroup) {
+    var variantBtns = variantGroup.querySelectorAll('.form-btn');
+    var hasOwnNormal = variantBtns.length === (d.poke.variants || []).length + 1;
+    variantBtns.forEach(function(b, i) {
+      var formIdx = hasOwnNormal ? i : i + 1 + megas.length;
+      // If variant group has its own Normal button (i===0 maps to index 0),
+      // otherwise variant buttons start at megas.length + 1
+      var matchIndex = hasOwnNormal
+        ? (i === 0 ? 0 : megas.length + i)
+        : megas.length + 1 + i;
+      b.classList.toggle('active', matchIndex === index);
+    });
+  }
 };
 
 
@@ -1356,9 +1506,10 @@ window.toggleShiny = function() {
   var d = window._shinyData;
   if (!d || !d.poke) return;
 
+  var allForms = (d.poke.megaEvolutions || []).concat(d.poke.variants || []);
   var form = d.formIndex === 0
     ? { sprite: d.poke.sprite, shinySprite: d.poke.shinySprite, shinyVideo: d.poke.shinyVideo }
-    : d.poke.megaEvolutions[d.formIndex - 1];
+    : allForms[d.formIndex - 1];
 
   if (!form.shinySprite && !form.shinyVideo) { return; }
   d.isShiny = !d.isShiny;
@@ -2357,11 +2508,14 @@ function loadPersonalPokedex() {
     if (saved) _pdexProgress = JSON.parse(saved);
   } catch(e) {}
 
+  loadVariantProgress();
+
   var total = State.allPokemon.length;
   document.getElementById('pdexTotal').textContent = total;
 
   updatePdexStats();
   renderPdexGrid();
+  renderPdexVariantGrid();
 }
 
 function savePdexProgress() {
@@ -2452,6 +2606,92 @@ function renderPdexGrid() {
   setTimeout(playAllVideos, 100);
 }
 
+// Render the separate "Variant Forms" grid — all variants across all Pokémon,
+// tracked independently and excluded from the main Pokédex count.
+// Includes the base/"Normal" form alongside its named variants so all forms
+// of a multi-variant species (e.g. Oricorio Baile/Pom Pom/Pa'u/Sensu) show together.
+function renderPdexVariantGrid() {
+  var grid = document.getElementById('pdexVariantGrid');
+  if (!grid) return;
+
+  var entries = [];
+  State.allPokemon.forEach(function(poke) {
+    if (!poke.variants || !poke.variants.length) return;
+    // Synthesize a "Normal" entry representing the base form
+    entries.push({
+      poke: poke,
+      variant: {
+        name: 'Normal',
+        sprite: poke.sprite,
+        video: poke.video,
+        shinySprite: poke.shinySprite,
+        shinyVideo: poke.shinyVideo
+      }
+    });
+    poke.variants.forEach(function(variant) {
+      entries.push({ poke: poke, variant: variant });
+    });
+  });
+
+  if (!entries.length) {
+    grid.innerHTML = '<p class="moves-empty" style="grid-column:1/-1">No variant forms available.</p>';
+    return;
+  }
+
+  // Apply the same filter as the main grid
+  entries = entries.filter(function(e) {
+    var key = variantKey(e.poke.id, e.variant.name);
+    var p = _variantProgress[key] || {};
+    switch (_pdexFilter) {
+      case 'captured':  return p.captured;
+      case 'seen':      return p.seen && !p.captured;
+      case 'legendary': return e.poke.legendary;
+      case 'mythical':  return e.poke.mythical;
+      case 'missing':   return !p.captured;
+      default:          return true;
+    }
+  });
+
+  if (entries.length === 0) {
+    grid.innerHTML = '<p class="moves-empty" style="grid-column:1/-1">No variant forms in this category.</p>';
+    return;
+  }
+
+  grid.innerHTML = entries.map(function(e) {
+    var poke    = e.poke;
+    var variant = e.variant;
+    var key     = variantKey(poke.id, variant.name);
+    var p       = _variantProgress[key] || {};
+    var sprite  = variant.video || variant.sprite || poke.video || poke.sprite;
+    var isSeen  = p.seen || p.captured;
+    var isCap   = p.captured;
+    var num     = poke.number || String(poke.id).padStart(4, '0');
+
+    var isNormal   = variant.name === 'Normal';
+    var displayName = isNormal ? poke.name : variant.name;
+
+    return (
+      '<div class="pdex-card pdex-variant-card' + (isNormal ? ' pdex-variant-base' : '') + (isCap ? ' pdex-captured' : isSeen ? ' pdex-seen' : '') + '">' +
+        '<div class="pdex-card-btns">' +
+          '<button class="pdex-btn pdex-btn-seen' + (isSeen ? ' active' : '') + '" onclick="toggleVariantSeen(' + poke.id + ', \'' + variant.name.replace(/'/g, "\\'") + '\'); renderPdexVariantGrid();" title="Mark as Seen">👁</button>' +
+          '<button class="pdex-btn pdex-btn-cap'  + (isCap  ? ' active' : '') + '" onclick="toggleVariantCaptured(' + poke.id + ', \'' + variant.name.replace(/'/g, "\\'") + '\'); renderPdexVariantGrid();" title="Mark as Captured">✓</button>' +
+        '</div>' +
+        '<div class="pdex-sprite-wrap">' +
+          (isSeen
+            ? buildSpriteEl(sprite, displayName, 'pdex-sprite')
+            : '<div class="pdex-sprite-unknown">?</div>') +
+        '</div>' +
+        '<a href="pokemon.html?id=' + poke.id + '" class="pdex-num pdex-variant-name">' +
+          '<span class="pdex-variant-name-main">' + displayName + '</span>' +
+          '<span class="pdex-variant-name-sub">#' + num + '</span>' +
+        '</a>' +
+      '</div>'
+    );
+  }).join('');
+
+  setTimeout(playAllVideos, 100);
+}
+
 window.toggleSeen = function(id) {
   var p = _pdexProgress[id] || {};
   if (p.seen && !p.captured) {
@@ -2493,11 +2733,16 @@ window.setPdexFilter = function(filter) {
     }
   });
   renderPdexGrid();
+  renderPdexVariantGrid();
   staggerPdexCards();
 };
 
 window.exportProgress = function() {
-  var data = JSON.stringify(_pdexProgress, null, 2);
+  var combined = {
+    pokedex:  _pdexProgress,
+    variants: _variantProgress
+  };
+  var data = JSON.stringify(combined, null, 2);
   var blob = new Blob([data], { type: 'application/json' });
   var url  = URL.createObjectURL(blob);
   var a    = document.createElement('a');
@@ -2513,10 +2758,20 @@ window.importProgress = function(event) {
   var reader = new FileReader();
   reader.onload = function(e) {
     try {
-      _pdexProgress = JSON.parse(e.target.result);
+      var parsed = JSON.parse(e.target.result);
+      // New format: { pokedex: {...}, variants: {...} }
+      // Old format: flat object of pdex progress only
+      if (parsed.pokedex || parsed.variants) {
+        _pdexProgress   = parsed.pokedex  || {};
+        _variantProgress = parsed.variants || {};
+      } else {
+        _pdexProgress = parsed;
+      }
       savePdexProgress();
+      saveVariantProgress();
       updatePdexStats();
       renderPdexGrid();
+      renderPdexVariantGrid();
     } catch(err) {
       alert('Invalid progress file.');
     }
@@ -2527,7 +2782,10 @@ window.importProgress = function(event) {
 window.resetProgress = function() {
   if (!confirm('Reset all progress? This cannot be undone.')) return;
   _pdexProgress = {};
+  _variantProgress = {};
   savePdexProgress();
+  saveVariantProgress();
   updatePdexStats();
   renderPdexGrid();
+  renderPdexVariantGrid();
 };

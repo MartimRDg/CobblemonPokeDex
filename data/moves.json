@@ -1159,6 +1159,262 @@
       "accuracy": 100,
       "pp": 10,
       "description": "The target is struck with an icy-cold beam of energy. This may also leave the target frozen."
+    },
+    "Pound": {
+      "type": "Normal",
+      "category": "Physical",
+      "power": 40,
+      "accuracy": 100,
+      "pp": 35,
+      "description": "The target is physically pounded with a long tail, a foreleg, or the like."
+    },
+    "Double Slap": {
+      "type": "Normal",
+      "category": "Physical",
+      "power": 15,
+      "accuracy": 85,
+      "pp": 10,
+      "description": "The target is slapped repeatedly, back and forth, two to five times in a row."
+    },
+    "Mirror Move": {
+      "type": "Flying",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user counters the target by mimicking the target's last move."
+    },
+    "Peck": {
+      "type": "Flying",
+      "category": "Physical",
+      "power": 35,
+      "accuracy": 100,
+      "pp": 35,
+      "description": "The target is jabbed with a sharply pointed beak or horn to inflict damage."
+    },
+    "Baton Pass": {
+      "type": "Normal",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 40,
+      "description": "The user switches places with a party Pokémon in waiting and passes along any stat changes."
+    },
+    "Feather Dance": {
+      "type": "Flying",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 15,
+      "description": "The user covers the target's body with a mass of down that harshly lowers its Attack stat."
+    },
+     "Teeter Dance": {
+      "type": "Normal",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user performs a wobbly dance that confuses every Pokémon around it."
+    },
+     "Flatter": {
+      "type": "Dark",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 15,
+      "description": "Flattery is used to confuse the target. However, this also boosts the target's Sp. Atk stat."
+    },
+    "Revelation Dance": {
+      "type": "Normal",
+      "category": "Special",
+      "power": 90,
+      "accuracy": 100,
+      "pp": 15,
+      "description": "The user attacks the target by dancing with all its might. This move becomes the same type as the user's type."
+    },
+    "Agility": {
+      "type": "Psychic",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 30,
+      "description": "The user relaxes and lightens its body to move faster. This sharply boosts its Speed stat."
+    },
+    "Alluring Voice": {
+      "type": "Fairy",
+      "category": "Special",
+      "power": 80,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user attacks the target using its angelic voice. This also confuses the target if its stats have been boosted during the turn."
+    },
+    "Attract": {
+      "type": "Normal",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 15,
+      "description": "If the target is of the opposite gender to the user, it becomes infatuated with the user and will sometimes be unable to use its moves."
+    },
+    "Calm Mind": {
+      "type": "Psychic",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user quietly focuses its mind and calms its spirit to boost its Sp. Atk and Sp. Def stats."
+    },
+    "Captivate": {
+      "type": "Normal",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 20,
+      "description": "If any opposing Pokémon is the opposite gender of the user, it is charmed, which harshly lowers its Sp. Atk stat."
+    },
+     "Charm": {
+      "type": "Fairy",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user gazes at the target rather charmingly, making it less wary. This harshly lowers the target's Attack stat."
+    },
+     "Covet": {
+      "type": "Normal",
+      "category": "Physical",
+      "power": 60,
+      "accuracy": 100,
+      "pp": 25,
+      "description": "The user endearingly approaches the target, then steals the target's held item."
+    },
+      "Defog": {
+      "type": "Flying",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 15,
+      "description": "A strong wind blows away the target's barriers such as Reflect or Light Screen. This also lowers the target's evasiveness."
+    },
+     "Dual Wingbeat": {
+      "type": "Flying",
+      "category": "Physical",
+      "power": 40,
+      "accuracy": 90,
+      "pp": 10,
+      "description": "The user slams the target with its wings to inflict damage. The target is hit twice in a row."
+    },
+     "Embargo": {
+      "type": "Dark",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 15,
+      "description": "This move prevents the target from using its held item for five turns. Its Trainer is also prevented from using items on it."
+    },
+     "Icy Wind": {
+      "type": "Ice",
+      "category": "Special",
+      "power": 55,
+      "accuracy": 95,
+      "pp": 15,
+      "description": "The user attacks with a gust of chilled air. This also lowers opposing Pokémon's Speed stats."
+    },
+     "Pluck": {
+      "type": "Flying",
+      "category": "Physical",
+      "power": 60,
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user attacks by pecking the target. If the target is holding a Berry, the user eats it and gains its effect."
+    },
+     "Psych Up": {
+      "type": "Normal",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user hypnotizes itself into copying any stat change made by the target."
+    },
+     "Quash": {
+      "type": "Dark",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 15,
+      "description": "The user suppresses the target and makes its move go last."
+    },
+     "Reversal": {
+      "type": "Fighting",
+      "category": "Physical",
+      "power": 0,
+      "accuracy": 100,
+      "pp": 15,
+      "description": "An all-out attack that becomes more powerful the less HP the user has."
+    },
+    "Role Play": {
+      "type": "Psychic",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user mimics the target completely, copying the target's Ability."
+    },
+    "Safeguard": {
+      "type": "Normal",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 25,
+      "description": "The user creates a protective field that prevents status conditions for five turns."
+    },
+    "Sky Attack": {
+      "type": "Flying",
+      "category": "Physical",
+      "power": 140,
+      "accuracy": 90,
+      "pp": 5,
+      "description": "The user attacks the turn after using this move. This move has a heightened chance of landing a critical hit and may also make the target flinch."
+    },
+    "Tailwind": {
+      "type": "Flying",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 15,
+      "description": "The user whips up a turbulent whirlwind that boosts the Speed stats of itself and its allies for four turns."
+    },
+    "Taunt": {
+      "type": "Dark",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The target is taunted into a rage that allows it to use only attack moves for three turns."
+    },
+    "Trailblaze": {
+      "type": "Grass",
+      "category": "Physical",
+      "power": 50,
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user attacks suddenly as if leaping out from tall grass. The user's nimble footwork boosts its Speed stat."
+    },
+    "U-turn": {
+      "type": "Bug",
+      "category": "Physical",
+      "power": 70,
+      "accuracy": 100,
+      "pp": 20,
+      "description": "After making its attack, the user rushes back to switch places with a party Pokémon in waiting."
+    },
+    "Quiver Dance": {
+      "type": "Bug",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user lightly performs a beautiful, mystic dance. This boosts the user's Sp. Atk, Sp. Def, and Speed stats."
     }
   }
 }

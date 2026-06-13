@@ -23,6 +23,9 @@
     },
     "Swift Swim": {
       "description": "Boosts the Pokémon's Speed stat in rain."
+    },
+     "Dancer": {
+      "description": "Whenever a dance move is used in battle, the Pokémon will copy the user to immediately perform that dance move itself."
     }
   }
 }
