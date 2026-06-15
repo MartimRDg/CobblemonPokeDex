@@ -713,6 +713,347 @@
     {
       "_comment": "Base Stats",
 
+      "id": 276,
+      "name": "Taillow",
+      "number": "0276",
+      "types": ["Normal", "Flying"],
+      "generation": 3,
+      "rarity": "Common",
+      "rideable": false,
+      "flying": false,
+      "legendary": false,
+      "mythical": false,
+      "catchRate": 200,
+
+      "abilities": ["Guts", "Scrappy (Hidden)"],
+
+      "baseStats": {
+        "hp": 40,
+        "attack": 55,
+        "defense": 30,
+        "spAttack": 30,
+        "spDefense": 30,
+        "speed": 85
+       },
+
+       "evYield": {
+        "speed": 1
+       },
+
+       "drops": [
+        { "item": "Feather", "chance": 100, "quantity": "0-1", "image": "assets/images/items/feather.png"},
+        { "item": "Raw Chicken", "chance": 100, "quantity": "1", "image": "assets/images/items/raw_chicken.png"},
+        { "item": "Charti Berry", "chance": 2.5, "quantity": "1", "image": "assets/images/items/charti_berry.png"}
+       ],
+
+      "weaknesses": ["Electric", "Ice", "Rock"],
+      "resistances": ["Grass", "Bug"],
+      "immunities": ["Ghost", "Ground"],
+      
+      "spawnOptions": [
+        {
+         "label": "Day",
+         "bucket": "Common",
+         "level": "2-27",
+         "context": "Grounded",
+         "preset": "Natural",
+         "biomes": ["Sky", "Temperate"],
+         "notBiomes": ["Spooky"],
+         "isDay": true,
+         "requirements": "N/A"
+        },
+        {
+         "label": "Any",
+         "bucket": "Common",
+         "level": "2-27",
+         "context": "Grounded",
+         "preset": "Natural",
+         "biomes": ["Aether"],
+         "requirements": "N/A"
+        }
+      ],
+
+      "video": "assets/videos/taillow.gif",
+      "shinyVideo":"assets/videos/taillow-shiny.gif",
+
+      "_comment2": "Evolutions",
+      
+      "evolutions": [
+       { "id": 276, "name": "Taillow", "level": null },
+       { "id": 277, "name": "Swellow", "level": 22 }
+      ],
+
+      "_comment3": "Movesets",
+
+      "moves": {
+        "level": [
+         { "level": 1, "name": "Peck" },
+         { "level": 1, "name": "Growl" },
+         { "level": 5, "name": "Focus Energy" },
+         { "level": 9, "name": "Quick Attack" },
+         { "level": 13, "name": "Wing Attack" },
+         { "level": 17, "name": "Double Team" },
+         { "level": 21, "name": "Aerial Ace" },
+         { "level": 25, "name": "Quick Guard" },
+         { "level": 29, "name": "Agility" },
+         { "level": 33, "name": "Air Slash" },
+         { "level": 37, "name": "Endeavor" },
+         { "level": 41, "name": "Brave Bird" },
+         { "level": 45, "name": "Reversal" }
+        ],
+        "tm": [
+         { "name": "Aerial Ace" },
+         { "name": "Agility" },
+         { "name": "Air Cutter" },
+         { "name": "Air Slash" },
+         { "name": "Assurance" },  
+         { "name": "Baton Pass" },
+         { "name": "Brave Bird" },
+         { "name": "Defog" },
+         { "name": "Double Team" },
+         { "name": "Dual Wingbeat" },
+         { "name": "Echoed Voice" },
+         { "name": "Endeavor" },
+         { "name": "Endure" },
+         { "name": "Facade" },
+         { "name": "Fly" },
+         { "name": "Focus Energy" },
+         { "name": "Heat Wave" },
+         { "name": "Hurricane" },
+         { "name": "Mud-Slap" },
+         { "name": "Ominous Wind" },
+         { "name": "Pluck" },
+         { "name": "Protect" },
+         { "name": "Rain Dance" },
+         { "name": "Rest" },
+         { "name": "Reversal" },
+         { "name": "Roost" },
+         { "name": "Sky Attack" },
+         { "name": "Sleep Talk" },
+         { "name": "Steel Wing" },
+         { "name": "Substitute" },
+         { "name": "Sunny Day" },
+         { "name": "Tailwind" },
+         { "name": "Tera Blast" },
+         { "name": "Thief" },
+         { "name": "Twister" },
+         { "name": "U-turn" },
+         { "name": "Work Up" }
+        ],
+        "egg": [
+         { "name": "Boomburst" },
+         { "name": "Mirror Move" },
+         { "name": "Pursuit" },
+         { "name": "Rage" },
+         { "name": "Refresh" },
+         { "name": "Supersonic" },
+         { "name": "Whirlwind" }
+        ],
+        "tutor": [
+         { "name": "Aerial Ace" },
+         { "name": "Air Cutter" },
+         { "name": "Defog" },
+         { "name": "Dual Wingbeat" },
+         { "name": "Endeavor" },
+         { "name": "Focus Energy" },
+         { "name": "Heat Wave" },
+         { "name": "Mud-Slap" },
+         { "name": "Ominous Wind" },
+         { "name": "Rest" },
+         { "name": "Roost" },
+         { "name": "Sky Attack" },
+         { "name": "Sleep Talk" },
+         { "name": "Tailwind" },
+         { "name": "Twister" }
+       ]
+     }
+    },
+        {
+      "_comment": "Base Stats",
+
+      "id": 277,
+      "name": "Swellow",
+      "number": "0277",
+      "types": ["Normal", "Flying"],
+      "generation": 3,
+      "rarity": "Common",
+      "rideable": true,
+      "flying": true,
+      "legendary": false,
+      "mythical": false,
+      "catchRate": 45,
+
+      "abilities": ["Guts", "Scrappy (Hidden)"],
+
+      "baseStats": {
+        "hp": 60,
+        "attack": 85,
+        "defense": 60,
+        "spAttack": 75,
+        "spDefense": 50,
+        "speed": 125
+       },
+
+       "evYield": {
+        "speed": 2
+       },
+
+       "drops": [
+        { "item": "Feather", "chance": 100, "quantity": "0-2", "image": "assets/images/items/feather.png"},
+        { "item": "Raw Chicken", "chance": 100, "quantity": "1", "image": "assets/images/items/raw_chicken.png"},
+        { "item": "Sharp Beak", "chance": 2.5, "quantity": "1", "image": "assets/images/items/sharp_break.png"},
+        { "item": "Charti Berry", "chance": 5, "quantity": "1", "image": "assets/images/items/charti_berry.png"}
+       ],
+
+      "weaknesses": ["Electric", "Ice", "Rock"],
+      "resistances": ["Grass", "Bug"],
+      "immunities": ["Ghost", "Ground"],
+      
+      "spawnOptions": [
+        {
+         "label": "Day",
+         "bucket": "Common",
+         "level": "22-46",
+         "context": "Grounded",
+         "preset": "Natural",
+         "biomes": ["Sky", "Temperate"],
+         "notBiomes": ["Spooky"],
+         "isDay": true,
+         "requirements": "N/A"
+        },
+        {
+         "label": "Any",
+         "bucket": "Common",
+         "level": "22-46",
+         "context": "Grounded",
+         "preset": "Natural",
+         "biomes": ["Aether"],
+         "requirements": "N/A"
+        }
+      ],
+
+      "video": "assets/videos/swellow.gif",
+      "shinyVideo":"assets/videos/swellow-shiny.gif",
+
+      "riding": {
+       "ground": {
+         "acceleration": { "min": 15, "max": 35 },
+         "jump":         { "min": 15, "max": 30 },
+         "skill":        { "min": 25, "max": 40 },
+         "speed":        { "min": 15, "max": 30 },
+         "stamina":      { "min": 20, "max": 40 }
+        },
+       "air": {
+         "acceleration": { "min": 40, "max": 70 },
+         "jump":         { "min": 30, "max": 55 },
+         "skill":        { "min": 45, "max": 75 },
+         "speed":        { "min": 35, "max": 65 },
+         "stamina":      { "min": 25, "max": 50 }
+        }
+      },
+
+      "_comment2": "Evolutions",
+      
+      "evolutions": [
+       { "id": 276, "name": "Taillow", "level": null },
+       { "id": 277, "name": "Swellow", "level": 22 }
+      ],
+
+      "_comment3": "Movesets",
+
+      "moves": {
+        "level": [
+         { "level": 1, "name": "Pluck" },
+         { "level": 1, "name": "Peck" },
+         { "level": 1, "name": "Growl" },
+         { "level": 1, "name": "Focus Energy" },
+         { "level": 1, "name": "Quick Attack" },
+         { "level": 1, "name": "Air Slash" },
+         { "level": 1, "name": "Brave Bird" },
+         { "level": 13, "name": "Wing Attack" },
+         { "level": 17, "name": "Double Team" },
+         { "level": 21, "name": "Aerial Ace" },
+         { "level": 27, "name": "Quick Guard" },
+         { "level": 33, "name": "Agility" },
+         { "level": 45, "name": "Endeavor" },
+         { "level": 57, "name": "Reversal" }
+        ],
+        "tm": [
+         { "name": "Aerial Ace" },
+         { "name": "Agility" },
+         { "name": "Air Cutter" },
+         { "name": "Air Slash" },
+         { "name": "Assurance" },  
+         { "name": "Baton Pass" },
+         { "name": "Brave Bird" },
+         { "name": "Defog" },
+         { "name": "Double Team" },
+         { "name": "Dual Wingbeat" },
+         { "name": "Echoed Voice" },
+         { "name": "Endeavor" },
+         { "name": "Endure" },
+         { "name": "Facade" },
+         { "name": "Fly" },
+         { "name": "Focus Energy" },
+         { "name": "Giga Impact" },
+         { "name": "Heat Wave" },
+         { "name": "Hurricane" },
+         { "name": "Hyper Beam" },
+         { "name": "Laser Focus" },
+         { "name": "Mud-Slap" },
+         { "name": "Ominous Wind" },
+         { "name": "Pluck" },
+         { "name": "Protect" },
+         { "name": "Rain Dance" },
+         { "name": "Rest" },
+         { "name": "Reversal" },
+         { "name": "Roost" },
+         { "name": "Sky Attack" },
+         { "name": "Sleep Talk" },
+         { "name": "Steel Wing" },
+         { "name": "Substitute" },
+         { "name": "Sunny Day" },
+         { "name": "Tailwind" },
+         { "name": "Tera Blast" },
+         { "name": "Thief" },
+         { "name": "Twister" },
+         { "name": "U-turn" },
+         { "name": "Work Up" }
+        ],
+        "egg": [
+         { "name": "Boomburst" },
+         { "name": "Mirror Move" },
+         { "name": "Pursuit" },
+         { "name": "Rage" },
+         { "name": "Refresh" },
+         { "name": "Supersonic" },
+         { "name": "Whirlwind" }
+        ],
+        "tutor": [
+         { "name": "Aerial Ace" },
+         { "name": "Air Cutter" },
+         { "name": "Defog" },
+         { "name": "Dual Wingbeat" },
+         { "name": "Endeavor" },
+         { "name": "Focus Energy" },
+         { "name": "Giga Impact" },
+         { "name": "Heat Wave" },
+         { "name": "Hyper Beam" },
+         { "name": "Laser Focus" },
+         { "name": "Mud-Slap" },
+         { "name": "Ominous Wind" },
+         { "name": "Rest" },
+         { "name": "Roost" },
+         { "name": "Sky Attack" },
+         { "name": "Sleep Talk" },
+         { "name": "Tailwind" },
+         { "name": "Twister" }
+       ]
+     }
+    },
+    {
+      "_comment": "Base Stats",
+
       "id": 741,
       "name": "Oricorio Baile",
       "number": "0741",
@@ -1010,7 +1351,7 @@
          "level": "3-28",
          "context": "Fishing",
          "preset": "",
-         "biomes": ["Arid", "Fresh Water", "Hills", "Jungle", "Temperate"],
+         "biomes": ["Arid", "Freshwater", "Hills", "Jungle", "Temperate"],
          "notbiomes": ["Freezing"],
          "seeSky": true,
          "requirements": "N/A"
@@ -1021,7 +1362,7 @@
          "level": "3-28",
          "context": "Fishing",
          "preset": "",
-         "biomes": ["Arid", "Fresh Water", "Hills", "Jungle", "Temperate"],
+         "biomes": ["Arid", "Freshwater", "Hills", "Jungle", "Temperate"],
          "notBiomes": ["Freezing"],
          "seeSky": false,
          "requirements": "N/A"
@@ -1032,7 +1373,7 @@
          "level": "3-28",
          "context": "Grounded",
          "preset": "",
-         "biomes": ["Fresh Water"],
+         "biomes": ["Freshwater"],
          "notBiomes": ["Freezing"],
          "requirements": "N/A"
         },
@@ -1042,7 +1383,7 @@
          "level": "3-28",
          "context": "Seafloor",
          "preset": "",
-         "biomes": ["Fresh Water"],
+         "biomes": ["Freshwater"],
          "notBiomes": ["Freezing"],
          "seeSky": true,
          "requirements": "N/A"
@@ -1174,7 +1515,7 @@
          "level": "22-49",
          "context": "Fishing",
          "preset": "",
-         "biomes": ["Arid", "Fresh Water", "Hills", "Jungle", "Temperate"],
+         "biomes": ["Arid", "Freshwater", "Hills", "Jungle", "Temperate"],
          "notBiomes": ["Freezing"],
          "seeSky": true,
          "requirements": "N/A"
@@ -1185,7 +1526,7 @@
          "level": "22-49",
          "context": "Fishing",
          "preset": "",
-         "biomes": ["Arid", "Fresh Water", "Hills", "Jungle", "Temperate"],
+         "biomes": ["Arid", "Freshwater", "Hills", "Jungle", "Temperate"],
          "notBiomes": ["Freezing"],
          "seeSky": false,
          "requirements": "N/A"
@@ -1196,7 +1537,7 @@
          "level": "22-49",
          "context": "Grounded",
          "preset": "",
-         "biomes": ["Fresh Water"],
+         "biomes": ["Freshwater"],
          "notBiomes": ["Freezing"],
          "requirements": "N/A"
         },
@@ -1206,7 +1547,7 @@
          "level": "22-49",
          "context": "Seafloor",
          "preset": "",
-         "biomes": ["Fresh Water"],
+         "biomes": ["Freshwater"],
          "notBiomes": ["Freezing"],
          "seeSky": true,
          "requirements": "N/A"
@@ -1232,6 +1573,18 @@
          "stamina":      { "min": 45, "max": 80 }
         }
       },
+
+      "_comment1": "Decks",
+
+      "decks": [
+        {
+         "name": "",
+         "game": "Cobbleverse",
+         "version": "Drednaw",
+         "logo": "assets/games/cobbleverse.png",
+         "moves": ["High Horsepower", "Liquidation", "Stone Edge", "Iron Tail"]
+        }
+      ],
 
       "_comment2": "Evolutions",
       

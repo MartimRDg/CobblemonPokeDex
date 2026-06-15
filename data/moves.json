@@ -1415,6 +1415,126 @@
       "accuracy": 100,
       "pp": 20,
       "description": "The user lightly performs a beautiful, mystic dance. This boosts the user's Sp. Atk, Sp. Def, and Speed stats."
+    },
+    "Focus Energy": {
+      "type": "Normal",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 30,
+      "description": "The user takes a deep breath and focuses so that its future attacks have a heightened chance of landing critical hits."
+    },
+    "Quick Attack": {
+      "type": "Normal",
+      "category": "Physical",
+      "power": 40,
+      "accuracy": 100,
+      "pp": 30,
+      "description": "The user lunges at the target to inflict damage, moving at blinding speed. This move always goes first."
+    },
+    "Double Team": {
+      "type": "Normal",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 15,
+      "description": "By moving rapidly, the user makes illusory copies of itself to boost its evasiveness."
+    },
+    "Quick Guard": {
+      "type": "Fighting",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 15,
+      "description": "The user protects itself and its allies from priority moves."
+    },
+    "Endeavor": {
+      "type": "Normal",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 5,
+      "description": "The user inflicts damage by cutting down the target's HP to roughly equal the user's HP."
+    },
+    "Brave Bird": {
+      "type": "Flying",
+      "category": "Physical",
+      "power": 120,
+      "accuracy": 100,
+      "pp": 15,
+      "description": "The user tucks in its wings and charges at a low altitude. This also damages the user quite a lot."
+    },
+    "Mud-Slap": {
+      "type": "Ground",
+      "category": "Special",
+      "power": 20,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user hurls mud in the target's face to inflict damage and lower its accuracy."
+    },
+     "Thief": {
+      "type": "Dark",
+      "category": "Physical",
+      "power": 60,
+      "accuracy": 100,
+      "pp": 25,
+      "description": "The user attacks and steals the target's held item simultaneously. The user can't steal anything if it already holds an item."
+    },
+     "Boomburst": {
+      "type": "Normal",
+      "category": "Special",
+      "power": 140,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user attacks everything around it with the destructive power of a terrible explosive sound."
+    },
+    "Pursuit": {
+      "type": "Dark",
+      "category": "Physical",
+      "power": 40,
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The power of this attack move is doubled if it's used on a target that's switching out of battle."
+    },
+     "Rage": {
+      "type": "Normal",
+      "category": "Physical",
+      "power": 20,
+      "accuracy": 100,
+      "pp": 20,
+      "description": "As long as this move is in use, the power of rage raises the Attack stat each time the user is hit in battle."
+    },
+     "Refresh": {
+      "type": "Normal",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user rests to cure itself of poisoning, a burn, or paralysis."
+    },
+    "Supersonic": {
+      "type": "Normal",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 55,
+      "pp": 20,
+      "description": "The user generates odd sound waves from its body that confuse the target."
+    },
+    "Whirlwind": {
+      "type": "Normal",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The target is blown away, and a different Pokémon is dragged out. In the wild, this ends a battle against a single Pokémon."
+    },
+    "Laser Focus": {
+      "type": "Normal",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 30,
+      "description": "The user concentrates intensely. The attack on the next turn always results in a critical hit."
     }
   }
 }

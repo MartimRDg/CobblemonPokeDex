@@ -3125,6 +3125,41 @@ html { background-color: #050709; }
   border-color: rgba(168,85,247,0.35);
   color: #d8b4fe;
 }
+.biome-related-chip.ns-darkerdepths {
+  background: #2c4139;
+  border-color: #4dcf8b;
+  color: #8ae2a5;
+}
+.biome-related-chip.ns-betternether {
+  background: #A9000F;
+  border-color: #558563;
+  color: #f5b346;
+}
+.biome-related-chip.ns-cinderscapes {
+  background: #E75D56;
+  border-color: #FFFFFF;
+  color: #DF261C;
+}
+.biome-related-chip.ns-incendium {
+  background: #EA9625;
+  border-color: #D85E20;
+  color: #FFD11E;
+}
+.biome-related-chip.ns-blooming_biosphere {
+  background: #604D48;
+  border-color: #466284;
+  color: #80B741;
+}
+.biome-related-chip.ns-clifftree {
+  background: #643A47;
+  border-color: #6A2D2A;
+  color: #A97063;
+}
+.biome-related-chip.ns-biomeswevegone {
+  background: #63A950;
+  border-color: #7AC16D;
+  color: #3cfc02;
+}
 
 /* ---- Legend ---- */
 .biome-tooltip-legend {
@@ -3155,12 +3190,19 @@ html { background-color: #050709; }
   display: inline-block;
 }
 
-.biome-legend-dot.ns-minecraft     { background: #d1d5db; }
-.biome-legend-dot.ns-c             { background: #93c5fd; }
-.biome-legend-dot.ns-terralith     { background: #86efac; }
-.biome-legend-dot.ns-wythers       { background: #fde68a; }
-.biome-legend-dot.ns-biomesoplenty { background: #fbcfe8; }
-.biome-legend-dot.ns-other         { background: #d8b4fe; }
+.biome-legend-dot.ns-minecraft             { background: #d1d5db; }
+.biome-legend-dot.ns-c                     { background: #93c5fd; }
+.biome-legend-dot.ns-terralith             { background: #86efac; }
+.biome-legend-dot.ns-wythers               { background: #fde68a; }
+.biome-legend-dot.ns-biomesoplenty         { background: #fbcfe8; }
+.biome-legend-dot.ns-other                 { background: #d8b4fe; }
+.biome-legend-dot.ns-darkerdepths          { background: #89e3a5; }
+.biome-legend-dot.ns-betternether          { background: #558563; }
+.biome-legend-dot.ns-cinderscapes          { background: #DF261C; }
+.biome-legend-dot.ns-incendium             { background: #FFD11E; }
+.biome-legend-dot.ns-blooming_biosphere    { background: #80B741; }
+.biome-legend-dot.ns-clifftree             { background: #A97063; }
+.biome-legend-dot.ns-biomeswevegone        { background: #3cfc02; }
 
 @media (max-width: 480px) {
   .biome-tooltip { width: 220px; }

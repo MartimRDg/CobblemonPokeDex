@@ -418,21 +418,16 @@ function buildDrops(drops) {
 
 // Biome group definitions — used to show related biomes on hover
 var BIOME_GROUPS = {
-  'hills':          ['#minecraft:is_hill', 'is_highlands', '#c:is_hill', '#c:is_mountain/slope', '#c:is_windswept', 'biomesoplenty:jade_cliffs', 'biomesoplenty:mediterranean_forest', 'terralith:blooming_valley', 'terralith:forested_highlands', 'terralith:lavender_valley', 'terralith:lush_valley', 'terralith:moonlight_valley', 'terralith:sakura_valley', 'terralith:savanna_slopes', 'terralith:temperate_highlands', 'terralith:yosemite_lowlands', 'wythers:autumnal_crags', 'wythers:ayers_rock', 'wythers:icy_crags', 'wythers:old_growth_taiga_crags', 'wythers:taiga_crags', 'wythers:temperate_rainforest_crags', 'wythers:thermal_taiga_crags', 'wythers:windswept_jungle'],
-  'volcanic':       ['Basalt Deltas', 'Volcanic Peaks', 'Crimson Forest', 'Warped Forest'],
-  'nether/basalt':  ['Nether Wastes', 'Basalt Deltas', 'Soul Sand Valley', 'Crimson Forest', 'Warped Forest'],
-  'freezing':       ['Snowy Plains', 'Ice Spikes', 'Frozen Peaks', 'Jagged Peaks', 'Snowy Slopes', 'Grove', 'Frozen River', 'Frozen Ocean', 'Deep Frozen Ocean'],
-  'forest':         ['Forest', 'Flower Forest', 'Birch Forest', 'Old Growth Birch Forest', 'Dark Forest'],
-  'plains':         ['Plains', 'Sunflower Plains', 'Meadow'],
-  'desert':         ['Desert'],
-  'jungle':         ['Jungle', 'Sparse Jungle', 'Bamboo Jungle'],
-  'swamp':          ['Swamp', 'Mangrove Swamp'],
-  'ocean':          ['Ocean', 'Deep Ocean', 'Warm Ocean', 'Lukewarm Ocean', 'Cold Ocean', 'Deep Lukewarm Ocean', 'Deep Cold Ocean'],
-  'savanna':        ['Savanna', 'Savanna Plateau', 'Windswept Savanna'],
-  'mesa':           ['Badlands', 'Eroded Badlands', 'Wooded Badlands'],
-  'taiga':          ['Taiga', 'Old Growth Pine Taiga', 'Old Growth Spruce Taiga', 'Snowy Taiga'],
-  'mountain':       ['Meadow', 'Grove', 'Snowy Slopes', 'Jagged Peaks', 'Frozen Peaks', 'Stony Peaks', 'Windswept Hills', 'Windswept Gravelly Hills'],
-  'cave':           ['Dripstone Caves', 'Lush Caves', 'Deep Dark']
+  'hills':          ['#minecraft:hill', 'highlands', '#c:hill', '#c:mountain/slope', '#c:windswept', 'biomesoplenty:jade_cliffs', 'biomesoplenty:mediterranean_forest', 'terralith:blooming_valley', 'terralith:forested_highlands', 'terralith:lavender_valley', 'terralith:lush_valley', 'terralith:moonlight_valley', 'terralith:sakura_valley', 'terralith:savanna_slopes', 'terralith:temperate_highlands', 'terralith:yosemite_lowlands', 'wythers:autumnal_crags', 'wythers:ayers_rock', 'wythers:icy_crags', 'wythers:old_growth_taiga_crags', 'wythers:taiga_crags', 'wythers:temperate_rainforest_crags', 'wythers:thermal_taiga_crags', 'wythers:windswept_jungle'],
+  'volcanic':       ['biomesoplenty:volcanic_plains', 'biomesoplenty:volcano', 'darkerdepths:molten_cavern', 'terralith:cave/mantle_caves', 'terralith:volcanic_crater', 'terralith:volcanic_peaks', 'wythers:icy_volcano', 'wythers:tropical_volcano', 'wythers:volcano', 'wythers:volcanic_chamber', 'wythers:volcanic_crater'],
+  'nether/basalt':  ['minecraft:basalt_deltas', 'betternether:flooded_deltas', 'cinderscapes:blackstone_shales', 'incendium:ash_barrens', 'incendium:volcanic_deltas', 'incendium:withered_forest'],
+  'arid':           ['badlands', 'desert', 'savanna'],
+  'freshwater':     ['river', 'swamp', 'wythers:desert_lakes', 'wythers:guelta', 'wythers:tropical_forest_river'],
+  'jungle':         ["#minecraft:jungle", '#c:jungle', 'terralith:cave/underground_jungle', 'biomesoplenty:floodplain', 'biomesoplenty:rainforest', 'blooming_biosphere:rainforest', 'clifftree:tropical_river', 'wythers:dripleaf_swamp', 'wythers:eucalyptus_deanei_forest', 'wythers:highland_tropical_rainforest', 'wythers:humid_tropical_grassland', 'wythers:jungle_canyon', 'wythers:subtropical_forest', 'wythers:subtropical_forest_edge', 'wythers:subtropical_grassland', 'wythers:tropical_forest', 'wythers:tropical_forest_canyon', 'wythers:tropical_grassland', 'wythers:tropical_island', 'wythers:tropical_rainforest'],
+  'temperate':      ['forest', 'plains'],
+  'freezing':       ['minecraft:frozen_river', 'minecraft:jagged_peaks', 'minecraft:snowy_beach', 'minecraft:snowy_plains', 'minecraft:snowy_slopes', 'frozen_ocean', 'glacial', 'snowy', '#c:snowy', 'clifftree:frozen_caves', 'terralith:emerald_peaks', 'terralith:scarlet_mountains', 'terralith:skylands_winter', 'terralith:snowy_badlands', 'wythers:crimson_tundra', 'wythers:frozen_island', 'wythers:snowy_bog', 'wythers:snowy_canyon', 'wythers:snowy_peaks', 'wythers:snowy_tundra'],
+  'sky':            ['terralith:skylands_autumn', 'terralith:skylands_spring', 'terralith:skylands_summer', 'terralith:skylands_winter'],
+  'spooky':         ['minecraft:dark_forest', '#c:spooky', '#wythers:dark_forest', 'biomesoplenty:ominous_woods', 'biomeswevegone:ebony_woods', 'biomeswevegone:overgrowth_woodlands', 'biomeswevegone:pale_bog', 'biomeswevegone:weeping_witch_forest', 'wythers:ancient_taiga', 'wythers:tangled_forest', 'wythers:twilight_meadow'],
 };
 
 function getBiomeGroupTooltip(biomeName) {
@@ -471,12 +466,19 @@ function getBiomeTagNamespace(raw) {
 }
 
 var NAMESPACE_LABELS = {
-  'minecraft':     'Vanilla',
-  'c':             'Common Tag',
-  'terralith':     'Terralith',
-  'wythers':       'Wythers',
-  'biomesoplenty': 'Biomes O\' Plenty',
-  'other':         'Other'
+  'minecraft':          'Vanilla',
+  'c':                  'Common Tag',
+  'terralith':          'Terralith',
+  'wythers':            'Wythers',
+  'biomesoplenty':      'Biomes O\' Plenty',
+  'darkerdepths':       'Darker Depths',
+  'betternether':       'BetterNether',
+  'cinderscapes':       'Cinderscapes',
+  'incendium':          'Incendium',
+  'blooming_biosphere': 'Blooming Biosphere',
+  'clifftree':          'CliffTree',
+  'biomeswevegone':     'Oh The Biomes We\'ve Gone',
+  'other':              'Other'
 };
 
 // Build a compact, scrollable popover listing related biome tags as colour-coded chips,
@@ -518,6 +520,7 @@ function buildSpawnSection(poke) {
       biomes:       poke.spawnBiomes       || [],
       notBiomes:    poke.notBiomes || poke.notbiomes || [],
       isRaining:    poke.isRaining,
+      isDay:        poke.isDay,
       seeSky:       poke.seeSky,
       requirements: poke.spawnRequirements || null,
       label:        null
@@ -551,6 +554,8 @@ function buildSpawnSection(poke) {
     var reqLines = [];
     if (opt.isRaining === true)  reqLines.push({ label: 'Raining', value: 'Required' });
     if (opt.isRaining === false) reqLines.push({ label: 'Raining', value: 'Must not be raining' });
+    if (opt.isDay === true)  reqLines.push({ label: 'Time range', value: 'Day' });
+    if (opt.isDay === false) reqLines.push({ label: 'Time range', value: 'Not during Day' });
     if (opt.seeSky === true)     reqLines.push({ label: 'See sky', value: 'Required' });
     if (opt.seeSky === false)    reqLines.push({ label: 'See sky', value: 'Must not see sky' });
     if (opt.requirements && opt.requirements !== 'N/A') reqLines.push({ label: 'Other', value: opt.requirements });
