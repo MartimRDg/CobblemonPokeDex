@@ -956,7 +956,24 @@ function buildDecksSection(poke) {
     return (
       '<div class="deck-card">' +
         '<div class="deck-sprite-wrap">' +
-          buildSpriteEl(resolveFormVideo(poke, deck.version) || resolveFormSprite(poke, deck.version), deck.version, 'deck-sprite', 'assets/images/placeholder.png') +
+          (function() {
+            var isShinyDeck = /shiny/i.test(deck.version || '');
+            var baseName    = (deck.version || '').replace(/shiny\s*/i, '').trim() || 'Normal';
+            var src;
+            if (isShinyDeck) {
+              // Try shiny video/sprite of the base form or matching mega/variant
+              var forms = (poke.megaEvolutions || []).concat(poke.variants || []);
+              var matchForm = forms.find(function(f) { return f.name && f.name.toLowerCase() === baseName.toLowerCase(); });
+              if (matchForm) {
+                src = matchForm.shinyVideo || matchForm.shinySprite || matchForm.video || matchForm.sprite;
+              } else {
+                src = poke.shinyVideo || poke.shinySprite || poke.video || poke.sprite;
+              }
+            } else {
+              src = resolveFormVideo(poke, deck.version) || resolveFormSprite(poke, deck.version);
+            }
+            return buildSpriteEl(src, deck.version, 'deck-sprite', 'assets/images/placeholder.png');
+          })() +
         '</div>' +
         '<div class="deck-info">' +
           '<div class="deck-header">' +
