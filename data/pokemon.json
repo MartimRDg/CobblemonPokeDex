@@ -786,6 +786,18 @@
       "video": "assets/videos/ditto.gif",
       "shinyVideo":"assets/videos/ditto-shiny.gif",
 
+      "_comment1": "Decks",
+
+      "decks": [
+        {
+         "name": "Not much of a choice, huh?",
+         "game": "Cobbleverse",
+         "version": "Ditto",
+         "logo": "assets/games/cobbleverse.png",
+         "moves": ["Transform"]
+        }
+      ],
+
       "_comment2": "Evolutions",
       
       "evolutions": [
