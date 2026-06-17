@@ -952,6 +952,18 @@
         }
       },
 
+      "_comment1": "Decks",
+
+      "decks": [
+        {
+         "name": "",
+         "game": "Cobbleverse",
+         "version": "Shiny Swellow",
+         "logo": "assets/games/cobbleverse.png",
+         "moves": ["Brave Bird", "Facade", "Steel Wing", "U-turn"]
+        }
+      ],
+
       "_comment2": "Evolutions",
       
       "evolutions": [
