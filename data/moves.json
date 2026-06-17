@@ -1535,6 +1535,14 @@
       "accuracy": 100,
       "pp": 30,
       "description": "The user concentrates intensely. The attack on the next turn always results in a critical hit."
+    },
+     "Transform": {
+      "type": "Normal",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user transforms into a copy of the target, right down to having the same move set."
     }
   }
 }

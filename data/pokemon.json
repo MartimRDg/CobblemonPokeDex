@@ -713,6 +713,102 @@
     {
       "_comment": "Base Stats",
 
+      "id": 132,
+      "name": "Ditto",
+      "number": "0132",
+      "types": ["Normal"],
+      "generation": 1,
+      "rarity": "Rare",
+      "rideable": false,
+      "flying": false,
+      "legendary": false,
+      "mythical": false,
+      "catchRate": 35,
+
+      "abilities": ["Limber", "Imposter (Hidden)"],
+
+      "baseStats": {
+        "hp": 48,
+        "attack": 48,
+        "defense": 48,
+        "spAttack": 48,
+        "spDefense": 48,
+        "speed": 48
+       },
+
+       "evYield": {
+        "hp": 1
+       },
+
+       "drops": [
+        { "item": "Quick Powder", "chance": 100, "quantity": "0-1", "image": "assets/images/items/quick_powder.png"},
+        { "item": "Metal Powder", "chance": 5, "quantity": "1", "image": "assets/images/items/metal_powder.png"}
+       ],
+
+      "weaknesses": ["Fighting"],
+      "resistances": ["None"],
+      "immunities": ["Ghost"],
+      
+      "spawnOptions": [
+        {
+         "label": "Any",
+         "bucket": "Rare",
+         "level": "4-29",
+         "context": "Grounded",
+         "preset": "Natural",
+         "biomes": ["Overworld"],
+         "notbiomes": ["Ocean"],
+         "isSlimeChunk": true,
+         "requirements": "N/A"
+        },
+        {
+         "label": "Any",
+         "bucket": "Ultra-rare",
+         "level": "4-29",
+         "context": "Grounded",
+         "preset": "Natural",
+         "biomes": ["Overworld"],
+         "notbiomes": ["Ocean"],
+         "requirements": "N/A"
+        },
+        {
+         "label": "Any",
+         "bucket": "Uncommon",
+         "level": "4-29",
+         "context": "Grounded",
+         "preset": "Mansion",
+         "biomes": ["Overworld"],
+         "seeSky": false,
+         "requirements": "N/A"
+        }
+      ],
+
+      "video": "assets/videos/ditto.gif",
+      "shinyVideo":"assets/videos/ditto-shiny.gif",
+
+      "_comment2": "Evolutions",
+      
+      "evolutions": [
+       { "id": 132, "name": "Ditto", "level": null }
+      ],
+
+      "_comment3": "Movesets",
+
+      "moves": {
+        "level": [
+         { "level": 1, "name": "Transform" }
+        ],
+        "tm": [
+        ],
+        "egg": [
+        ],
+        "tutor": [
+       ]
+     }
+    },
+    {
+      "_comment": "Base Stats",
+
       "id": 276,
       "name": "Taillow",
       "number": "0276",

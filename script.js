@@ -428,6 +428,8 @@ var BIOME_GROUPS = {
   'freezing':       ['minecraft:frozen_river', 'minecraft:jagged_peaks', 'minecraft:snowy_beach', 'minecraft:snowy_plains', 'minecraft:snowy_slopes', 'frozen_ocean', 'glacial', 'snowy', '#c:snowy', 'clifftree:frozen_caves', 'terralith:emerald_peaks', 'terralith:scarlet_mountains', 'terralith:skylands_winter', 'terralith:snowy_badlands', 'wythers:crimson_tundra', 'wythers:frozen_island', 'wythers:snowy_bog', 'wythers:snowy_canyon', 'wythers:snowy_peaks', 'wythers:snowy_tundra'],
   'sky':            ['terralith:skylands_autumn', 'terralith:skylands_spring', 'terralith:skylands_summer', 'terralith:skylands_winter'],
   'spooky':         ['minecraft:dark_forest', '#c:spooky', '#wythers:dark_forest', 'biomesoplenty:ominous_woods', 'biomeswevegone:ebony_woods', 'biomeswevegone:overgrowth_woodlands', 'biomeswevegone:pale_bog', 'biomeswevegone:weeping_witch_forest', 'wythers:ancient_taiga', 'wythers:tangled_forest', 'wythers:twilight_meadow'],
+  'overworld':      ['#minecraft:overworld', '#c: overworld'],
+  'ocean':          ['#minecraft:ocean', 'cold_ocean', 'deep_ocean', 'frozen_ocean', 'lukewarm_ocean', 'temperate_ocean', 'warm_ocean', '#c:ocean', 'clifftree:stone_ocean']
 };
 
 function getBiomeGroupTooltip(biomeName) {
@@ -520,6 +522,7 @@ function buildSpawnSection(poke) {
       biomes:       poke.spawnBiomes       || [],
       notBiomes:    poke.notBiomes || poke.notbiomes || [],
       isRaining:    poke.isRaining,
+      isSlimeChunk: poke.isSlimeChunk,
       isDay:        poke.isDay,
       seeSky:       poke.seeSky,
       requirements: poke.spawnRequirements || null,
@@ -554,6 +557,8 @@ function buildSpawnSection(poke) {
     var reqLines = [];
     if (opt.isRaining === true)  reqLines.push({ label: 'Raining', value: 'Required' });
     if (opt.isRaining === false) reqLines.push({ label: 'Raining', value: 'Must not be raining' });
+    if (opt.isSlimeChunk === true)  reqLines.push({ label: 'Slime Chunk', value: 'Required' });
+    if (opt.isSlimeChunk === false)  reqLines.push({ label: 'Slime Chunk', value: 'Must not be a slime chunk' });
     if (opt.isDay === true)  reqLines.push({ label: 'Time range', value: 'Day' });
     if (opt.isDay === false) reqLines.push({ label: 'Time range', value: 'Not during Day' });
     if (opt.seeSky === true)     reqLines.push({ label: 'See sky', value: 'Required' });

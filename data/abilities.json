@@ -32,6 +32,12 @@
     },
      "Scrappy": {
       "description": "The Pokémon can hit Ghost-type Pokémon with Normal- and Fighting-type moves. It is also unaffected by Intimidate."
+    },
+     "Limber": {
+      "description": "The Pokémon's limber body prevents it from being paralyzed."
+    },
+     "Imposter": {
+      "description": "The Pokémon transforms itself into the Pokémon it's facing."
     }
   }
 }
