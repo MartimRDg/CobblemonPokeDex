@@ -868,7 +868,7 @@
        ]
      }
     },
-        {
+    {
       "_comment": "Base Stats",
 
       "id": 277,
@@ -1137,6 +1137,18 @@
 
       "sprite": "assets/images/oricorio.png",
       "shinySprite":"assets/images/oricorio-shiny.png",
+
+      "_comment1": "Decks",
+
+      "decks": [
+        {
+         "name": "VGC MOVESET",
+         "game": "Cobbleverse",
+         "version": "Shiny Oricorio Sensu",
+         "logo": "assets/games/cobbleverse.png",
+         "moves": ["Revelation Dance", "Air Slash", "Roost", "Feather Dance"]
+        }
+      ],
 
       "_comment2": "Evolutions",
       
