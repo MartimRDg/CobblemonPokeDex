@@ -23,15 +23,15 @@ async function loadData() {
 
     const [pokeData, movesData, abilitiesData, gamesData] = await Promise.all([
       pokeRes.json(), movesRes.json(),
-      abilitiesRes.ok  ? abilitiesRes.json()  : Promise.resolve({ abilities: {} }),
-      gamesRes.ok      ? gamesRes.json()       : Promise.resolve({ games: [] }),
+      abilitiesRes.ok ? abilitiesRes.json() : Promise.resolve({ abilities: {} }),
+      gamesRes.ok ? gamesRes.json() : Promise.resolve({ games: [] }),
     ]);
 
-    State.allPokemon   = pokeData.pokemon || [];
-    State.allMoves     = movesData.moves || {};
+    State.allPokemon = pokeData.pokemon || [];
+    State.allMoves = movesData.moves || {};
     State.allAbilities = abilitiesData.abilities || {};
-    State.allGames     = gamesData.games || [];
-    window._allMoves   = State.allMoves;
+    State.allGames = gamesData.games || [];
+    window._allMoves = State.allMoves;
 
     console.log('Loaded ' + State.allPokemon.length + ' Pokemon, ' + Object.keys(State.allMoves).length + ' moves, ' + State.allGames.length + ' game rows');
     return true;
@@ -54,7 +54,7 @@ function buildSpriteEl(src, alt, cssClass, fallback) {
   if (ext === 'mov' || ext === 'mp4' || ext === 'webm') {
     return (
       '<video class="' + cssClass + '" autoplay loop muted playsinline disablepictureinpicture preload="auto" style="display:block">' +
-        '<source src="' + src + '" type="video/' + (ext === 'mov' ? 'mp4' : ext) + '">' +
+      '<source src="' + src + '" type="video/' + (ext === 'mov' ? 'mp4' : ext) + '">' +
       '</video>'
     );
   }
@@ -62,23 +62,43 @@ function buildSpriteEl(src, alt, cssClass, fallback) {
 }
 
 function playAllVideos() {
-  document.querySelectorAll('video').forEach(function(v) {
+  document.querySelectorAll('video').forEach(function (v) {
     v.muted = true;
-    v.play().catch(function() {});
+    v.play().catch(function () { });
   });
 }
 
 
+
+// Type border colours
+var TYPE_COLORS = {
+  grass: '#4a9e3f', poison: '#8b44b0', fire: '#d43a1a', water: '#2a6fc4',
+  electric: '#c0960a', normal: '#6b7280', flying: '#5469c4', bug: '#5d8a1a',
+  dragon: '#4a28c0', rock: '#8a6a22', dark: '#3a3230', fighting: '#b02020',
+  ground: '#9a6418', steel: '#4a6070', psychic: '#b82872', ghost: '#4a2a78',
+  ice: '#2a8fa0', fairy: '#b84888',
+};
+
+
+// Type border colours
+var TYPE_COLORS = {
+  grass: '#4a9e3f', poison: '#8b44b0', fire: '#d43a1a', water: '#2a6fc4',
+  electric: '#c0960a', normal: '#6b7280', flying: '#5469c4', bug: '#5d8a1a',
+  dragon: '#4a28c0', rock: '#8a6a22', dark: '#3a3230', fighting: '#b02020',
+  ground: '#9a6418', steel: '#4a6070', psychic: '#b82872', ghost: '#4a2a78',
+  ice: '#2a8fa0', fairy: '#b84888',
+};
+
 // ====================== Index Page ======================
 function buildFilters() {
-  const types = [...new Set(State.allPokemon.flatMap(function(p) { return p.types || []; }))].sort();
-  const gens  = [...new Set(State.allPokemon.map(function(p) { return p.generation; }).filter(Boolean))].sort(function(a,b){ return a-b; });
+  const types = [...new Set(State.allPokemon.flatMap(function (p) { return p.types || []; }))].sort();
+  const gens = [...new Set(State.allPokemon.map(function (p) { return p.generation; }).filter(Boolean))].sort(function (a, b) { return a - b; });
 
   const typeSelect = document.getElementById('typeFilter');
-  const genSelect  = document.getElementById('genFilter');
+  const genSelect = document.getElementById('genFilter');
 
   if (typeSelect) {
-    types.forEach(function(t) {
+    types.forEach(function (t) {
       var opt = document.createElement('option');
       opt.value = t;
       opt.textContent = t;
@@ -87,7 +107,7 @@ function buildFilters() {
   }
 
   if (genSelect) {
-    gens.forEach(function(g) {
+    gens.forEach(function (g) {
       var opt = document.createElement('option');
       opt.value = g;
       opt.textContent = 'Gen ' + g;
@@ -109,36 +129,46 @@ function renderGrid(pokemonList, resetPage) {
   if (pokemonList.length === 0) {
     grid.innerHTML =
       '<div class="col-span-full text-center py-20 text-gray-500">' +
-        '<div class="text-5xl mb-4">&#128269;</div>' +
-        '<p class="text-xl">No Pokémon found</p>' +
-        '<p class="text-sm mt-2">Try adjusting your filters</p>' +
+      '<div class="text-5xl mb-4">&#128269;</div>' +
+      '<p class="text-xl">No Pokémon found</p>' +
+      '<p class="text-sm mt-2">Try adjusting your filters</p>' +
       '</div>';
     renderPagination(0);
     return;
   }
 
-  var start   = (State.currentPage - 1) * State.pageSize;
-  var end     = start + State.pageSize;
-  var page    = pokemonList.slice(start, end);
+  var start = (State.currentPage - 1) * State.pageSize;
+  var end = start + State.pageSize;
+  var page = pokemonList.slice(start, end);
 
-  grid.innerHTML = page.map(function(poke) {
+  grid.innerHTML = page.map(function (poke) {
     var typeBadges = (poke.types || [])
-      .map(function(t) {
+      .map(function (t) {
         var tl = t.toLowerCase();
         return '<span class="type-badge type-' + tl + '"><img src="assets/images/elements/' + tl + '.png" class="type-icon" alt="" onerror="this.style.display=\'none\'">' + t + '</span>';
       })
       .join('');
     var num = poke.number || String(poke.id).padStart(4, '0');
+    var _t = poke.types || [];
+    var _c1 = TYPE_COLORS[(_t[0] || '').toLowerCase()];
+    var _c2 = _t[1] ? TYPE_COLORS[_t[1].toLowerCase()] : null;
+    var cardStyle = _c1
+      ? (_c2 && _c2 !== _c1
+        ? 'background:linear-gradient(var(--surface),var(--surface)) padding-box,linear-gradient(160deg,' + _c1 + ',' + _c2 + ') border-box;border:1.5px solid transparent;box-shadow:0 0 10px ' + _c1 + '40;'
+        : 'border:1.5px solid ' + _c1 + '99;box-shadow:0 0 10px ' + _c1 + '40;')
+      : '';
+    var extraClass = (poke.legendary ? ' card-legendary' : '') + (poke.mythical ? ' card-mythical' : '');
     return (
-      '<div class="pokemon-card" role="button" tabindex="0"' +
-           ' onclick="location.href=\'pokemon.html?id=' + poke.id + '\'"' +
-           ' onkeydown="if(event.key===\'Enter\') location.href=\'pokemon.html?id=' + poke.id + '\'">' +
-        '<div class="card-inner">' +
-          buildSpriteEl(poke.video || poke.sprite, poke.name, 'pokemon-sprite', 'assets/images/placeholder.png') +
-          '<h3 class="pokemon-name">' + poke.name + '</h3>' +
-          '<p class="pokemon-number">#' + num + '</p>' +
-          '<div class="type-badges">' + typeBadges + '</div>' +
-        '</div>' +
+      '<div class="pokemon-card' + extraClass + '" role="button" tabindex="0" style="' + cardStyle + '"' +
+      ' onclick="location.href=\'pokemon.html?id=' + poke.id + '\'"' +
+      ' onkeydown="if(event.key===\'Enter\') location.href=\'pokemon.html?id=' + poke.id + '\'"' +
+      '>' +
+      '<div class="card-inner">' +
+      buildSpriteEl(poke.video || poke.sprite, poke.name, 'pokemon-sprite', 'assets/images/placeholder.png') +
+      '<h3 class="pokemon-name">' + poke.name + '</h3>' +
+      '<p class="pokemon-number">#' + num + '</p>' +
+      '<div class="type-badges">' + typeBadges + '</div>' +
+      '</div>' +
       '</div>'
     );
   }).join('');
@@ -156,17 +186,17 @@ function renderPagination(total) {
   if (totalPages <= 1) { el.innerHTML = ''; return; }
 
   var start = (State.currentPage - 1) * State.pageSize + 1;
-  var end   = Math.min(State.currentPage * State.pageSize, total);
+  var end = Math.min(State.currentPage * State.pageSize, total);
 
   el.innerHTML =
     '<div class="pagination">' +
-      '<button class="page-btn" onclick="changePage(-1)"' + (State.currentPage === 1 ? ' disabled' : '') + '>← Prev</button>' +
-      '<span class="page-info">' + start + '–' + end + ' of ' + total + '</span>' +
-      '<button class="page-btn" onclick="changePage(1)"' + (State.currentPage === totalPages ? ' disabled' : '') + '>Next →</button>' +
+    '<button class="page-btn" onclick="changePage(-1)"' + (State.currentPage === 1 ? ' disabled' : '') + '>← Prev</button>' +
+    '<span class="page-info">' + start + '–' + end + ' of ' + total + '</span>' +
+    '<button class="page-btn" onclick="changePage(1)"' + (State.currentPage === totalPages ? ' disabled' : '') + '>Next →</button>' +
     '</div>';
 }
 
-window.changePage = function(dir) {
+window.changePage = function (dir) {
   var totalPages = Math.ceil(_filteredList.length / State.pageSize);
   State.currentPage = Math.max(1, Math.min(State.currentPage + dir, totalPages));
   renderGrid(_filteredList);
@@ -176,18 +206,18 @@ window.changePage = function(dir) {
 function renderCompletion() {
   var el = document.getElementById('completionBar');
   if (!el) return;
-  var total   = State.allPokemon.length;
-  var max     = 1025;
-  var pct     = Math.min((total / max) * 100, 100).toFixed(1);
+  var total = State.allPokemon.length;
+  var max = 1025;
+  var pct = Math.min((total / max) * 100, 100).toFixed(1);
   el.innerHTML =
     '<div class="completion-inner">' +
-      '<div class="completion-text">' +
-        '<span class="completion-label">Pokédex Completion</span>' +
-        '<span class="completion-count">' + total + ' / ' + max + '</span>' +
-      '</div>' +
-      '<div class="completion-track">' +
-        '<div class="completion-fill" style="width:' + pct + '%"></div>' +
-      '</div>' +
+    '<div class="completion-text">' +
+    '<span class="completion-label">Pokédex Completion</span>' +
+    '<span class="completion-count">' + total + ' / ' + max + '</span>' +
+    '</div>' +
+    '<div class="completion-track">' +
+    '<div class="completion-fill" style="width:' + pct + '%"></div>' +
+    '</div>' +
     '</div>';
 }
 
@@ -196,29 +226,29 @@ function renderPotd() {
   if (!el || !State.allPokemon.length) return;
 
   // Seed with today's date so it's the same all day
-  var today    = new Date();
-  var seed     = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
-  var index    = seed % State.allPokemon.length;
-  var poke     = State.allPokemon[index];
-  var sprite   = poke.video || poke.sprite;
-  var num      = poke.number || String(poke.id).padStart(4, '0');
-  var total    = poke.baseStats ? Object.values(poke.baseStats).reduce(function(t, v) { return t + v; }, 0) : 0;
-  var types    = (poke.types || []).map(function(t) {
+  var today = new Date();
+  var seed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+  var index = seed % State.allPokemon.length;
+  var poke = State.allPokemon[index];
+  var sprite = poke.video || poke.sprite;
+  var num = poke.number || String(poke.id).padStart(4, '0');
+  var total = poke.baseStats ? Object.values(poke.baseStats).reduce(function (t, v) { return t + v; }, 0) : 0;
+  var types = (poke.types || []).map(function (t) {
     return '<span class="type-badge type-' + t.toLowerCase() + '">' + t + '</span>';
   }).join('');
 
   el.innerHTML =
     '<a href="pokemon.html?id=' + poke.id + '" class="potd-card">' +
-      '<div class="potd-sprite-wrap">' +
-        buildSpriteEl(sprite, poke.name, 'potd-sprite') +
-      '</div>' +
-      '<div class="potd-info">' +
-        '<p class="potd-number">#' + num + '</p>' +
-        '<h3 class="potd-name">' + poke.name + '</h3>' +
-        '<div class="potd-types">' + types + '</div>' +
-        (total ? '<p class="potd-bst">' + total + ' BST</p>' : '') +
-      '</div>' +
-      '<span class="potd-btn">View</span>' +
+    '<div class="potd-sprite-wrap">' +
+    buildSpriteEl(sprite, poke.name, 'potd-sprite') +
+    '</div>' +
+    '<div class="potd-info">' +
+    '<p class="potd-number">#' + num + '</p>' +
+    '<h3 class="potd-name">' + poke.name + '</h3>' +
+    '<div class="potd-types">' + types + '</div>' +
+    (total ? '<p class="potd-bst">' + total + ' BST</p>' : '') +
+    '</div>' +
+    '<span class="potd-btn">View</span>' +
     '</a>';
 
   setTimeout(playAllVideos, 100);
@@ -226,32 +256,32 @@ function renderPotd() {
 
 function renderRecentlyViewed() {
   var section = document.getElementById('recentSection');
-  var grid    = document.getElementById('recentGrid');
+  var grid = document.getElementById('recentGrid');
   if (!section || !grid) return;
 
   var ids = [];
-  try { ids = JSON.parse(localStorage.getItem('recentPokemon') || '[]'); } catch(e) {}
+  try { ids = JSON.parse(localStorage.getItem('recentPokemon') || '[]'); } catch (e) { }
 
-  var recent = ids.map(function(id) {
-    return State.allPokemon.find(function(p) { return p.id === id; });
+  var recent = ids.map(function (id) {
+    return State.allPokemon.find(function (p) { return p.id === id; });
   }).filter(Boolean);
 
   if (!recent.length) { section.style.display = 'none'; return; }
   section.style.display = 'block';
 
-  grid.innerHTML = recent.map(function(poke) {
+  grid.innerHTML = recent.map(function (poke) {
     var sprite = poke.video || poke.sprite;
-    var num    = poke.number || String(poke.id).padStart(4, '0');
-    var types  = (poke.types || []).map(function(t) {
+    var num = poke.number || String(poke.id).padStart(4, '0');
+    var types = (poke.types || []).map(function (t) {
       var tl = t.toLowerCase();
       return '<span class="type-badge type-' + tl + ' type-xs"><img src="assets/images/elements/' + tl + '.png" class="type-icon" alt="" onerror="this.style.display=\'none\'">' + t + '</span>';
     }).join('');
     return (
       '<a href="pokemon.html?id=' + poke.id + '" class="top5-card" style="text-decoration:none;color:inherit;min-width:140px;">' +
-        '<div class="top5-sprite-wrap">' + buildSpriteEl(sprite, poke.name, 'top5-sprite') + '</div>' +
-        '<p class="pokemon-number">#' + num + '</p>' +
-        '<h3 class="pokemon-name" style="font-size:0.9rem">' + poke.name + '</h3>' +
-        '<div class="type-badges">' + types + '</div>' +
+      '<div class="top5-sprite-wrap">' + buildSpriteEl(sprite, poke.name, 'top5-sprite') + '</div>' +
+      '<p class="pokemon-number">#' + num + '</p>' +
+      '<h3 class="pokemon-name" style="font-size:0.9rem">' + poke.name + '</h3>' +
+      '<div class="type-badges">' + types + '</div>' +
       '</a>'
     );
   }).join('');
@@ -263,44 +293,44 @@ function renderTop5() {
   var grid = document.getElementById('top5Grid');
   if (!grid) return;
 
-  var ranked = State.allPokemon.slice().sort(function(a, b) {
-    var sumA = a.baseStats ? Object.values(a.baseStats).reduce(function(t, v) { return t + v; }, 0) : 0;
-    var sumB = b.baseStats ? Object.values(b.baseStats).reduce(function(t, v) { return t + v; }, 0) : 0;
+  var ranked = State.allPokemon.slice().sort(function (a, b) {
+    var sumA = a.baseStats ? Object.values(a.baseStats).reduce(function (t, v) { return t + v; }, 0) : 0;
+    var sumB = b.baseStats ? Object.values(b.baseStats).reduce(function (t, v) { return t + v; }, 0) : 0;
     return sumB - sumA;
   }).slice(0, 5);
 
-  grid.innerHTML = ranked.map(function(poke, i) {
-    var total = poke.baseStats ? Object.values(poke.baseStats).reduce(function(t, v) { return t + v; }, 0) : 0;
-    var num   = poke.number || String(poke.id).padStart(4, '0');
+  grid.innerHTML = ranked.map(function (poke, i) {
+    var total = poke.baseStats ? Object.values(poke.baseStats).reduce(function (t, v) { return t + v; }, 0) : 0;
+    var num = poke.number || String(poke.id).padStart(4, '0');
     var medals = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣'];
     return (
       '<div class="top5-card">' +
-        '<div class="top5-rank">' + medals[i] + '</div>' +
-        '<div class="top5-sprite-wrap">' +
-          buildSpriteEl(poke.video || poke.sprite, poke.name, 'top5-sprite', 'assets/images/placeholder.png') +
-        '</div>' +
-        '<div class="top5-info">' +
-          '<p class="top5-number">#' + num + '</p>' +
-          '<h3 class="top5-name">' + poke.name + '</h3>' +
-          '<p class="top5-total">' + total + ' BST</p>' +
-        '</div>' +
-        '<a href="pokemon.html?id=' + poke.id + '" class="top5-btn">View</a>' +
+      '<div class="top5-rank">' + medals[i] + '</div>' +
+      '<div class="top5-sprite-wrap">' +
+      buildSpriteEl(poke.video || poke.sprite, poke.name, 'top5-sprite', 'assets/images/placeholder.png') +
+      '</div>' +
+      '<div class="top5-info">' +
+      '<p class="top5-number">#' + num + '</p>' +
+      '<h3 class="top5-name">' + poke.name + '</h3>' +
+      '<p class="top5-total">' + total + ' BST</p>' +
+      '</div>' +
+      '<a href="pokemon.html?id=' + poke.id + '" class="top5-btn">View</a>' +
       '</div>'
     );
   }).join('');
 }
 
 function filterPokemon() {
-  var search     = (document.getElementById('searchInput') ? document.getElementById('searchInput').value.toLowerCase().trim() : '');
+  var search = (document.getElementById('searchInput') ? document.getElementById('searchInput').value.toLowerCase().trim() : '');
   var typeFilter = (document.getElementById('typeFilter') ? document.getElementById('typeFilter').value : '');
-  var genFilter  = (document.getElementById('genFilter')  ? document.getElementById('genFilter').value  : '');
+  var genFilter = (document.getElementById('genFilter') ? document.getElementById('genFilter').value : '');
 
-  var filtered = State.allPokemon.filter(function(p) {
+  var filtered = State.allPokemon.filter(function (p) {
     var matchSearch = p.name.toLowerCase().includes(search) ||
-                      String(p.id).includes(search) ||
-                      (p.number || '').includes(search);
+      String(p.id).includes(search) ||
+      (p.number || '').includes(search);
     var matchType = !typeFilter || (p.types || []).includes(typeFilter);
-    var matchGen  = !genFilter  || String(p.generation) === genFilter;
+    var matchGen = !genFilter || String(p.generation) === genFilter;
     return matchSearch && matchType && matchGen;
   });
 
@@ -310,7 +340,7 @@ function filterPokemon() {
 
 // ====================== Detail Page ======================
 function getPokemonById(id) {
-  return State.allPokemon.find(function(p) { return p.id === id; }) || null;
+  return State.allPokemon.find(function (p) { return p.id === id; }) || null;
 }
 
 function buildStatBar(label, value, max) {
@@ -323,11 +353,11 @@ function buildStatBar(label, value, max) {
   var color = value >= 100 ? '#3eca6e' : value >= 60 ? '#facc15' : '#f87171';
   return (
     '<div class="stat-row">' +
-      '<span class="stat-label">' + (statLabels[label] || label) + '</span>' +
-      '<span class="stat-value stat-value-anim" style="color:' + color + '" data-target="' + value + '">0</span>' +
-      '<div class="stat-bar-bg">' +
-        '<div class="stat-bar-fill stat-bar-anim" style="width:0%;background:' + color + '" data-width="' + pct + '"></div>' +
-      '</div>' +
+    '<span class="stat-label">' + (statLabels[label] || label) + '</span>' +
+    '<span class="stat-value stat-value-anim" style="color:' + color + '" data-target="' + value + '">0</span>' +
+    '<div class="stat-bar-bg">' +
+    '<div class="stat-bar-fill stat-bar-anim" style="width:0%;background:' + color + '" data-width="' + pct + '"></div>' +
+    '</div>' +
     '</div>'
   );
 }
@@ -339,11 +369,11 @@ function animateStatBars(container) {
 
   function runAnimation() {
     var delay = 0;
-    fills.forEach(function(bar, i) {
+    fills.forEach(function (bar, i) {
       var target = parseFloat(bar.getAttribute('data-width'));
       var valueEl = values[i];
       var targetVal = parseInt(valueEl ? valueEl.getAttribute('data-target') : 0, 10);
-      setTimeout(function() {
+      setTimeout(function () {
         bar.style.transition = 'width 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
         bar.style.width = target + '%';
         if (valueEl) {
@@ -362,14 +392,14 @@ function animateStatBars(container) {
       }, delay);
       delay += 80;
     });
-    fills.forEach(function(bar) { bar.classList.remove('stat-bar-anim'); });
-    values.forEach(function(v) { v.classList.remove('stat-value-anim'); });
+    fills.forEach(function (bar) { bar.classList.remove('stat-bar-anim'); });
+    values.forEach(function (v) { v.classList.remove('stat-value-anim'); });
   }
 
   var section = fills[0].closest('.detail-section') || fills[0].closest('section') || fills[0];
   // Use a one-shot observer for stat bars
   if ('IntersectionObserver' in window) {
-    var _statIO = new IntersectionObserver(function(entries) {
+    var _statIO = new IntersectionObserver(function (entries) {
       if (entries[0].isIntersecting) {
         runAnimation();
         _statIO.disconnect();
@@ -384,7 +414,7 @@ function animateStatBars(container) {
 function buildTypeBadges(types, size) {
   size = size || '';
   return (types || [])
-    .map(function(t) {
+    .map(function (t) {
       var tl = t.toLowerCase();
       var icon = '<img src="assets/images/elements/' + tl + '.png" class="type-icon" alt="" onerror="this.style.display=\'none\'">';
       return '<span class="type-badge type-' + tl + ' ' + size + '">' + icon + t + '</span>';
@@ -394,18 +424,18 @@ function buildTypeBadges(types, size) {
 
 function buildDrops(drops) {
   if (!drops || !drops.length) return '<p class="text-gray-500 text-sm">No drops data</p>';
-  return drops.map(function(drop) {
+  return drops.map(function (drop) {
     return (
       '<div class="drop-row">' +
-        '<div class="drop-icon">' +
-          (drop.image
-            ? '<img src="' + drop.image + '" alt="' + drop.item + '" onerror="this.parentElement.innerHTML=\'📦\'">'
-            : '&#128230;') +
-        '</div>' +
-        '<div class="drop-info">' +
-          '<p class="drop-name">' + drop.item + '</p>' +
-          '<p class="drop-meta"><span class="text-green-400 font-semibold">' + drop.chance + '%</span> &nbsp;&middot;&nbsp; Qty: ' + drop.quantity + '</p>' +
-        '</div>' +
+      '<div class="drop-icon">' +
+      (drop.image
+        ? '<img src="' + drop.image + '" alt="' + drop.item + '" onerror="this.parentElement.innerHTML=\'📦\'">'
+        : '&#128230;') +
+      '</div>' +
+      '<div class="drop-info">' +
+      '<p class="drop-name">' + drop.item + '</p>' +
+      '<p class="drop-meta"><span class="text-green-400 font-semibold">' + drop.chance + '%</span> &nbsp;&middot;&nbsp; Qty: ' + drop.quantity + '</p>' +
+      '</div>' +
       '</div>'
     );
   }).join('');
@@ -418,18 +448,18 @@ function buildDrops(drops) {
 
 // Biome group definitions — used to show related biomes on hover
 var BIOME_GROUPS = {
-  'hills':          ['#minecraft:hill', 'highlands', '#c:hill', '#c:mountain/slope', '#c:windswept', 'biomesoplenty:jade_cliffs', 'biomesoplenty:mediterranean_forest', 'terralith:blooming_valley', 'terralith:forested_highlands', 'terralith:lavender_valley', 'terralith:lush_valley', 'terralith:moonlight_valley', 'terralith:sakura_valley', 'terralith:savanna_slopes', 'terralith:temperate_highlands', 'terralith:yosemite_lowlands', 'wythers:autumnal_crags', 'wythers:ayers_rock', 'wythers:icy_crags', 'wythers:old_growth_taiga_crags', 'wythers:taiga_crags', 'wythers:temperate_rainforest_crags', 'wythers:thermal_taiga_crags', 'wythers:windswept_jungle'],
-  'volcanic':       ['biomesoplenty:volcanic_plains', 'biomesoplenty:volcano', 'darkerdepths:molten_cavern', 'terralith:cave/mantle_caves', 'terralith:volcanic_crater', 'terralith:volcanic_peaks', 'wythers:icy_volcano', 'wythers:tropical_volcano', 'wythers:volcano', 'wythers:volcanic_chamber', 'wythers:volcanic_crater'],
-  'nether/basalt':  ['minecraft:basalt_deltas', 'betternether:flooded_deltas', 'cinderscapes:blackstone_shales', 'incendium:ash_barrens', 'incendium:volcanic_deltas', 'incendium:withered_forest'],
-  'arid':           ['badlands', 'desert', 'savanna'],
-  'freshwater':     ['river', 'swamp', 'wythers:desert_lakes', 'wythers:guelta', 'wythers:tropical_forest_river'],
-  'jungle':         ["#minecraft:jungle", '#c:jungle', 'terralith:cave/underground_jungle', 'biomesoplenty:floodplain', 'biomesoplenty:rainforest', 'blooming_biosphere:rainforest', 'clifftree:tropical_river', 'wythers:dripleaf_swamp', 'wythers:eucalyptus_deanei_forest', 'wythers:highland_tropical_rainforest', 'wythers:humid_tropical_grassland', 'wythers:jungle_canyon', 'wythers:subtropical_forest', 'wythers:subtropical_forest_edge', 'wythers:subtropical_grassland', 'wythers:tropical_forest', 'wythers:tropical_forest_canyon', 'wythers:tropical_grassland', 'wythers:tropical_island', 'wythers:tropical_rainforest'],
-  'temperate':      ['forest', 'plains'],
-  'freezing':       ['minecraft:frozen_river', 'minecraft:jagged_peaks', 'minecraft:snowy_beach', 'minecraft:snowy_plains', 'minecraft:snowy_slopes', 'frozen_ocean', 'glacial', 'snowy', '#c:snowy', 'clifftree:frozen_caves', 'terralith:emerald_peaks', 'terralith:scarlet_mountains', 'terralith:skylands_winter', 'terralith:snowy_badlands', 'wythers:crimson_tundra', 'wythers:frozen_island', 'wythers:snowy_bog', 'wythers:snowy_canyon', 'wythers:snowy_peaks', 'wythers:snowy_tundra'],
-  'sky':            ['terralith:skylands_autumn', 'terralith:skylands_spring', 'terralith:skylands_summer', 'terralith:skylands_winter'],
-  'spooky':         ['minecraft:dark_forest', '#c:spooky', '#wythers:dark_forest', 'biomesoplenty:ominous_woods', 'biomeswevegone:ebony_woods', 'biomeswevegone:overgrowth_woodlands', 'biomeswevegone:pale_bog', 'biomeswevegone:weeping_witch_forest', 'wythers:ancient_taiga', 'wythers:tangled_forest', 'wythers:twilight_meadow'],
-  'overworld':      ['#minecraft:overworld', '#c: overworld'],
-  'ocean':          ['#minecraft:ocean', 'cold_ocean', 'deep_ocean', 'frozen_ocean', 'lukewarm_ocean', 'temperate_ocean', 'warm_ocean', '#c:ocean', 'clifftree:stone_ocean']
+  'hills': ['#minecraft:hill', 'highlands', '#c:hill', '#c:mountain/slope', '#c:windswept', 'biomesoplenty:jade_cliffs', 'biomesoplenty:mediterranean_forest', 'terralith:blooming_valley', 'terralith:forested_highlands', 'terralith:lavender_valley', 'terralith:lush_valley', 'terralith:moonlight_valley', 'terralith:sakura_valley', 'terralith:savanna_slopes', 'terralith:temperate_highlands', 'terralith:yosemite_lowlands', 'wythers:autumnal_crags', 'wythers:ayers_rock', 'wythers:icy_crags', 'wythers:old_growth_taiga_crags', 'wythers:taiga_crags', 'wythers:temperate_rainforest_crags', 'wythers:thermal_taiga_crags', 'wythers:windswept_jungle'],
+  'volcanic': ['biomesoplenty:volcanic_plains', 'biomesoplenty:volcano', 'darkerdepths:molten_cavern', 'terralith:cave/mantle_caves', 'terralith:volcanic_crater', 'terralith:volcanic_peaks', 'wythers:icy_volcano', 'wythers:tropical_volcano', 'wythers:volcano', 'wythers:volcanic_chamber', 'wythers:volcanic_crater'],
+  'nether/basalt': ['minecraft:basalt_deltas', 'betternether:flooded_deltas', 'cinderscapes:blackstone_shales', 'incendium:ash_barrens', 'incendium:volcanic_deltas', 'incendium:withered_forest'],
+  'arid': ['badlands', 'desert', 'savanna'],
+  'freshwater': ['river', 'swamp', 'wythers:desert_lakes', 'wythers:guelta', 'wythers:tropical_forest_river'],
+  'jungle': ["#minecraft:jungle", '#c:jungle', 'terralith:cave/underground_jungle', 'biomesoplenty:floodplain', 'biomesoplenty:rainforest', 'blooming_biosphere:rainforest', 'clifftree:tropical_river', 'wythers:dripleaf_swamp', 'wythers:eucalyptus_deanei_forest', 'wythers:highland_tropical_rainforest', 'wythers:humid_tropical_grassland', 'wythers:jungle_canyon', 'wythers:subtropical_forest', 'wythers:subtropical_forest_edge', 'wythers:subtropical_grassland', 'wythers:tropical_forest', 'wythers:tropical_forest_canyon', 'wythers:tropical_grassland', 'wythers:tropical_island', 'wythers:tropical_rainforest'],
+  'temperate': ['forest', 'plains'],
+  'freezing': ['minecraft:frozen_river', 'minecraft:jagged_peaks', 'minecraft:snowy_beach', 'minecraft:snowy_plains', 'minecraft:snowy_slopes', 'frozen_ocean', 'glacial', 'snowy', '#c:snowy', 'clifftree:frozen_caves', 'terralith:emerald_peaks', 'terralith:scarlet_mountains', 'terralith:skylands_winter', 'terralith:snowy_badlands', 'wythers:crimson_tundra', 'wythers:frozen_island', 'wythers:snowy_bog', 'wythers:snowy_canyon', 'wythers:snowy_peaks', 'wythers:snowy_tundra'],
+  'sky': ['terralith:skylands_autumn', 'terralith:skylands_spring', 'terralith:skylands_summer', 'terralith:skylands_winter'],
+  'spooky': ['minecraft:dark_forest', '#c:spooky', '#wythers:dark_forest', 'biomesoplenty:ominous_woods', 'biomeswevegone:ebony_woods', 'biomeswevegone:overgrowth_woodlands', 'biomeswevegone:pale_bog', 'biomeswevegone:weeping_witch_forest', 'wythers:ancient_taiga', 'wythers:tangled_forest', 'wythers:twilight_meadow'],
+  'overworld': ['#minecraft:overworld', '#c: overworld'],
+  'ocean': ['#minecraft:ocean', 'cold_ocean', 'deep_ocean', 'frozen_ocean', 'lukewarm_ocean', 'temperate_ocean', 'warm_ocean', '#c:ocean', 'clifftree:stone_ocean']
 };
 
 function getBiomeGroupTooltip(biomeName) {
@@ -449,7 +479,7 @@ function formatBiomeTagName(raw) {
   name = name.replace(/_/g, ' ');          // underscores -> spaces
   name = name.replace(/\s+/g, ' ').trim();
   // Title case each word
-  name = name.split(' ').map(function(w) {
+  name = name.split(' ').map(function (w) {
     if (!w) return w;
     if (w === '/') return w;
     return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
@@ -468,19 +498,19 @@ function getBiomeTagNamespace(raw) {
 }
 
 var NAMESPACE_LABELS = {
-  'minecraft':          'Vanilla',
-  'c':                  'Common Tag',
-  'terralith':          'Terralith',
-  'wythers':            'Wythers',
-  'biomesoplenty':      'Biomes O\' Plenty',
-  'darkerdepths':       'Darker Depths',
-  'betternether':       'BetterNether',
-  'cinderscapes':       'Cinderscapes',
-  'incendium':          'Incendium',
+  'minecraft': 'Vanilla',
+  'c': 'Common Tag',
+  'terralith': 'Terralith',
+  'wythers': 'Wythers',
+  'biomesoplenty': 'Biomes O\' Plenty',
+  'darkerdepths': 'Darker Depths',
+  'betternether': 'BetterNether',
+  'cinderscapes': 'Cinderscapes',
+  'incendium': 'Incendium',
   'blooming_biosphere': 'Blooming Biosphere',
-  'clifftree':          'CliffTree',
-  'biomeswevegone':     'Oh The Biomes We\'ve Gone',
-  'other':              'Other'
+  'clifftree': 'CliffTree',
+  'biomeswevegone': 'Oh The Biomes We\'ve Gone',
+  'other': 'Other'
 };
 
 // Build a compact, scrollable popover listing related biome tags as colour-coded chips,
@@ -489,22 +519,22 @@ function buildBiomeRelatedPopover(related) {
   if (!related || !related.length) return '';
 
   var seenNamespaces = {};
-  var chips = related.map(function(r) {
+  var chips = related.map(function (r) {
     var ns = getBiomeTagNamespace(r);
     seenNamespaces[ns] = true;
     return '<span class="biome-related-chip ns-' + ns + '">' + formatBiomeTagName(r) + '</span>';
   }).join('');
 
-  var legendItems = Object.keys(seenNamespaces).sort().map(function(ns) {
+  var legendItems = Object.keys(seenNamespaces).sort().map(function (ns) {
     var label = NAMESPACE_LABELS[ns] || (ns.charAt(0).toUpperCase() + ns.slice(1));
     return '<span class="biome-legend-item"><span class="biome-legend-dot ns-' + ns + '"></span>' + label + '</span>';
   }).join('');
 
   return (
     '<div class="biome-tooltip">' +
-      '<div class="biome-tooltip-title">Related biomes <span class="biome-tooltip-count">' + related.length + '</span></div>' +
-      '<div class="biome-tooltip-chips">' + chips + '</div>' +
-      '<div class="biome-tooltip-legend">' + legendItems + '</div>' +
+    '<div class="biome-tooltip-title">Related biomes <span class="biome-tooltip-count">' + related.length + '</span></div>' +
+    '<div class="biome-tooltip-chips">' + chips + '</div>' +
+    '<div class="biome-tooltip-legend">' + legendItems + '</div>' +
     '</div>'
   );
 }
@@ -515,22 +545,22 @@ function buildSpawnSection(poke) {
   if (!options.length) {
     // Build single option from flat fields
     options = [{
-      bucket:       poke.spawnBucket       || null,
-      level:        poke.spawnLevel        || null,
-      context:      poke.spawnContext      || null,
-      preset:       poke.spawnPreset       || null,
-      biomes:       poke.spawnBiomes       || [],
-      notBiomes:    poke.notBiomes || poke.notbiomes || [],
-      isRaining:    poke.isRaining,
+      bucket: poke.spawnBucket || null,
+      level: poke.spawnLevel || null,
+      context: poke.spawnContext || null,
+      preset: poke.spawnPreset || null,
+      biomes: poke.spawnBiomes || [],
+      notBiomes: poke.notBiomes || poke.notbiomes || [],
+      isRaining: poke.isRaining,
       isSlimeChunk: poke.isSlimeChunk,
-      isDay:        poke.isDay,
-      seeSky:       poke.seeSky,
+      isDay: poke.isDay,
+      seeSky: poke.seeSky,
       requirements: poke.spawnRequirements || null,
-      label:        null
+      label: null
     }];
   } else {
     // Normalise each provided spawnOption — JSON may use 'notbiomes' (lowercase)
-    options = options.map(function(opt) {
+    options = options.map(function (opt) {
       return Object.assign({}, opt, {
         notBiomes: opt.notBiomes || opt.notbiomes || []
       });
@@ -540,7 +570,7 @@ function buildSpawnSection(poke) {
   var total = options.length;
 
   function buildBiomeTags(biomes, variant) {
-    return (biomes || []).map(function(b) {
+    return (biomes || []).map(function (b) {
       var isNether = b.toLowerCase().indexOf('nether') !== -1;
       var colorClass = variant === 'not' ? 'biome-not' : (isNether ? 'biome-nether' : 'biome-normal');
       var related = getBiomeGroupTooltip(b);
@@ -550,65 +580,65 @@ function buildSpawnSection(poke) {
   }
 
   function buildSlide(opt, idx) {
-    var biomeHTML    = buildBiomeTags(opt.biomes, 'normal');
+    var biomeHTML = buildBiomeTags(opt.biomes, 'normal');
     var notBiomeHTML = buildBiomeTags(opt.notBiomes, 'not');
     var hasNotBiomes = (opt.notBiomes || []).length > 0;
 
     var reqLines = [];
-    if (opt.isRaining === true)  reqLines.push({ label: 'Raining', value: 'Required' });
+    if (opt.isRaining === true) reqLines.push({ label: 'Raining', value: 'Required' });
     if (opt.isRaining === false) reqLines.push({ label: 'Raining', value: 'Must not be raining' });
-    if (opt.isSlimeChunk === true)  reqLines.push({ label: 'Slime Chunk', value: 'Required' });
-    if (opt.isSlimeChunk === false)  reqLines.push({ label: 'Slime Chunk', value: 'Must not be a slime chunk' });
-    if (opt.isDay === true)  reqLines.push({ label: 'Time range', value: 'Day' });
+    if (opt.isSlimeChunk === true) reqLines.push({ label: 'Slime Chunk', value: 'Required' });
+    if (opt.isSlimeChunk === false) reqLines.push({ label: 'Slime Chunk', value: 'Must not be a slime chunk' });
+    if (opt.isDay === true) reqLines.push({ label: 'Time range', value: 'Day' });
     if (opt.isDay === false) reqLines.push({ label: 'Time range', value: 'Not during Day' });
-    if (opt.seeSky === true)     reqLines.push({ label: 'See sky', value: 'Required' });
-    if (opt.seeSky === false)    reqLines.push({ label: 'See sky', value: 'Must not see sky' });
+    if (opt.seeSky === true) reqLines.push({ label: 'See sky', value: 'Required' });
+    if (opt.seeSky === false) reqLines.push({ label: 'See sky', value: 'Must not see sky' });
     if (opt.requirements && opt.requirements !== 'N/A') reqLines.push({ label: 'Other', value: opt.requirements });
     var reqHTML = reqLines.length
       ? '<div class="spawn-card"><h3 class="spawn-card-title">Requirements</h3><ul class="spawn-detail-list">' +
-          reqLines.map(function(r) { return '<li><span>' + r.label + ':</span> ' + r.value + '</li>'; }).join('') +
-        '</ul></div>'
+      reqLines.map(function (r) { return '<li><span>' + r.label + ':</span> ' + r.value + '</li>'; }).join('') +
+      '</ul></div>'
       : '<div class="spawn-card"><h3 class="spawn-card-title">Requirements</h3><p class="spawn-empty">None</p></div>';
 
     return (
       '<div class="spawn-slide" data-index="' + idx + '" style="display:' + (idx === 0 ? 'flex' : 'none') + '">' +
-        '<div class="spawn-card">' +
-          '<h3 class="spawn-card-title">Spawning Details</h3>' +
-          '<ul class="spawn-detail-list">' +
-            (opt.context && opt.context !== '-' ? '<li><span>Context:</span> ' + opt.context + '</li>' : '') +
-            (opt.bucket   ? '<li><span>Bucket:</span> '  + opt.bucket  + '</li>' : '') +
-            (opt.level    ? '<li><span>Level:</span> '   + opt.level   + '</li>' : '') +
-            (opt.preset   ? '<li><span>Preset:</span> '  + opt.preset  + '</li>' : '') +
-          '</ul>' +
-        '</div>' +
-        reqHTML +
-        '<div class="spawn-card spawn-card-biomes">' +
-          '<h3 class="spawn-card-title">Biomes</h3>' +
-          '<p class="spawn-biome-label">WILL SPAWN IN BIOMES:</p>' +
-          '<div class="biome-tags">' + biomeHTML + '</div>' +
-          (hasNotBiomes ?
-            '<p class="spawn-biome-label spawn-biome-label-not">WON\'T SPAWN IN BIOMES:</p>' +
-            '<div class="biome-tags">' + notBiomeHTML + '</div>'
-          : '') +
-        '</div>' +
+      '<div class="spawn-card">' +
+      '<h3 class="spawn-card-title">Spawning Details</h3>' +
+      '<ul class="spawn-detail-list">' +
+      (opt.context && opt.context !== '-' ? '<li><span>Context:</span> ' + opt.context + '</li>' : '') +
+      (opt.bucket ? '<li><span>Bucket:</span> ' + opt.bucket + '</li>' : '') +
+      (opt.level ? '<li><span>Level:</span> ' + opt.level + '</li>' : '') +
+      (opt.preset ? '<li><span>Preset:</span> ' + opt.preset + '</li>' : '') +
+      '</ul>' +
+      '</div>' +
+      reqHTML +
+      '<div class="spawn-card spawn-card-biomes">' +
+      '<h3 class="spawn-card-title">Biomes</h3>' +
+      '<p class="spawn-biome-label">WILL SPAWN IN BIOMES:</p>' +
+      '<div class="biome-tags">' + biomeHTML + '</div>' +
+      (hasNotBiomes ?
+        '<p class="spawn-biome-label spawn-biome-label-not">WON\'T SPAWN IN BIOMES:</p>' +
+        '<div class="biome-tags">' + notBiomeHTML + '</div>'
+        : '') +
+      '</div>' +
       '</div>'
     );
   }
 
-  var slidesHTML = options.map(function(opt, i) { return buildSlide(opt, i); }).join('');
+  var slidesHTML = options.map(function (opt, i) { return buildSlide(opt, i); }).join('');
 
   var dotsHTML = total > 1
-    ? options.map(function(_, i) {
-        return '<button class="spawn-dot' + (i === 0 ? ' active' : '') + '" onclick="goSpawnSlide(' + i + ')" aria-label="Spawn option ' + (i+1) + '"></button>';
-      }).join('')
+    ? options.map(function (_, i) {
+      return '<button class="spawn-dot' + (i === 0 ? ' active' : '') + '" onclick="goSpawnSlide(' + i + ')" aria-label="Spawn option ' + (i + 1) + '"></button>';
+    }).join('')
     : '';
 
   var navHTML = total > 1
     ? '<div class="spawn-nav">' +
-        '<button class="spawn-nav-btn" onclick="prevSpawnSlide()" aria-label="Previous">&#8249;</button>' +
-        '<div class="spawn-dots">' + dotsHTML + '</div>' +
-        '<button class="spawn-nav-btn" onclick="nextSpawnSlide()" aria-label="Next">&#8250;</button>' +
-      '</div>'
+    '<button class="spawn-nav-btn" onclick="prevSpawnSlide()" aria-label="Previous">&#8249;</button>' +
+    '<div class="spawn-dots">' + dotsHTML + '</div>' +
+    '<button class="spawn-nav-btn" onclick="nextSpawnSlide()" aria-label="Next">&#8250;</button>' +
+    '</div>'
     : '';
 
   var counterHTML = total > 1
@@ -617,17 +647,17 @@ function buildSpawnSection(poke) {
 
   return (
     '<section class="detail-section spawn-section">' +
-      '<div class="spawn-header">' +
-        '<div>' +
-          '<p class="spawn-label">SPAWNING</p>' +
-          '<h2 class="spawn-title">Where does ' + poke.name + ' spawn in Cobblemon?</h2>' +
-        '</div>' +
-        counterHTML +
-      '</div>' +
-      navHTML +
-      '<div class="spawn-slides" id="spawnSlides">' +
-        slidesHTML +
-      '</div>' +
+    '<div class="spawn-header">' +
+    '<div>' +
+    '<p class="spawn-label">SPAWNING</p>' +
+    '<h2 class="spawn-title">Where does ' + poke.name + ' spawn in Cobblemon?</h2>' +
+    '</div>' +
+    counterHTML +
+    '</div>' +
+    navHTML +
+    '<div class="spawn-slides" id="spawnSlides">' +
+    slidesHTML +
+    '</div>' +
     '</section>'
   );
 }
@@ -636,38 +666,38 @@ window._spawnIndex = 0;
 
 function goSpawnSlide(idx) {
   var slides = document.querySelectorAll('.spawn-slide');
-  var dots   = document.querySelectorAll('.spawn-dot');
+  var dots = document.querySelectorAll('.spawn-dot');
   var counter = document.getElementById('spawnCounter');
   if (!slides.length) return;
   idx = Math.max(0, Math.min(idx, slides.length - 1));
 
-  slides.forEach(function(s, i) {
+  slides.forEach(function (s, i) {
     s.style.display = i === idx ? 'flex' : 'none';
     s.style.animation = i === idx ? 'spawnSlideIn 0.3s cubic-bezier(0.22,1,0.36,1) both' : '';
   });
-  dots.forEach(function(d, i) { d.classList.toggle('active', i === idx); });
+  dots.forEach(function (d, i) { d.classList.toggle('active', i === idx); });
   if (counter) counter.textContent = (idx + 1) + ' / ' + slides.length;
   window._spawnIndex = idx;
 }
 
-window.nextSpawnSlide = function() { goSpawnSlide(window._spawnIndex + 1); };
-window.prevSpawnSlide = function() { goSpawnSlide(window._spawnIndex - 1); };
-window.goSpawnSlide   = goSpawnSlide;
+window.nextSpawnSlide = function () { goSpawnSlide(window._spawnIndex + 1); };
+window.prevSpawnSlide = function () { goSpawnSlide(window._spawnIndex - 1); };
+window.goSpawnSlide = goSpawnSlide;
 
 function buildEvolutionSection(poke) {
   if (!poke.evolutions || !poke.evolutions.length) return '';
 
-  var stages = poke.evolutions.map(function(evo, i) {
+  var stages = poke.evolutions.map(function (evo, i) {
     var evoPoke = getPokemonById(evo.id);
-    var sprite  = evoPoke ? (evoPoke.video || evoPoke.sprite) : null;
+    var sprite = evoPoke ? (evoPoke.video || evoPoke.sprite) : null;
     var isCurrent = evo.id === poke.id;
 
     var arrow = i > 0
       ? '<div class="evo-arrow">' +
-          '<div class="evo-arrow-line"></div>' +
-          '<span class="evo-arrow-label">' + (evo.level ? 'Lv. ' + evo.level : evo.method || '?') + '</span>' +
-          '<div class="evo-arrow-tip">▶</div>' +
-        '</div>'
+      '<div class="evo-arrow-line"></div>' +
+      '<span class="evo-arrow-label">' + (evo.level ? 'Lv. ' + evo.level : evo.method || '?') + '</span>' +
+      '<div class="evo-arrow-tip">▶</div>' +
+      '</div>'
       : '';
 
     var spriteEl = sprite
@@ -677,17 +707,17 @@ function buildEvolutionSection(poke) {
     return (
       arrow +
       '<a href="pokemon.html?id=' + evo.id + '" class="evo-card' + (isCurrent ? ' evo-current' : '') + '">' +
-        '<div class="evo-sprite-wrap">' + spriteEl + '</div>' +
-        '<p class="evo-name">' + evo.name + '</p>' +
-        '<p class="evo-number">#' + String(evo.id).padStart(4, '0') + '</p>' +
+      '<div class="evo-sprite-wrap">' + spriteEl + '</div>' +
+      '<p class="evo-name">' + evo.name + '</p>' +
+      '<p class="evo-number">#' + String(evo.id).padStart(4, '0') + '</p>' +
       '</a>'
     );
   }).join('');
 
   return (
     '<section class="detail-section">' +
-      '<h2 class="section-title">Evolution Chart</h2>' +
-      '<div class="evo-chain">' + stages + '</div>' +
+    '<h2 class="section-title">Evolution Chart</h2>' +
+    '<div class="evo-chain">' + stages + '</div>' +
     '</section>'
   );
 }
@@ -697,11 +727,11 @@ function buildRangeBar(stat) {
   if (!stat) return '';
   var min = Math.min(stat.min, stat.max);
   var max = Math.max(stat.min, stat.max);
-  var leftPct  = min;
+  var leftPct = min;
   var widthPct = max - min;
   return (
     '<div class="ride-bar-bg">' +
-      '<div class="ride-bar-fill" style="left:' + leftPct + '%;width:' + widthPct + '%"></div>' +
+    '<div class="ride-bar-fill" style="left:' + leftPct + '%;width:' + widthPct + '%"></div>' +
     '</div>'
   );
 }
@@ -710,39 +740,39 @@ function buildMountCard(title, stats) {
   if (!stats) return '';
   var labels = {
     acceleration: 'Acceleration',
-    jump:         'Jump',
-    skill:        'Skill',
-    speed:        'Speed',
-    stamina:      'Stamina',
+    jump: 'Jump',
+    skill: 'Skill',
+    speed: 'Speed',
+    stamina: 'Stamina',
   };
 
-  var rows = Object.entries(labels).map(function(entry) {
-    var key   = entry[0];
+  var rows = Object.entries(labels).map(function (entry) {
+    var key = entry[0];
     var label = entry[1];
-    var stat  = stats[key];
+    var stat = stats[key];
     if (!stat) return '';
     return (
       '<div class="ride-stat-row">' +
-        '<div class="ride-stat-header">' +
-          '<span class="ride-stat-label">' + label + '</span>' +
-          '<span class="ride-stat-range">' + stat.min + ' \u2013 ' + stat.max + '</span>' +
-        '</div>' +
-        buildRangeBar(stat) +
+      '<div class="ride-stat-header">' +
+      '<span class="ride-stat-label">' + label + '</span>' +
+      '<span class="ride-stat-range">' + stat.min + ' \u2013 ' + stat.max + '</span>' +
+      '</div>' +
+      buildRangeBar(stat) +
       '</div>'
     );
   }).join('');
 
   var icons = {
-    'Air Mount':      'assets/images/air_mount.png',
-    'Ground Mount':   'assets/images/ground_mount.png',
+    'Air Mount': 'assets/images/air_mount.png',
+    'Ground Mount': 'assets/images/ground_mount.png',
     'Swimming Mount': 'assets/images/swimming_mount.png'
   };
   var icon = '<img src="' + (icons[title] || 'assets/images/ground_mount.png') + '" alt="' + title + '" class="mount-icon">';
 
   return (
     '<div class="mount-card">' +
-      '<h3 class="mount-card-title">' + icon + ' ' + title + '</h3>' +
-      '<div class="ride-stats">' + rows + '</div>' +
+    '<h3 class="mount-card-title">' + icon + ' ' + title + '</h3>' +
+    '<div class="ride-stats">' + rows + '</div>' +
     '</div>'
   );
 }
@@ -762,23 +792,23 @@ function buildRidingSection(poke) {
   if (!poke.rideable) return '';
 
   var riding = poke.riding || {};
-  var hasAir      = poke.flying && getRidingKey(riding, 'air');
-  var groundData  = getRidingKey(riding, 'ground');
-  var swimData    = getRidingKey(riding, 'swimming');
+  var hasAir = poke.flying && getRidingKey(riding, 'air');
+  var groundData = getRidingKey(riding, 'ground');
+  var swimData = getRidingKey(riding, 'swimming');
 
-  var ground   = buildMountCard('Ground Mount', groundData);
-  var air      = hasAir ? buildMountCard('Air Mount', getRidingKey(riding, 'air')) : '';
+  var ground = buildMountCard('Ground Mount', groundData);
+  var air = hasAir ? buildMountCard('Air Mount', getRidingKey(riding, 'air')) : '';
   var swimming = swimData ? buildMountCard('Swimming Mount', swimData) : '';
 
   return (
     '<section class="detail-section riding-section">' +
-      '<h2 class="section-title">How to ride ' + poke.name + '</h2>' +
-      '<p class="section-subtitle">Mount stats scale with level and show the possible range</p>' +
-      '<div class="mount-grid">' +
-        ground +
-        air +
-        swimming +
-      '</div>' +
+    '<h2 class="section-title">How to ride ' + poke.name + '</h2>' +
+    '<p class="section-subtitle">Mount stats scale with level and show the possible range</p>' +
+    '<div class="mount-grid">' +
+    ground +
+    air +
+    swimming +
+    '</div>' +
     '</section>'
   );
 }
@@ -788,10 +818,10 @@ function buildRidingSection(poke) {
 function resolveFormVideo(poke, version) {
   var v = version || 'Normal';
   if (v === 'Normal') return poke.video || null;
-  if (v === 'Shiny')  return poke.shinyVideo || null;
+  if (v === 'Shiny') return poke.shinyVideo || null;
   var forms = (poke.megaEvolutions || []).concat(poke.variants || []);
   for (var i = 0; i < forms.length; i++) {
-    if (v === forms[i].name)            return forms[i].video || null;
+    if (v === forms[i].name) return forms[i].video || null;
     if (v === forms[i].name + ' Shiny') return forms[i].shinyVideo || null;
   }
   // Unknown version (e.g. pokemon name used as version) — fall back to Normal
@@ -837,11 +867,11 @@ function loadVariantProgress() {
   try {
     var saved = localStorage.getItem('variantProgress');
     if (saved) _variantProgress = JSON.parse(saved);
-  } catch(e) {}
+  } catch (e) { }
 }
 
 function saveVariantProgress() {
-  try { localStorage.setItem('variantProgress', JSON.stringify(_variantProgress)); } catch(e) {}
+  try { localStorage.setItem('variantProgress', JSON.stringify(_variantProgress)); } catch (e) { }
 }
 
 function variantKey(pokeId, variantName) {
@@ -857,34 +887,34 @@ function buildVariantTrackerCard(poke) {
   // "Normal" form counts as a variant too — shown first
   var allEntries = [{ name: poke.name, _isBase: true }].concat(poke.variants);
 
-  var rows = allEntries.map(function(variant) {
+  var rows = allEntries.map(function (variant) {
     var key = variantKey(poke.id, variant.name);
-    var p   = _variantProgress[key] || {};
+    var p = _variantProgress[key] || {};
     var isSeen = p.seen || p.captured;
-    var isCap  = p.captured;
+    var isCap = p.captured;
 
     return (
       '<div class="variant-tracker-row">' +
-        '<span class="variant-tracker-name">' + variant.name + '</span>' +
-        '<div class="variant-tracker-btns">' +
-          '<button class="pdex-btn pdex-btn-seen' + (isSeen ? ' active' : '') + '" ' +
-            'onclick="toggleVariantSeen(' + poke.id + ', \'' + variant.name.replace(/'/g, "\\'") + '\')" title="Mark as Seen">\uD83D\uDC41</button>' +
-          '<button class="pdex-btn pdex-btn-cap' + (isCap ? ' active' : '') + '" ' +
-            'onclick="toggleVariantCaptured(' + poke.id + ', \'' + variant.name.replace(/'/g, "\\'") + '\')" title="Mark as Captured">\u2713</button>' +
-        '</div>' +
+      '<span class="variant-tracker-name">' + variant.name + '</span>' +
+      '<div class="variant-tracker-btns">' +
+      '<button class="pdex-btn pdex-btn-seen' + (isSeen ? ' active' : '') + '" ' +
+      'onclick="toggleVariantSeen(' + poke.id + ', \'' + variant.name.replace(/'/g, "\\'") + '\')" title="Mark as Seen">\uD83D\uDC41</button>' +
+      '<button class="pdex-btn pdex-btn-cap' + (isCap ? ' active' : '') + '" ' +
+      'onclick="toggleVariantCaptured(' + poke.id + ', \'' + variant.name.replace(/'/g, "\\'") + '\')" title="Mark as Captured">\u2713</button>' +
+      '</div>' +
       '</div>'
     );
   }).join('');
 
   return (
     '<div class="meta-card variant-tracker-card">' +
-      '<h3 class="meta-title">Variant Forms</h3>' +
-      '<div class="variant-tracker-list">' + rows + '</div>' +
+    '<h3 class="meta-title">Variant Forms</h3>' +
+    '<div class="variant-tracker-list">' + rows + '</div>' +
     '</div>'
   );
 }
 
-window.toggleVariantSeen = function(pokeId, variantName) {
+window.toggleVariantSeen = function (pokeId, variantName) {
   var key = variantKey(pokeId, variantName);
   var p = _variantProgress[key] || {};
   if (p.seen && !p.captured) {
@@ -903,7 +933,7 @@ window.toggleVariantSeen = function(pokeId, variantName) {
   }
 };
 
-window.toggleVariantCaptured = function(pokeId, variantName) {
+window.toggleVariantCaptured = function (pokeId, variantName) {
   var key = variantKey(pokeId, variantName);
   var p = _variantProgress[key] || {};
   p.captured = !p.captured;
@@ -923,92 +953,92 @@ function buildDecksSection(poke) {
   // Max possible power for 4 moves (4 x 150 = 600)
   var MAX_DECK_POWER = 600;
 
-  var cards = poke.decks.map(function(deck) {
+  var cards = poke.decks.map(function (deck) {
     var sprite = resolveFormSprite(poke, deck.version);
     var logoPath = deck.logo || '';    // Calculate deck strength
-    var totalPower = (deck.moves || []).reduce(function(sum, moveName) {
+    var totalPower = (deck.moves || []).reduce(function (sum, moveName) {
       var move = window._allMoves ? window._allMoves[moveName] : null;
       return sum + (parseInt(move && move.power) || 0);
     }, 0);
     var strengthPct = Math.min((totalPower / MAX_DECK_POWER) * 100, 100).toFixed(1);
     var strengthColor = totalPower >= 400 ? '#4ade80' : totalPower >= 250 ? '#facc15' : '#f87171';
 
-    var movesList = (deck.moves || []).map(function(moveName) {
+    var movesList = (deck.moves || []).map(function (moveName) {
       var move = window._allMoves ? window._allMoves[moveName] : null;
       var typeClass = move ? 'type-' + move.type.toLowerCase() : '';
       var typeLabel = move ? move.type : '';
-      var power    = move && move.power && move.power !== '-' ? move.power : '—';
+      var power = move && move.power && move.power !== '-' ? move.power : '—';
       var accuracy = move && move.accuracy ? move.accuracy : '—';
-      var pp       = move && move.pp ? move.pp : '—';
+      var pp = move && move.pp ? move.pp : '—';
       var category = move && move.category ? move.category : '—';
 
       return (
         '<div class="deck-move">' +
-          '<div class="deck-move-top">' +
-            '<span class="deck-move-name">' + moveName + '</span>' +
-            (typeLabel ? '<span class="type-badge ' + typeClass + ' type-xs"><img src="assets/images/elements/' + move.type.toLowerCase() + '.png" class="type-icon" alt="" onerror="this.style.display=\'none\'">' + typeLabel + '</span>' : '') +
-          '</div>' +
-          '<div class="deck-move-stats">' +
-            '<span title="Power">Pwr: ' + power + '</span>' +
-            '<span title="Accuracy">Acc: ' + accuracy + '</span>' +
-            '<span title="PP">PP: ' + pp + '</span>' +
-            '<span title="Category" class="deck-move-cat">' + category + '</span>' +
-          '</div>' +
+        '<div class="deck-move-top">' +
+        '<span class="deck-move-name">' + moveName + '</span>' +
+        (typeLabel ? '<span class="type-badge ' + typeClass + ' type-xs"><img src="assets/images/elements/' + move.type.toLowerCase() + '.png" class="type-icon" alt="" onerror="this.style.display=\'none\'">' + typeLabel + '</span>' : '') +
+        '</div>' +
+        '<div class="deck-move-stats">' +
+        '<span title="Power">Pwr: ' + power + '</span>' +
+        '<span title="Accuracy">Acc: ' + accuracy + '</span>' +
+        '<span title="PP">PP: ' + pp + '</span>' +
+        '<span title="Category" class="deck-move-cat">' + category + '</span>' +
+        '</div>' +
         '</div>'
       );
     }).join('');
 
     return (
       '<div class="deck-card">' +
-        '<div class="deck-sprite-wrap">' +
-          (function() {
-            var isShinyDeck = /shiny/i.test(deck.version || '');
-            var baseName    = (deck.version || '').replace(/shiny\s*/i, '').trim() || 'Normal';
-            var src;
-            if (isShinyDeck) {
-              // Try shiny video/sprite of the base form or matching mega/variant
-              var forms = (poke.megaEvolutions || []).concat(poke.variants || []);
-              var matchForm = forms.find(function(f) { return f.name && f.name.toLowerCase() === baseName.toLowerCase(); });
-              if (matchForm) {
-                src = matchForm.shinyVideo || matchForm.shinySprite || matchForm.video || matchForm.sprite;
-              } else {
-                src = poke.shinyVideo || poke.shinySprite || poke.video || poke.sprite;
-              }
-            } else {
-              src = resolveFormVideo(poke, deck.version) || resolveFormSprite(poke, deck.version);
-            }
-            return buildSpriteEl(src, deck.version, 'deck-sprite', 'assets/images/placeholder.png');
-          })() +
-        '</div>' +
-        '<div class="deck-info">' +
-          '<div class="deck-header">' +
-            '<h3 class="deck-name">' + deck.name + '</h3>' +
-            '<span class="deck-game">' +
-              '<img src="' + logoPath + '" alt="' + deck.game + '" class="deck-game-logo" onerror="this.style.display=\'none\'">' +
-              (deck.game || '') +
-            '</span>' +
-          '</div>' +
-          '<p class="deck-version">' + deck.version + '</p>' +
-          '<div class="deck-moves">' + movesList + '</div>' +
-          '<div class="deck-strength">' +
-            '<div class="deck-strength-header">' +
-              '<span class="deck-strength-label">Deck Power</span>' +
-              '<span class="deck-strength-value" style="color:' + strengthColor + '">' + totalPower + ' / ' + MAX_DECK_POWER + '</span>' +
-            '</div>' +
-            '<div class="deck-strength-bar-bg">' +
-              '<div class="deck-strength-bar-fill" style="width:' + strengthPct + '%;background:' + strengthColor + '"></div>' +
-            '</div>' +
-          '</div>' +
-        '</div>' +
+      '<div class="deck-sprite-wrap">' +
+      (function () {
+        var isShinyDeck = /shiny/i.test(deck.version || '');
+        var baseName = (deck.version || '').replace(/shiny\s*/i, '').trim() || 'Normal';
+        var src;
+        if (isShinyDeck) {
+          // Try shiny video/sprite of the base form or matching mega/variant
+          var forms = (poke.megaEvolutions || []).concat(poke.variants || []);
+          var matchForm = forms.find(function (f) { return f.name && f.name.toLowerCase() === baseName.toLowerCase(); });
+          if (matchForm) {
+            src = matchForm.shinyVideo || matchForm.shinySprite || matchForm.video || matchForm.sprite;
+          } else {
+            src = poke.shinyVideo || poke.shinySprite || poke.video || poke.sprite;
+          }
+        } else {
+          src = resolveFormVideo(poke, deck.version) || resolveFormSprite(poke, deck.version);
+        }
+        return buildSpriteEl(src, deck.version, 'deck-sprite', 'assets/images/placeholder.png');
+      })() +
+      '</div>' +
+      '<div class="deck-info">' +
+      '<div class="deck-header">' +
+      '<h3 class="deck-name">' + deck.name + '</h3>' +
+      '<span class="deck-game">' +
+      '<img src="' + logoPath + '" alt="' + deck.game + '" class="deck-game-logo" onerror="this.style.display=\'none\'">' +
+      (deck.game || '') +
+      '</span>' +
+      '</div>' +
+      '<p class="deck-version">' + deck.version + '</p>' +
+      '<div class="deck-moves">' + movesList + '</div>' +
+      '<div class="deck-strength">' +
+      '<div class="deck-strength-header">' +
+      '<span class="deck-strength-label">Deck Power</span>' +
+      '<span class="deck-strength-value" style="color:' + strengthColor + '">' + totalPower + ' / ' + MAX_DECK_POWER + '</span>' +
+      '</div>' +
+      '<div class="deck-strength-bar-bg">' +
+      '<div class="deck-strength-bar-fill" style="width:' + strengthPct + '%;background:' + strengthColor + '"></div>' +
+      '</div>' +
+      '</div>' +
+      '</div>' +
       '</div>'
     );
   }).join('');
 
   return (
     '<section class="detail-section">' +
-      '<h2 class="section-title">&#127922; Decks</h2>' +
-      '<p class="section-subtitle">' + poke.decks.length + ' deck' + (poke.decks.length > 1 ? 's' : '') + ' available</p>' +
-      '<div class="decks-list">' + cards + '</div>' +
+    '<h2 class="section-title">&#127922; Decks</h2>' +
+    '<p class="section-subtitle">' + poke.decks.length + ' deck' + (poke.decks.length > 1 ? 's' : '') + ' available</p>' +
+    '<div class="decks-list">' + cards + '</div>' +
     '</section>'
   );
 }
@@ -1017,20 +1047,20 @@ function buildDecksSection(poke) {
 // ====================== Pokédex Data Builders ======================
 function buildCatchRate(poke) {
   if (poke.catchRate === undefined) return '';
-  var rate  = poke.catchRate;
-  var pct   = ((rate / 255) * 100).toFixed(1);
+  var rate = poke.catchRate;
+  var pct = ((rate / 255) * 100).toFixed(1);
   var color = rate >= 150 ? '#4ade80' : rate >= 75 ? '#facc15' : '#f87171';
   var label = rate >= 150 ? 'Easy' : rate >= 75 ? 'Medium' : 'Hard';
   return (
     '<div class="meta-card pokedex-data-card">' +
-      '<h3 class="meta-title">Catch Rate</h3>' +
-      '<div class="pokedex-data-row">' +
-        '<span class="pokedex-data-value" style="color:' + color + '">' + rate + '</span>' +
-        '<span class="pokedex-data-sub">' + label + '</span>' +
-      '</div>' +
-      '<div class="stat-bar-bg" style="margin-top:0.5rem">' +
-        '<div class="stat-bar-fill" style="width:' + pct + '%;background:' + color + '"></div>' +
-      '</div>' +
+    '<h3 class="meta-title">Catch Rate</h3>' +
+    '<div class="pokedex-data-row">' +
+    '<span class="pokedex-data-value" style="color:' + color + '">' + rate + '</span>' +
+    '<span class="pokedex-data-sub">' + label + '</span>' +
+    '</div>' +
+    '<div class="stat-bar-bg" style="margin-top:0.5rem">' +
+    '<div class="stat-bar-fill" style="width:' + pct + '%;background:' + color + '"></div>' +
+    '</div>' +
     '</div>'
   );
 }
@@ -1039,11 +1069,11 @@ function buildShinyRate(poke) {
   if (!poke.shinyRate) return '';
   return (
     '<div class="meta-card pokedex-data-card">' +
-      '<h3 class="meta-title">Shiny Rate</h3>' +
-      '<div class="pokedex-data-row">' +
-        '<span class="pokedex-data-value" style="color:#facc15">&#10024;</span>' +
-        '<span class="pokedex-data-sub">' + poke.shinyRate + '</span>' +
-      '</div>' +
+    '<h3 class="meta-title">Shiny Rate</h3>' +
+    '<div class="pokedex-data-row">' +
+    '<span class="pokedex-data-value" style="color:#facc15">&#10024;</span>' +
+    '<span class="pokedex-data-sub">' + poke.shinyRate + '</span>' +
+    '</div>' +
     '</div>'
   );
 }
@@ -1051,43 +1081,43 @@ function buildShinyRate(poke) {
 function buildEVYield(poke) {
   if (!poke.evYield) return '';
   var statLabels = { hp: 'HP', attack: 'Attack', defense: 'Defense', spAttack: 'Sp. Atk', spDefense: 'Sp. Def', speed: 'Speed' };
-  var rows = Object.entries(poke.evYield).map(function(e) {
+  var rows = Object.entries(poke.evYield).map(function (e) {
     return (
       '<div class="ev-row">' +
-        '<span class="ev-stat">' + (statLabels[e[0]] || e[0]) + '</span>' +
-        '<span class="ev-value">+' + e[1] + '</span>' +
+      '<span class="ev-stat">' + (statLabels[e[0]] || e[0]) + '</span>' +
+      '<span class="ev-value">+' + e[1] + '</span>' +
       '</div>'
     );
   }).join('');
   return (
     '<div class="meta-card pokedex-data-card">' +
-      '<h3 class="meta-title">EV Yield</h3>' +
-      '<div class="ev-list">' + rows + '</div>' +
+    '<h3 class="meta-title">EV Yield</h3>' +
+    '<div class="ev-list">' + rows + '</div>' +
     '</div>'
   );
 }
 
 function buildHeldItems(poke) {
   if (!poke.heldItems || !poke.heldItems.length) return '';
-  var rows = poke.heldItems.map(function(item) {
+  var rows = poke.heldItems.map(function (item) {
     return (
       '<div class="drop-row">' +
-        '<div class="drop-icon">' +
-          (item.image
-            ? '<img src="' + item.image + '" alt="' + item.item + '" onerror="this.parentElement.innerHTML=\'&#128230;\'">'
-            : '&#128230;') +
-        '</div>' +
-        '<div class="drop-info">' +
-          '<p class="drop-name">' + item.item + '</p>' +
-          '<p class="drop-meta"><span style="color:#4ade80;font-weight:600">' + item.chance + '%</span> chance</p>' +
-        '</div>' +
+      '<div class="drop-icon">' +
+      (item.image
+        ? '<img src="' + item.image + '" alt="' + item.item + '" onerror="this.parentElement.innerHTML=\'&#128230;\'">'
+        : '&#128230;') +
+      '</div>' +
+      '<div class="drop-info">' +
+      '<p class="drop-name">' + item.item + '</p>' +
+      '<p class="drop-meta"><span style="color:#4ade80;font-weight:600">' + item.chance + '%</span> chance</p>' +
+      '</div>' +
       '</div>'
     );
   }).join('');
   return (
     '<div class="meta-card pokedex-data-card">' +
-      '<h3 class="meta-title">Held Items</h3>' +
-      rows +
+    '<h3 class="meta-title">Held Items</h3>' +
+    rows +
     '</div>'
   );
 }
@@ -1097,15 +1127,15 @@ function loadPokemonDetail() {
   var container = document.getElementById('pokemonDetail');
   if (!container) return;
 
-  var id   = parseInt(new URLSearchParams(window.location.search).get('id'));
+  var id = parseInt(new URLSearchParams(window.location.search).get('id'));
   var poke = getPokemonById(id);
 
   if (!poke) {
     container.innerHTML =
       '<div class="error-state">' +
-        '<div class="text-5xl mb-4">&#10067;</div>' +
-        '<p class="text-xl text-red-400">Pokémon not found</p>' +
-        '<a href="index.html" class="back-link mt-4 inline-block">\u2190 Back to Pokédex</a>' +
+      '<div class="text-5xl mb-4">&#10067;</div>' +
+      '<p class="text-xl text-red-400">Pokémon not found</p>' +
+      '<a href="index.html" class="back-link mt-4 inline-block">\u2190 Back to Pokédex</a>' +
       '</div>';
     return;
   }
@@ -1113,7 +1143,7 @@ function loadPokemonDetail() {
   document.title = poke.name + ' (#' + (poke.number || poke.id) + ') \u2014 Cobblemon Pokédex';
 
   var statsHTML = poke.baseStats
-    ? Object.entries(poke.baseStats).map(function(e) { return buildStatBar(e[0], e[1]); }).join('')
+    ? Object.entries(poke.baseStats).map(function (e) { return buildStatBar(e[0], e[1]); }).join('')
     : '<p class="text-yellow-400 text-sm">No stats available</p>';
 
   var typeBadgesLg = buildTypeBadges(poke.types, 'type-lg');
@@ -1122,32 +1152,32 @@ function loadPokemonDetail() {
     ? '<button id="shinyBtn" onclick="toggleShiny()" class="shiny-btn" title="Toggle shiny form"><span id="shinyLabel">Shiny</span></button>'
     : '';
 
-  var abilitiesHTML = (poke.abilities || []).map(function(a) {
+  var abilitiesHTML = (poke.abilities || []).map(function (a) {
     var cleanName = a.replace(' (Hidden)', '').trim();
-    var isHidden  = a.indexOf('(Hidden)') !== -1;
+    var isHidden = a.indexOf('(Hidden)') !== -1;
     var desc = State.allAbilities[cleanName] ? State.allAbilities[cleanName].description : '';
     return (
       '<div class="meta-tag ability-tag' + (isHidden ? ' ability-hidden' : '') + '"' +
-           (desc ? ' data-tooltip="' + desc.replace(/"/g, '&quot;') + '"' : '') + '>' +
-        a +
-        (desc ? '<div class="ability-tooltip">' + desc + '</div>' : '') +
+      (desc ? ' data-tooltip="' + desc.replace(/"/g, '&quot;') + '"' : '') + '>' +
+      a +
+      (desc ? '<div class="ability-tooltip">' + desc + '</div>' : '') +
       '</div>'
     );
   }).join('');
 
-  var weakHTML      = buildTypeBadges(poke.weaknesses);
-  var resistHTML    = buildTypeBadges(poke.resistances);
-  var immunityHTML  = (poke.immunities || ['None']).map(function(i) {
+  var weakHTML = buildTypeBadges(poke.weaknesses);
+  var resistHTML = buildTypeBadges(poke.resistances);
+  var immunityHTML = (poke.immunities || ['None']).map(function (i) {
     return i === 'None'
       ? '<span class="immunity-none">None</span>'
       : buildTypeBadges([i]);
   }).join('');
 
-  var moveTabs = ['Level Up', 'TM', 'Egg', 'Tutor'].map(function(label, i) {
+  var moveTabs = ['Level Up', 'TM', 'Egg', 'Tutor'].map(function (label, i) {
     return (
       '<button class="move-tab ' + (i === 0 ? 'active' : '') + '"' +
-              ' role="tab" aria-selected="' + (i === 0) + '"' +
-              ' onclick="switchMoveTab(' + i + ')">' + label + '</button>'
+      ' role="tab" aria-selected="' + (i === 0) + '"' +
+      ' onclick="switchMoveTab(' + i + ')">' + label + '</button>'
     );
   }).join('');
 
@@ -1157,16 +1187,16 @@ function loadPokemonDetail() {
   if (megaCount > 0) {
     megaButtons = '<div class="form-btns">' +
       '<button class="form-btn active" onclick="switchForm(0)">' + poke.name + '</button>' +
-      poke.megaEvolutions.map(function(mega, i) {
+      poke.megaEvolutions.map(function (mega, i) {
         var name = mega.name || '';
         var variantClass = '';
-        if (/mega.*x\b/i.test(name))      variantClass = 'form-btn-mega-x';
+        if (/mega.*x\b/i.test(name)) variantClass = 'form-btn-mega-x';
         else if (/mega.*y\b/i.test(name)) variantClass = 'form-btn-mega-y';
         else if (/gigantamax|gmax/i.test(name)) variantClass = 'form-btn-gmax';
-        else if (/mega/i.test(name))      variantClass = 'form-btn-mega';
+        else if (/mega/i.test(name)) variantClass = 'form-btn-mega';
         return '<button class="form-btn ' + variantClass + '" onclick="switchForm(' + (i + 1) + ')"><span class="form-btn-label">' + name + '</span></button>';
       }).join('') +
-    '</div>';
+      '</div>';
   }
 
   // Variants — own button group, own space, indexed after mega evolutions
@@ -1174,104 +1204,104 @@ function loadPokemonDetail() {
   if (poke.variants && poke.variants.length > 0) {
     variantButtons = '<div class="form-btns variant-btns">' +
       (megaCount === 0 ? '<button class="form-btn active" onclick="switchForm(0)">' + poke.name + '</button>' : '') +
-      poke.variants.map(function(variant, i) {
+      poke.variants.map(function (variant, i) {
         var name = variant.name || '';
         return '<button class="form-btn form-btn-variant" onclick="switchForm(' + (megaCount + i + 1) + ')"><span class="form-btn-label">' + name + '</span></button>';
       }).join('') +
-    '</div>';
+      '</div>';
   }
 
   container.innerHTML =
     '<div class="detail-wrapper">' +
 
-      '<div class="detail-hero">' +
-        '<div class="sprite-container">' +
-          '<div class="sprite-wrap">' +
-            buildSpriteEl(poke.video || poke.sprite, poke.name, 'detail-sprite', 'assets/images/placeholder.png') +
-          '</div>' +
-          shinyBtn +
-          megaButtons +
-          variantButtons +
-        '</div>' +
+    '<div class="detail-hero">' +
+    '<div class="sprite-container">' +
+    '<div class="sprite-wrap">' +
+    buildSpriteEl(poke.video || poke.sprite, poke.name, 'detail-sprite', 'assets/images/placeholder.png') +
+    '</div>' +
+    shinyBtn +
+    megaButtons +
+    variantButtons +
+    '</div>' +
 
-        '<div class="detail-info">' +
-          '<p class="detail-number">#' + (poke.number || String(poke.id).padStart(4, '0')) + '</p>' +
-          '<h1 class="detail-name">' + poke.name + '</h1>' +
-          '<div class="detail-types" id="pokemonTypes">' + typeBadgesLg + '</div>' +
-          '<div class="detail-meta-grid">' +
-            '<div class="meta-card">' +
-              '<h3 class="meta-title">Abilities</h3>' +
-              '<div id="pokemonAbilities">' + abilitiesHTML + '</div>' +
-            '</div>' +
-            '<div class="meta-card">' +
-              '<h3 class="meta-title">Rarity</h3>' +
-              '<div class="meta-tag">' + (poke.rarity || '\u2014') + '</div>' +
-              '<h3 class="meta-title mt-3">Generation</h3>' +
-              '<div class="meta-tag">Gen ' + (poke.generation || '?') + '</div>' +
-            '</div>' +
-            '<div class="meta-card">' +
-              '<h3 class="meta-title">Dropped Items</h3>' +
-              buildDrops(poke.drops) +
-            '</div>' +
-            buildVariantTrackerCard(poke) +
-          '</div>' +
-        '</div>' +
-      '</div>' +
+    '<div class="detail-info">' +
+    '<p class="detail-number">#' + (poke.number || String(poke.id).padStart(4, '0')) + '</p>' +
+    '<h1 class="detail-name">' + poke.name + '</h1>' +
+    '<div class="detail-types" id="pokemonTypes">' + typeBadgesLg + '</div>' +
+    '<div class="detail-meta-grid">' +
+    '<div class="meta-card">' +
+    '<h3 class="meta-title">Abilities</h3>' +
+    '<div id="pokemonAbilities">' + abilitiesHTML + '</div>' +
+    '</div>' +
+    '<div class="meta-card">' +
+    '<h3 class="meta-title">Rarity</h3>' +
+    '<div class="meta-tag">' + (poke.rarity || '\u2014') + '</div>' +
+    '<h3 class="meta-title mt-3">Generation</h3>' +
+    '<div class="meta-tag">Gen ' + (poke.generation || '?') + '</div>' +
+    '</div>' +
+    '<div class="meta-card">' +
+    '<h3 class="meta-title">Dropped Items</h3>' +
+    buildDrops(poke.drops) +
+    '</div>' +
+    buildVariantTrackerCard(poke) +
+    '</div>' +
+    '</div>' +
+    '</div>' +
 
-      '<section class="detail-section">' +
-        '<h2 class="section-title">Pokédex Data</h2>' +
-        '<div class="pokedex-data-grid">' +
-          buildCatchRate(poke) +
-          buildShinyRate(poke) +
-          buildEVYield(poke) +
-          buildHeldItems(poke) +
-        '</div>' +
-      '</section>' +
+    '<section class="detail-section">' +
+    '<h2 class="section-title">Pokédex Data</h2>' +
+    '<div class="pokedex-data-grid">' +
+    buildCatchRate(poke) +
+    buildShinyRate(poke) +
+    buildEVYield(poke) +
+    buildHeldItems(poke) +
+    '</div>' +
+    '</section>' +
 
-      '<section class="detail-section">' +
-        '<h2 class="section-title">Base Stats</h2>' +
-        '<div class="stats-grid">' + statsHTML + '</div>' +
-      '</section>' +
+    '<section class="detail-section">' +
+    '<h2 class="section-title">Base Stats</h2>' +
+    '<div class="stats-grid">' + statsHTML + '</div>' +
+    '</section>' +
 
-      '<section class="detail-section">' +
-        '<h2 class="section-title">Type Effectiveness</h2>' +
-        '<div class="effectiveness-grid">' +
-          '<div class="effectiveness-card weakness"><h3>Weaknesses</h3><div class="badge-row" id="pokemonWeaknesses">' + weakHTML + '</div></div>' +
-          '<div class="effectiveness-card resistance"><h3>Resistances</h3><div class="badge-row" id="pokemonResistances">' + resistHTML + '</div></div>' +
-          '<div class="effectiveness-card immunity"><h3>Immunities</h3><div class="badge-row" id="pokemonImmunities">' + immunityHTML + '</div></div>' +
-        '</div>' +
-      '</section>' +
+    '<section class="detail-section">' +
+    '<h2 class="section-title">Type Effectiveness</h2>' +
+    '<div class="effectiveness-grid">' +
+    '<div class="effectiveness-card weakness"><h3>Weaknesses</h3><div class="badge-row" id="pokemonWeaknesses">' + weakHTML + '</div></div>' +
+    '<div class="effectiveness-card resistance"><h3>Resistances</h3><div class="badge-row" id="pokemonResistances">' + resistHTML + '</div></div>' +
+    '<div class="effectiveness-card immunity"><h3>Immunities</h3><div class="badge-row" id="pokemonImmunities">' + immunityHTML + '</div></div>' +
+    '</div>' +
+    '</section>' +
 
-      buildSpawnSection(poke) +
+    buildSpawnSection(poke) +
 
-      buildEvolutionSection(poke) +
+    buildEvolutionSection(poke) +
 
-      buildRidingSection(poke) +
+    buildRidingSection(poke) +
 
-      '<section class="detail-section">' +
-        '<h2 class="section-title">Moves</h2>' +
-        '<div class="move-tabs" role="tablist">' + moveTabs + '</div>' +
-        '<div class="move-filters">' +
-          '<input id="moveSearch" type="text" placeholder="Search name..." class="move-filter-input" oninput="filterMoves()">' +
-          '<select id="moveCategoryFilter" class="move-filter-select" onchange="filterMoves()">' +
-            '<option value="">All Categories</option>' +
-            '<option value="Physical">Physical</option>' +
-            '<option value="Special">Special</option>' +
-            '<option value="Status">Status</option>' +
-          '</select>' +
-          '<select id="movePowerFilter" class="move-filter-select" onchange="filterMoves()">' +
-            '<option value="">Any Power</option>' +
-            '<option value="0-40">0 – 40</option>' +
-            '<option value="41-80">41 – 80</option>' +
-            '<option value="81-120">81 – 120</option>' +
-            '<option value="121-999">121+</option>' +
-            '<option value="status">Status (no power)</option>' +
-          '</select>' +
-        '</div>' +
-        '<div id="movesContent" class="moves-content"></div>' +
-      '</section>' +
+    '<section class="detail-section">' +
+    '<h2 class="section-title">Moves</h2>' +
+    '<div class="move-tabs" role="tablist">' + moveTabs + '</div>' +
+    '<div class="move-filters">' +
+    '<input id="moveSearch" type="text" placeholder="Search name..." class="move-filter-input" oninput="filterMoves()">' +
+    '<select id="moveCategoryFilter" class="move-filter-select" onchange="filterMoves()">' +
+    '<option value="">All Categories</option>' +
+    '<option value="Physical">Physical</option>' +
+    '<option value="Special">Special</option>' +
+    '<option value="Status">Status</option>' +
+    '</select>' +
+    '<select id="movePowerFilter" class="move-filter-select" onchange="filterMoves()">' +
+    '<option value="">Any Power</option>' +
+    '<option value="0-40">0 – 40</option>' +
+    '<option value="41-80">41 – 80</option>' +
+    '<option value="81-120">81 – 120</option>' +
+    '<option value="121-999">121+</option>' +
+    '<option value="status">Status (no power)</option>' +
+    '</select>' +
+    '</div>' +
+    '<div id="movesContent" class="moves-content"></div>' +
+    '</section>' +
 
-      buildDecksSection(poke) +
+    buildDecksSection(poke) +
 
     '</div>';
 
@@ -1280,14 +1310,14 @@ function loadPokemonDetail() {
   // Track recently viewed
   try {
     var history = JSON.parse(localStorage.getItem('recentPokemon') || '[]');
-    history = history.filter(function(id) { return id !== poke.id; });
+    history = history.filter(function (id) { return id !== poke.id; });
     history.unshift(poke.id);
     localStorage.setItem('recentPokemon', JSON.stringify(history.slice(0, 5)));
-  } catch(e) {}
+  } catch (e) { }
 
   animateStatBars(container);
   // Scroll-reveal for each section
-  container.querySelectorAll('.detail-section').forEach(function(sec, i) {
+  container.querySelectorAll('.detail-section').forEach(function (sec, i) {
     sec.classList.add('scroll-reveal');
     sec.style.transitionDelay = (i * 0.07) + 's';
   });
@@ -1296,30 +1326,30 @@ function loadPokemonDetail() {
   renderMoves(poke);
 }
 
-window.switchForm = function(index) {
+window.switchForm = function (index) {
   var d = window._shinyData;
   if (!d) return;
   d.formIndex = index;
-  d.isShiny   = false;
+  d.isShiny = false;
 
   var isNormal = index === 0;
-  var megas    = d.poke.megaEvolutions || [];
+  var megas = d.poke.megaEvolutions || [];
   var variants = d.poke.variants || [];
   var allForms = megas.concat(variants);
 
   var form = isNormal
     ? {
-        name:        d.poke.name,
-        sprite:      d.poke.sprite,
-        shinySprite: d.poke.shinySprite,
-        shinyVideo:  d.poke.shinyVideo,
-        video:       d.poke.video,
-        abilities:   d.poke.abilities,
-        types:       d.poke.types,
-        weaknesses:  d.poke.weaknesses,
-        resistances: d.poke.resistances,
-        immunities:  d.poke.immunities,
-      }
+      name: d.poke.name,
+      sprite: d.poke.sprite,
+      shinySprite: d.poke.shinySprite,
+      shinyVideo: d.poke.shinyVideo,
+      video: d.poke.video,
+      abilities: d.poke.abilities,
+      types: d.poke.types,
+      weaknesses: d.poke.weaknesses,
+      resistances: d.poke.resistances,
+      immunities: d.poke.immunities,
+    }
     : allForms[index - 1];
 
   // Sprite — swap video or image
@@ -1335,7 +1365,7 @@ window.switchForm = function(index) {
   var statsGrid = document.querySelector('.stats-grid');
   var statsSource = (form.baseStats && Object.keys(form.baseStats).length) ? form.baseStats : d.poke.baseStats;
   if (statsGrid && statsSource) {
-    var newStats = Object.entries(statsSource).map(function(e) { return buildStatBar(e[0], e[1]); }).join('');
+    var newStats = Object.entries(statsSource).map(function (e) { return buildStatBar(e[0], e[1]); }).join('');
     statsGrid.innerHTML = newStats;
     animateStatBars(statsGrid.closest('.detail-section') || statsGrid);
   }
@@ -1348,7 +1378,7 @@ window.switchForm = function(index) {
 
   // Shiny button — show if any shiny asset exists for this form
   var hasShiny = !!(form.shinySprite || form.shinyVideo);
-  var btn   = document.getElementById('shinyBtn');
+  var btn = document.getElementById('shinyBtn');
   var label = document.getElementById('shinyLabel');
   if (btn) { btn.classList.remove('active'); btn.style.display = hasShiny ? '' : 'none'; }
   if (label) label.textContent = 'Shiny';
@@ -1356,15 +1386,15 @@ window.switchForm = function(index) {
   // Abilities
   var abilitiesEl = document.getElementById('pokemonAbilities');
   if (abilitiesEl && form.abilities) {
-    abilitiesEl.innerHTML = form.abilities.map(function(a) {
+    abilitiesEl.innerHTML = form.abilities.map(function (a) {
       var cleanName = a.replace(' (Hidden)', '').trim();
-      var isHidden  = a.indexOf('(Hidden)') !== -1;
+      var isHidden = a.indexOf('(Hidden)') !== -1;
       var desc = State.allAbilities[cleanName] ? State.allAbilities[cleanName].description : '';
       return (
         '<div class="meta-tag ability-tag' + (isHidden ? ' ability-hidden' : '') + '"' +
-             (desc ? ' data-tooltip="' + desc.replace(/"/g, '&quot;') + '"' : '') + '>' +
-          a +
-          (desc ? '<div class="ability-tooltip">' + desc + '</div>' : '') +
+        (desc ? ' data-tooltip="' + desc.replace(/"/g, '&quot;') + '"' : '') + '>' +
+        a +
+        (desc ? '<div class="ability-tooltip">' + desc + '</div>' : '') +
         '</div>'
       );
     }).join('');
@@ -1391,7 +1421,7 @@ window.switchForm = function(index) {
   // Immunities
   var immunEl = document.getElementById('pokemonImmunities');
   if (immunEl && form.immunities) {
-    immunEl.innerHTML = (form.immunities).map(function(i) {
+    immunEl.innerHTML = (form.immunities).map(function (i) {
       return i === 'None'
         ? '<span class="immunity-none">None</span>'
         : buildTypeBadges([i]);
@@ -1399,12 +1429,12 @@ window.switchForm = function(index) {
   }
 
   // Active form tab — handle separate mega/variant button groups
-  var megaGroup    = document.querySelector('.form-btns:not(.variant-btns)');
+  var megaGroup = document.querySelector('.form-btns:not(.variant-btns)');
   var variantGroup = document.querySelector('.form-btns.variant-btns');
 
   if (megaGroup) {
     var megaBtns = megaGroup.querySelectorAll('.form-btn');
-    megaBtns.forEach(function(b, i) {
+    megaBtns.forEach(function (b, i) {
       b.classList.toggle('active', i === index);
     });
   }
@@ -1412,7 +1442,7 @@ window.switchForm = function(index) {
   if (variantGroup) {
     var variantBtns = variantGroup.querySelectorAll('.form-btn');
     var hasOwnNormal = variantBtns.length === (d.poke.variants || []).length + 1;
-    variantBtns.forEach(function(b, i) {
+    variantBtns.forEach(function (b, i) {
       var formIdx = hasOwnNormal ? i : i + 1 + megas.length;
       // If variant group has its own Normal button (i===0 maps to index 0),
       // otherwise variant buttons start at megas.length + 1
@@ -1430,7 +1460,7 @@ function renderMoves(poke, filtered) {
   var content = document.getElementById('movesContent');
   if (!content) return;
 
-  var keys  = ['level', 'tm', 'egg', 'tutor'];
+  var keys = ['level', 'tm', 'egg', 'tutor'];
   var moves = filtered !== undefined ? filtered : ((poke.moves || {})[keys[State.currentMoveTab]] || []).map(enrichMove);
 
   if (moves.length === 0) {
@@ -1439,69 +1469,69 @@ function renderMoves(poke, filtered) {
   }
 
   if (State.currentMoveTab !== 0) {
-    moves = moves.slice().sort(function(a, b) { return (parseInt(b.power) || 0) - (parseInt(a.power) || 0); });
+    moves = moves.slice().sort(function (a, b) { return (parseInt(b.power) || 0) - (parseInt(a.power) || 0); });
   }
 
   var categoryColors = { Physical: '#f87171', Special: '#818cf8', Status: '#4ade80' };
   var isLevelTab = State.currentMoveTab === 0;
 
-  var rows = moves.map(function(m) {
+  var rows = moves.map(function (m) {
     var typeCell = m.type
       ? '<span class="type-badge type-' + m.type.toLowerCase() + ' type-xs"><img src="assets/images/elements/' + m.type.toLowerCase() + '.png" class="type-icon" alt="" onerror="this.style.display=\'none\'">' + m.type + '</span>'
       : '\u2014';
     var catColor = categoryColors[m.category] || '#9ca3af';
-    var catCell  = m.category
+    var catCell = m.category
       ? '<span class="move-category-badge" style="background:' + catColor + '20;border-color:' + catColor + ';color:' + catColor + '">' + m.category + '</span>'
       : '\u2014';
     return (
       '<tr>' +
-        (isLevelTab ? '<td class="move-level">' + (m.level || '\u2014') + '</td>' : '') +
-        '<td class="move-name"><a href="move.html?name=' + encodeURIComponent(m.name) + '" class="move-link">' + m.name + '</a></td>' +
-        '<td>' + typeCell + '</td>' +
-        '<td>' + catCell + '</td>' +
-        '<td class="text-center move-power">' + (m.power || '\u2014') + '</td>' +
-        '<td class="text-center">' + (m.accuracy || '\u2014') + '</td>' +
-        '<td class="text-center">' + (m.pp || '\u2014') + '</td>' +
+      (isLevelTab ? '<td class="move-level">' + (m.level || '\u2014') + '</td>' : '') +
+      '<td class="move-name"><a href="move.html?name=' + encodeURIComponent(m.name) + '" class="move-link">' + m.name + '</a></td>' +
+      '<td>' + typeCell + '</td>' +
+      '<td>' + catCell + '</td>' +
+      '<td class="text-center move-power">' + (m.power || '\u2014') + '</td>' +
+      '<td class="text-center">' + (m.accuracy || '\u2014') + '</td>' +
+      '<td class="text-center">' + (m.pp || '\u2014') + '</td>' +
       '</tr>'
     );
   }).join('');
 
   content.innerHTML =
     '<div class="table-wrapper">' +
-      '<table class="moves-table">' +
-        '<thead><tr>' +
-          (isLevelTab ? '<th>Lv.</th>' : '') +
-          '<th>Move</th><th>Type</th><th>Cat.</th>' +
-          '<th class="text-center">Pwr</th><th class="text-center">Acc</th><th class="text-center">PP</th>' +
-        '</tr></thead>' +
-        '<tbody>' + rows + '</tbody>' +
-      '</table>' +
+    '<table class="moves-table">' +
+    '<thead><tr>' +
+    (isLevelTab ? '<th>Lv.</th>' : '') +
+    '<th>Move</th><th>Type</th><th>Cat.</th>' +
+    '<th class="text-center">Pwr</th><th class="text-center">Acc</th><th class="text-center">PP</th>' +
+    '</tr></thead>' +
+    '<tbody>' + rows + '</tbody>' +
+    '</table>' +
     '</div>';
 }
 
-window.filterMoves = function() {
-  var id   = parseInt(new URLSearchParams(window.location.search).get('id'));
+window.filterMoves = function () {
+  var id = parseInt(new URLSearchParams(window.location.search).get('id'));
   var poke = getPokemonById(id);
   if (!poke) return;
 
-  var search   = (document.getElementById('moveSearch') ? document.getElementById('moveSearch').value.toLowerCase().trim() : '');
+  var search = (document.getElementById('moveSearch') ? document.getElementById('moveSearch').value.toLowerCase().trim() : '');
   var category = (document.getElementById('moveCategoryFilter') ? document.getElementById('moveCategoryFilter').value : '');
-  var power    = (document.getElementById('movePowerFilter') ? document.getElementById('movePowerFilter').value : '');
+  var power = (document.getElementById('movePowerFilter') ? document.getElementById('movePowerFilter').value : '');
 
-  var keys  = ['level', 'tm', 'egg', 'tutor'];
+  var keys = ['level', 'tm', 'egg', 'tutor'];
   var moves = ((poke.moves || {})[keys[State.currentMoveTab]] || []).map(enrichMove);
 
-  var filtered = moves.filter(function(m) {
+  var filtered = moves.filter(function (m) {
     var matchName = !search || m.name.toLowerCase().includes(search);
-    var matchCat  = !category || m.category === category;
-    var matchPow  = true;
+    var matchCat = !category || m.category === category;
+    var matchPow = true;
     if (power === 'status') {
       matchPow = !m.power || m.power === '-';
     } else if (power) {
       var parts = power.split('-');
       var min = parseInt(parts[0]);
       var max = parseInt(parts[1]);
-      var p   = parseInt(m.power) || 0;
+      var p = parseInt(m.power) || 0;
       matchPow = p >= min && p <= max;
     }
     return matchName && matchCat && matchPow;
@@ -1510,9 +1540,9 @@ window.filterMoves = function() {
   renderMoves(poke, filtered);
 };
 
-window.switchMoveTab = function(index) {
+window.switchMoveTab = function (index) {
   State.currentMoveTab = index;
-  document.querySelectorAll('.move-tab').forEach(function(btn, i) {
+  document.querySelectorAll('.move-tab').forEach(function (btn, i) {
     var active = i === index;
     btn.classList.toggle('active', active);
     btn.setAttribute('aria-selected', active);
@@ -1524,12 +1554,12 @@ window.switchMoveTab = function(index) {
   if (s) s.value = '';
   if (c) c.value = '';
   if (p) p.value = '';
-  var id   = parseInt(new URLSearchParams(window.location.search).get('id'));
+  var id = parseInt(new URLSearchParams(window.location.search).get('id'));
   var poke = getPokemonById(id);
   if (poke) renderMoves(poke);
 };
 
-window.toggleShiny = function() {
+window.toggleShiny = function () {
   var d = window._shinyData;
   if (!d || !d.poke) return;
 
@@ -1552,9 +1582,9 @@ window.toggleShiny = function() {
     spriteWrap.insertAdjacentHTML('afterbegin', buildSpriteEl(src, d.poke.name, 'detail-sprite', 'assets/images/placeholder.png'));
   }
 
-  var btn   = document.getElementById('shinyBtn');
+  var btn = document.getElementById('shinyBtn');
   var label = document.getElementById('shinyLabel');
-  if (btn)   btn.classList.toggle('active', d.isShiny);
+  if (btn) btn.classList.toggle('active', d.isShiny);
   if (label) label.textContent = d.isShiny ? 'NORMAL' : 'SHINY';
 };
 
@@ -1564,13 +1594,13 @@ function loadMoveDetail() {
   var container = document.getElementById('moveDetail');
   if (!container) return;
 
-  var params   = new URLSearchParams(window.location.search);
+  var params = new URLSearchParams(window.location.search);
   var moveName = decodeURIComponent(params.get('name') || '');
   // Use browser history for back navigation - reliable regardless of where user came from
   var backLink = document.getElementById('backLink');
   if (backLink) {
     backLink.href = '#';
-    backLink.onclick = function(e) {
+    backLink.onclick = function (e) {
       e.preventDefault();
       if (history.length > 1) {
         history.back();
@@ -1590,10 +1620,10 @@ function loadMoveDetail() {
 
   // Find all pokemon that learn this move
   var learnedBy = { level: [], tm: [], egg: [], tutor: [] };
-  State.allPokemon.forEach(function(poke) {
+  State.allPokemon.forEach(function (poke) {
     if (!poke.moves) return;
-    ['level', 'tm', 'egg', 'tutor'].forEach(function(method) {
-      var found = (poke.moves[method] || []).find(function(m) { return m.name === moveName; });
+    ['level', 'tm', 'egg', 'tutor'].forEach(function (method) {
+      var found = (poke.moves[method] || []).find(function (m) { return m.name === moveName; });
       if (found) learnedBy[method].push({ poke: poke, level: found.level });
     });
   });
@@ -1602,25 +1632,25 @@ function loadMoveDetail() {
   var catColor = categoryColors[move.category] || '#9ca3af';
 
   var statBlocks = [
-    { label: 'Power',    value: move.power    || '—' },
+    { label: 'Power', value: move.power || '—' },
     { label: 'Accuracy', value: move.accuracy ? move.accuracy + '%' : '—' },
-    { label: 'PP',       value: move.pp       || '—' },
-  ].map(function(s) {
+    { label: 'PP', value: move.pp || '—' },
+  ].map(function (s) {
     return (
       '<div class="move-stat-block">' +
-        '<p class="move-stat-value">' + s.value + '</p>' +
-        '<p class="move-stat-label">' + s.label + '</p>' +
+      '<p class="move-stat-value">' + s.value + '</p>' +
+      '<p class="move-stat-label">' + s.label + '</p>' +
       '</div>'
     );
   }).join('');
 
-  var moveTabs = ['Level Up', 'TM', 'Egg', 'Tutor'].map(function(label, i) {
+  var moveTabs = ['Level Up', 'TM', 'Egg', 'Tutor'].map(function (label, i) {
     var key = ['level', 'tm', 'egg', 'tutor'][i];
     var count = learnedBy[key].length;
     return (
       '<button class="move-tab ' + (i === 0 ? 'active' : '') + '"' +
-              ' onclick="switchMoveLearnerTab(' + i + ')">' +
-        label + ' <span class="move-tab-count">' + count + '</span>' +
+      ' onclick="switchMoveLearnerTab(' + i + ')">' +
+      label + ' <span class="move-tab-count">' + count + '</span>' +
       '</button>'
     );
   }).join('');
@@ -1628,34 +1658,34 @@ function loadMoveDetail() {
   container.innerHTML =
     '<div class="detail-wrapper">' +
 
-      '<section class="detail-section move-hero">' +
-        '<div class="move-hero-top">' +
-          '<div>' +
-            '<h1 class="move-hero-name">' + moveName + '</h1>' +
-            '<div class="move-hero-badges">' +
-              '<span class="type-badge type-' + (move.type || 'normal').toLowerCase() + ' type-lg"><img src="assets/images/elements/' + (move.type || 'normal').toLowerCase() + '.png" class="type-icon" alt="" onerror="this.style.display=\'none\'">' + (move.type || '—') + '</span>' +
-              '<span class="move-category-badge" style="background:' + catColor + '20;border-color:' + catColor + ';color:' + catColor + '">' + (move.category || '—') + '</span>' +
-            '</div>' +
-          '</div>' +
-          '<div class="move-stat-blocks">' + statBlocks + '</div>' +
-        '</div>' +
-        (move.description
-          ? '<p class="move-description">' + move.description + '</p>'
-          : '') +
-      '</section>' +
+    '<section class="detail-section move-hero">' +
+    '<div class="move-hero-top">' +
+    '<div>' +
+    '<h1 class="move-hero-name">' + moveName + '</h1>' +
+    '<div class="move-hero-badges">' +
+    '<span class="type-badge type-' + (move.type || 'normal').toLowerCase() + ' type-lg"><img src="assets/images/elements/' + (move.type || 'normal').toLowerCase() + '.png" class="type-icon" alt="" onerror="this.style.display=\'none\'">' + (move.type || '—') + '</span>' +
+    '<span class="move-category-badge" style="background:' + catColor + '20;border-color:' + catColor + ';color:' + catColor + '">' + (move.category || '—') + '</span>' +
+    '</div>' +
+    '</div>' +
+    '<div class="move-stat-blocks">' + statBlocks + '</div>' +
+    '</div>' +
+    (move.description
+      ? '<p class="move-description">' + move.description + '</p>'
+      : '') +
+    '</section>' +
 
-      '<section class="detail-section">' +
-        '<h2 class="section-title">Learned By</h2>' +
-        '<div class="move-tabs" role="tablist">' + moveTabs + '</div>' +
-        '<div id="moveLearnerContent" class="moves-content"></div>' +
-      '</section>' +
+    '<section class="detail-section">' +
+    '<h2 class="section-title">Learned By</h2>' +
+    '<div class="move-tabs" role="tablist">' + moveTabs + '</div>' +
+    '<div id="moveLearnerContent" class="moves-content"></div>' +
+    '</section>' +
 
     '</div>';
 
   window._moveLearnerData = learnedBy;
   window._currentMoveLearnerTab = 0;
   renderMoveLearners();
-  container.querySelectorAll('.detail-section').forEach(function(sec, i) {
+  container.querySelectorAll('.detail-section').forEach(function (sec, i) {
     sec.classList.add('scroll-reveal');
     sec.style.transitionDelay = (i * 0.07) + 's';
   });
@@ -1676,48 +1706,48 @@ function renderMoveLearners() {
 
   var isLevel = window._currentMoveLearnerTab === 0;
 
-  var rows = entries.map(function(entry) {
-    var poke   = entry.poke;
+  var rows = entries.map(function (entry) {
+    var poke = entry.poke;
     var sprite = poke.video || poke.sprite;
-    var num    = poke.number || String(poke.id).padStart(4, '0');
-    var types  = (poke.types || []).map(function(t) {
+    var num = poke.number || String(poke.id).padStart(4, '0');
+    var types = (poke.types || []).map(function (t) {
       return '<span class="type-badge type-' + t.toLowerCase() + ' type-xs">' + t + '</span>';
     }).join('');
 
     return (
       '<tr class="learner-row" onclick="location.href=\'pokemon.html?id=' + poke.id + '\'" style="cursor:pointer">' +
-        (isLevel ? '<td class="move-level">' + (entry.level || '—') + '</td>' : '') +
-        '<td>' +
-          '<div class="learner-sprite-wrap">' +
-            buildSpriteEl(sprite, poke.name, 'learner-sprite') +
-          '</div>' +
-        '</td>' +
-        '<td class="move-name"><a href="pokemon.html?id=' + poke.id + '" class="move-link">#' + num + ' ' + poke.name + '</a></td>' +
-        '<td><div class="badge-row">' + types + '</div></td>' +
+      (isLevel ? '<td class="move-level">' + (entry.level || '—') + '</td>' : '') +
+      '<td>' +
+      '<div class="learner-sprite-wrap">' +
+      buildSpriteEl(sprite, poke.name, 'learner-sprite') +
+      '</div>' +
+      '</td>' +
+      '<td class="move-name"><a href="pokemon.html?id=' + poke.id + '" class="move-link">#' + num + ' ' + poke.name + '</a></td>' +
+      '<td><div class="badge-row">' + types + '</div></td>' +
       '</tr>'
     );
   }).join('');
 
   content.innerHTML =
     '<div class="table-wrapper">' +
-      '<table class="moves-table">' +
-        '<thead><tr>' +
-          (isLevel ? '<th>Lv.</th>' : '') +
-          '<th></th>' +
-          '<th>Pokémon</th>' +
-          '<th>Type</th>' +
-        '</tr></thead>' +
-        '<tbody>' + rows + '</tbody>' +
-      '</table>' +
+    '<table class="moves-table">' +
+    '<thead><tr>' +
+    (isLevel ? '<th>Lv.</th>' : '') +
+    '<th></th>' +
+    '<th>Pokémon</th>' +
+    '<th>Type</th>' +
+    '</tr></thead>' +
+    '<tbody>' + rows + '</tbody>' +
+    '</table>' +
     '</div>';
 
   staggerMoveRows(content);
   setTimeout(playAllVideos, 100);
 }
 
-window.switchMoveLearnerTab = function(index) {
+window.switchMoveLearnerTab = function (index) {
   window._currentMoveLearnerTab = index;
-  document.querySelectorAll('.move-tab').forEach(function(btn, i) {
+  document.querySelectorAll('.move-tab').forEach(function (btn, i) {
     btn.classList.toggle('active', i === index);
     btn.setAttribute('aria-selected', i === index);
   });
@@ -1730,13 +1760,13 @@ function loadAbilityDetail() {
   var container = document.getElementById('abilityDetail');
   if (!container) return;
 
-  var params      = new URLSearchParams(window.location.search);
+  var params = new URLSearchParams(window.location.search);
   var abilityName = decodeURIComponent(params.get('name') || '');
 
   var backLink = document.getElementById('backLink');
   if (backLink) {
     backLink.href = '#';
-    backLink.onclick = function(e) {
+    backLink.onclick = function (e) {
       e.preventDefault();
       if (history.length > 1) { history.back(); } else { location.href = 'index.html'; }
     };
@@ -1747,11 +1777,11 @@ function loadAbilityDetail() {
   document.title = abilityName + ' — Cobblemon Pokédex';
 
   var regular = [];
-  var hidden  = [];
+  var hidden = [];
 
-  State.allPokemon.forEach(function(poke) {
-    (poke.abilities || []).forEach(function(a) {
-      var isHidden  = a.indexOf('(Hidden)') !== -1;
+  State.allPokemon.forEach(function (poke) {
+    (poke.abilities || []).forEach(function (a) {
+      var isHidden = a.indexOf('(Hidden)') !== -1;
       var cleanName = a.replace(' (Hidden)', '').trim();
       if (cleanName === abilityName) {
         if (isHidden) hidden.push(poke);
@@ -1762,36 +1792,36 @@ function loadAbilityDetail() {
 
   var tabs = [
     { label: 'Regular', list: regular },
-    { label: 'Hidden',  list: hidden  },
+    { label: 'Hidden', list: hidden },
   ];
 
-  var moveTabs = tabs.map(function(t, i) {
+  var moveTabs = tabs.map(function (t, i) {
     return (
       '<button class="move-tab ' + (i === 0 ? 'active' : '') + '"' +
-              ' onclick="switchAbilityTab(' + i + ')">' +
-        t.label + ' <span class="move-tab-count">' + t.list.length + '</span>' +
+      ' onclick="switchAbilityTab(' + i + ')">' +
+      t.label + ' <span class="move-tab-count">' + t.list.length + '</span>' +
       '</button>'
     );
   }).join('');
 
   container.innerHTML =
     '<div class="detail-wrapper">' +
-      '<section class="detail-section move-hero">' +
-        '<div class="move-hero-top">' +
-          '<h1 class="move-hero-name">' + abilityName + '</h1>' +
-        '</div>' +
-        (ability && ability.description
-          ? '<p class="move-description">' + ability.description + '</p>'
-          : '<p class="move-description" style="color:var(--text-dim);font-style:italic">No description available yet.</p>') +
-      '</section>' +
-      '<section class="detail-section">' +
-        '<h2 class="section-title">Pok\u00e9mon with this Ability</h2>' +
-        '<div class="move-tabs" role="tablist">' + moveTabs + '</div>' +
-        '<div id="abilityPokemonContent" class="moves-content"></div>' +
-      '</section>' +
+    '<section class="detail-section move-hero">' +
+    '<div class="move-hero-top">' +
+    '<h1 class="move-hero-name">' + abilityName + '</h1>' +
+    '</div>' +
+    (ability && ability.description
+      ? '<p class="move-description">' + ability.description + '</p>'
+      : '<p class="move-description" style="color:var(--text-dim);font-style:italic">No description available yet.</p>') +
+    '</section>' +
+    '<section class="detail-section">' +
+    '<h2 class="section-title">Pok\u00e9mon with this Ability</h2>' +
+    '<div class="move-tabs" role="tablist">' + moveTabs + '</div>' +
+    '<div id="abilityPokemonContent" class="moves-content"></div>' +
+    '</section>' +
     '</div>';
 
-  window._abilityTabData    = tabs;
+  window._abilityTabData = tabs;
   window._currentAbilityTab = 0;
   renderAbilityPokemon();
 }
@@ -1807,35 +1837,35 @@ function renderAbilityPokemon() {
     return;
   }
 
-  var rows = list.map(function(poke) {
+  var rows = list.map(function (poke) {
     var sprite = poke.video || poke.sprite;
-    var num    = poke.number || String(poke.id).padStart(4, '0');
-    var types  = (poke.types || []).map(function(t) {
+    var num = poke.number || String(poke.id).padStart(4, '0');
+    var types = (poke.types || []).map(function (t) {
       return '<span class="type-badge type-' + t.toLowerCase() + ' type-xs">' + t + '</span>';
     }).join('');
     return (
       '<tr class="learner-row" onclick="location.href=\'pokemon.html?id=' + poke.id + '\'" style="cursor:pointer">' +
-        '<td><div class="learner-sprite-wrap">' + buildSpriteEl(sprite, poke.name, 'learner-sprite') + '</div></td>' +
-        '<td class="move-name"><a href="pokemon.html?id=' + poke.id + '" class="move-link">#' + num + ' ' + poke.name + '</a></td>' +
-        '<td><div class="badge-row">' + types + '</div></td>' +
+      '<td><div class="learner-sprite-wrap">' + buildSpriteEl(sprite, poke.name, 'learner-sprite') + '</div></td>' +
+      '<td class="move-name"><a href="pokemon.html?id=' + poke.id + '" class="move-link">#' + num + ' ' + poke.name + '</a></td>' +
+      '<td><div class="badge-row">' + types + '</div></td>' +
       '</tr>'
     );
   }).join('');
 
   content.innerHTML =
     '<div class="table-wrapper">' +
-      '<table class="moves-table">' +
-        '<thead><tr><th></th><th>Pok\u00e9mon</th><th>Type</th></tr></thead>' +
-        '<tbody>' + rows + '</tbody>' +
-      '</table>' +
+    '<table class="moves-table">' +
+    '<thead><tr><th></th><th>Pok\u00e9mon</th><th>Type</th></tr></thead>' +
+    '<tbody>' + rows + '</tbody>' +
+    '</table>' +
     '</div>';
 
   setTimeout(playAllVideos, 100);
 }
 
-window.switchAbilityTab = function(index) {
+window.switchAbilityTab = function (index) {
   window._currentAbilityTab = index;
-  document.querySelectorAll('.move-tab').forEach(function(btn, i) {
+  document.querySelectorAll('.move-tab').forEach(function (btn, i) {
     btn.classList.toggle('active', i === index);
   });
   renderAbilityPokemon();
@@ -1843,10 +1873,10 @@ window.switchAbilityTab = function(index) {
 
 
 function showLoadingState() {
-  var grid   = document.getElementById('pokemonGrid');
+  var grid = document.getElementById('pokemonGrid');
   var detail = document.getElementById('pokemonDetail');
   if (grid) {
-    grid.innerHTML = Array(12).fill(0).map(function() {
+    grid.innerHTML = Array(12).fill(0).map(function () {
       return '<div class="pokemon-card skeleton"></div>';
     }).join('');
   }
@@ -1855,18 +1885,18 @@ function showLoadingState() {
   }
 }
 
-function hideLoadingState() {}
+function hideLoadingState() { }
 
 function showDataError() {
-  var grid   = document.getElementById('pokemonGrid');
+  var grid = document.getElementById('pokemonGrid');
   var detail = document.getElementById('pokemonDetail');
   var msg =
     '<div class="error-state col-span-full">' +
-      '<div class="text-4xl mb-3">&#9888;&#65039;</div>' +
-      '<p class="text-red-400 text-lg">Failed to load Pokémon data</p>' +
-      '<p class="text-gray-500 text-sm mt-1">Check that <code>data/pokemon.json</code> and <code>data/moves.json</code> exist.</p>' +
+    '<div class="text-4xl mb-3">&#9888;&#65039;</div>' +
+    '<p class="text-red-400 text-lg">Failed to load Pokémon data</p>' +
+    '<p class="text-gray-500 text-sm mt-1">Check that <code>data/pokemon.json</code> and <code>data/moves.json</code> exist.</p>' +
     '</div>';
-  if (grid)   grid.innerHTML   = msg;
+  if (grid) grid.innerHTML = msg;
   if (detail) detail.innerHTML = msg;
 }
 
@@ -1887,26 +1917,26 @@ var defaultSettings = {
 var currentSettings = Object.assign({}, defaultSettings);
 
 var fontSizeClasses = ['font-sm', 'font-md', 'font-lg', 'font-xl'];
-var fontSizeLabels  = ['13px', '15px', '17px', '19px'];
+var fontSizeLabels = ['13px', '15px', '17px', '19px'];
 var themes = ['dark', 'light', 'forest', 'midnight'];
 
 function loadSettings() {
   try {
     var saved = JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}');
     currentSettings = Object.assign({}, defaultSettings, saved);
-  } catch(e) {}
+  } catch (e) { }
   applySettings(false);
 }
 
 function saveSettings() {
-  try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(currentSettings)); } catch(e) {}
+  try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(currentSettings)); } catch (e) { }
 }
 
 function applySettings(animate) {
   var body = document.body;
 
   // Theme
-  themes.forEach(function(t) { body.classList.remove('theme-' + t); });
+  themes.forEach(function (t) { body.classList.remove('theme-' + t); });
   if (currentSettings.theme !== 'dark') {
     body.classList.add('theme-' + currentSettings.theme);
   }
@@ -1919,7 +1949,7 @@ function applySettings(animate) {
 
   // Font size — applied to <html> so rem units cascade from :root
   var html = document.documentElement;
-  fontSizeClasses.forEach(function(c) { body.classList.remove(c); html.classList.remove(c); });
+  fontSizeClasses.forEach(function (c) { body.classList.remove(c); html.classList.remove(c); });
   html.classList.add(fontSizeClasses[currentSettings.fontSize] || 'font-md');
   body.classList.add(fontSizeClasses[currentSettings.fontSize] || 'font-md');
 
@@ -1929,20 +1959,20 @@ function applySettings(animate) {
 
 function syncSettingsUI() {
   // Theme swatches
-  document.querySelectorAll('.theme-swatch').forEach(function(sw) {
+  document.querySelectorAll('.theme-swatch').forEach(function (sw) {
     sw.classList.toggle('active', sw.dataset.theme === currentSettings.theme);
   });
 
   // Toggles
-  var animToggle    = document.getElementById('settingAnimations');
+  var animToggle = document.getElementById('settingAnimations');
   var compactToggle = document.getElementById('settingCompact');
-  if (animToggle)    animToggle.checked = currentSettings.animations;
+  if (animToggle) animToggle.checked = currentSettings.animations;
   if (compactToggle) compactToggle.checked = currentSettings.compact;
 
   // Font size slider
-  var slider    = document.getElementById('settingFontSize');
+  var slider = document.getElementById('settingFontSize');
   var sizeLabel = document.getElementById('fontSizeLabel');
-  if (slider)    slider.value = currentSettings.fontSize;
+  if (slider) slider.value = currentSettings.fontSize;
   if (sizeLabel) sizeLabel.textContent = fontSizeLabels[currentSettings.fontSize] || '15px';
 }
 
@@ -1974,45 +2004,45 @@ function buildSettingsPanel() {
     '<div class="settings-panel-title">⚙️ &nbsp;Settings</div>' +
 
     '<div class="setting-row">' +
-      '<span class="setting-label">Theme</span>' +
-      '<div class="theme-swatches">' +
-        '<button class="theme-swatch" data-theme="dark"     onclick="setTheme(\'dark\')"    ><span class="theme-dot dot-dark"></span>Dark</button>' +
-        '<button class="theme-swatch" data-theme="light"    onclick="setTheme(\'light\')"   ><span class="theme-dot dot-light"></span>Light</button>' +
-        '<button class="theme-swatch" data-theme="forest"   onclick="setTheme(\'forest\')"  ><span class="theme-dot dot-forest"></span>Forest</button>' +
-        '<button class="theme-swatch" data-theme="midnight" onclick="setTheme(\'midnight\')"><span class="theme-dot dot-midnight"></span>Midnight</button>' +
-      '</div>' +
+    '<span class="setting-label">Theme</span>' +
+    '<div class="theme-swatches">' +
+    '<button class="theme-swatch" data-theme="dark"     onclick="setTheme(\'dark\')"    ><span class="theme-dot dot-dark"></span>Dark</button>' +
+    '<button class="theme-swatch" data-theme="light"    onclick="setTheme(\'light\')"   ><span class="theme-dot dot-light"></span>Light</button>' +
+    '<button class="theme-swatch" data-theme="forest"   onclick="setTheme(\'forest\')"  ><span class="theme-dot dot-forest"></span>Forest</button>' +
+    '<button class="theme-swatch" data-theme="midnight" onclick="setTheme(\'midnight\')"><span class="theme-dot dot-midnight"></span>Midnight</button>' +
+    '</div>' +
     '</div>' +
 
     '<div class="settings-divider"></div>' +
 
     '<div class="setting-row">' +
-      '<div class="setting-toggle-row">' +
-        '<span class="setting-toggle-label">Animations</span>' +
-        '<label class="toggle-switch">' +
-          '<input type="checkbox" id="settingAnimations" onchange="setSetting(\'animations\', this.checked)">' +
-          '<span class="toggle-track"></span>' +
-        '</label>' +
-      '</div>' +
+    '<div class="setting-toggle-row">' +
+    '<span class="setting-toggle-label">Animations</span>' +
+    '<label class="toggle-switch">' +
+    '<input type="checkbox" id="settingAnimations" onchange="setSetting(\'animations\', this.checked)">' +
+    '<span class="toggle-track"></span>' +
+    '</label>' +
+    '</div>' +
     '</div>' +
 
     '<div class="setting-row">' +
-      '<div class="setting-toggle-row">' +
-        '<span class="setting-toggle-label">Compact cards</span>' +
-        '<label class="toggle-switch">' +
-          '<input type="checkbox" id="settingCompact" onchange="setSetting(\'compact\', this.checked)">' +
-          '<span class="toggle-track"></span>' +
-        '</label>' +
-      '</div>' +
+    '<div class="setting-toggle-row">' +
+    '<span class="setting-toggle-label">Compact cards</span>' +
+    '<label class="toggle-switch">' +
+    '<input type="checkbox" id="settingCompact" onchange="setSetting(\'compact\', this.checked)">' +
+    '<span class="toggle-track"></span>' +
+    '</label>' +
+    '</div>' +
     '</div>' +
 
     '<div class="setting-row">' +
-      '<span class="setting-label">Font Size</span>' +
-      '<div class="font-slider-row">' +
-        '<span style="font-size:0.7rem;color:var(--text-dim)">A</span>' +
-        '<input type="range" class="font-slider" id="settingFontSize" min="0" max="3" step="1" oninput="setSetting(\'fontSize\', +this.value)">' +
-        '<span style="font-size:0.88rem;color:var(--text-dim)">A</span>' +
-        '<span class="font-size-label" id="fontSizeLabel">15px</span>' +
-      '</div>' +
+    '<span class="setting-label">Font Size</span>' +
+    '<div class="font-slider-row">' +
+    '<span style="font-size:0.7rem;color:var(--text-dim)">A</span>' +
+    '<input type="range" class="font-slider" id="settingFontSize" min="0" max="3" step="1" oninput="setSetting(\'fontSize\', +this.value)">' +
+    '<span style="font-size:0.88rem;color:var(--text-dim)">A</span>' +
+    '<span class="font-size-label" id="fontSizeLabel">15px</span>' +
+    '</div>' +
     '</div>' +
 
     '<div class="settings-divider"></div>' +
@@ -2024,8 +2054,8 @@ function buildSettingsPanel() {
 }
 
 function toggleSettings() {
-  var panel    = document.getElementById('settingsPanel');
-  var btn      = document.getElementById('settingsBtn');
+  var panel = document.getElementById('settingsPanel');
+  var btn = document.getElementById('settingsBtn');
   var backdrop = document.getElementById('settingsBackdrop');
   if (!panel) return;
   var isOpen = panel.classList.contains('open');
@@ -2039,34 +2069,34 @@ function toggleSettings() {
 }
 
 function closeSettings() {
-  var panel    = document.getElementById('settingsPanel');
-  var btn      = document.getElementById('settingsBtn');
+  var panel = document.getElementById('settingsPanel');
+  var btn = document.getElementById('settingsBtn');
   var backdrop = document.getElementById('settingsBackdrop');
-  if (panel)    panel.classList.remove('open');
-  if (btn)      btn.classList.remove('open');
+  if (panel) panel.classList.remove('open');
+  if (btn) btn.classList.remove('open');
   if (backdrop) backdrop.classList.remove('open');
 }
 
-window.setTheme = function(theme) {
+window.setTheme = function (theme) {
   currentSettings.theme = theme;
   saveSettings();
   applySettings(true);
 };
 
-window.setSetting = function(key, value) {
+window.setSetting = function (key, value) {
   currentSettings[key] = value;
   saveSettings();
   applySettings(true);
 };
 
-window.resetSettings = function() {
+window.resetSettings = function () {
   currentSettings = Object.assign({}, defaultSettings);
   saveSettings();
   applySettings(true);
 };
 
 // Close on Escape
-document.addEventListener('keydown', function(e) {
+document.addEventListener('keydown', function (e) {
   if (e.key === 'Escape') closeSettings();
 });
 
@@ -2076,8 +2106,8 @@ document.addEventListener('keydown', function(e) {
 var _revealObserver = null;
 function getRevealObserver() {
   if (!_revealObserver && 'IntersectionObserver' in window) {
-    _revealObserver = new IntersectionObserver(function(entries) {
-      entries.forEach(function(entry) {
+    _revealObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
         if (entry.isIntersecting) {
           entry.target.classList.add('revealed');
           _revealObserver.unobserve(entry.target);
@@ -2091,26 +2121,26 @@ function getRevealObserver() {
 function initScrollReveal() {
   var io = getRevealObserver();
   if (!io) {
-    document.querySelectorAll('.scroll-reveal').forEach(function(el) { el.classList.add('revealed'); });
+    document.querySelectorAll('.scroll-reveal').forEach(function (el) { el.classList.add('revealed'); });
     return;
   }
-  document.querySelectorAll('.scroll-reveal').forEach(function(el) { io.observe(el); });
+  document.querySelectorAll('.scroll-reveal').forEach(function (el) { io.observe(el); });
 }
 
 function observeNewRevealTargets(container) {
   var io = getRevealObserver();
   if (!io) {
-    (container || document).querySelectorAll('.scroll-reveal').forEach(function(el) { el.classList.add('revealed'); });
+    (container || document).querySelectorAll('.scroll-reveal').forEach(function (el) { el.classList.add('revealed'); });
     return;
   }
-  (container || document).querySelectorAll('.scroll-reveal:not(.revealed)').forEach(function(el) { io.observe(el); });
+  (container || document).querySelectorAll('.scroll-reveal:not(.revealed)').forEach(function (el) { io.observe(el); });
 }
 
 function staggerGridCards() {
   // Only animate cards in the first 2 rows (visible viewport) — rest appear instantly
   var cards = document.querySelectorAll('#pokemonGrid .pokemon-card');
   var VISIBLE_BATCH = 12; // ~2 rows on any screen size
-  cards.forEach(function(card, i) {
+  cards.forEach(function (card, i) {
     if (i < VISIBLE_BATCH) {
       card.style.setProperty('--card-index', i);
     } else {
@@ -2121,7 +2151,7 @@ function staggerGridCards() {
 }
 
 function staggerGameCards() {
-  document.querySelectorAll('.game-card').forEach(function(card, i) {
+  document.querySelectorAll('.game-card').forEach(function (card, i) {
     card.style.animationDelay = (i * 0.07) + 's';
     card.style.animationFillMode = 'both';
   });
@@ -2129,7 +2159,7 @@ function staggerGameCards() {
 
 function staggerPdexCards() {
   // Only animate first 24 cards - rest appear instantly to avoid lag on large grids
-  document.querySelectorAll('.pdex-card').forEach(function(card, i) {
+  document.querySelectorAll('.pdex-card').forEach(function (card, i) {
     if (i < 24) {
       card.style.animation = 'pdexCardPop 0.3s cubic-bezier(0.34,1.56,0.64,1) ' + (i * 0.018) + 's both';
     } else {
@@ -2141,7 +2171,7 @@ function staggerPdexCards() {
 
 function staggerMoveRows(container) {
   // Only animate first 12 rows for perf
-  (container || document).querySelectorAll('.moves-table tbody tr').forEach(function(row, i) {
+  (container || document).querySelectorAll('.moves-table tbody tr').forEach(function (row, i) {
     if (i < 12) {
       row.style.animation = 'slideRight 0.28s ease ' + (i * 0.022) + 's both';
     } else {
@@ -2152,7 +2182,7 @@ function staggerMoveRows(container) {
 }
 
 function staggerBiomeTags(container) {
-  (container || document).querySelectorAll('.biome-tag').forEach(function(tag, i) {
+  (container || document).querySelectorAll('.biome-tag').forEach(function (tag, i) {
     tag.style.animationDelay = Math.min(i * 0.03, 0.55) + 's';
     tag.style.animationFillMode = 'both';
   });
@@ -2175,8 +2205,8 @@ function animateCounter(el, target, duration) {
 function initPdexCounters() {
   var pcts = document.querySelectorAll('.pdex-stat-pct[data-target]');
   if (!pcts.length) return;
-  var io = new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry) {
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
       if (entry.isIntersecting) {
         var el = entry.target;
         var target = parseFloat(el.dataset.target);
@@ -2185,11 +2215,11 @@ function initPdexCounters() {
       }
     });
   }, { threshold: 0.5 });
-  pcts.forEach(function(el) { io.observe(el); });
+  pcts.forEach(function (el) { io.observe(el); });
 }
 
 // ====================== Init ======================
-document.addEventListener('DOMContentLoaded', async function() {
+document.addEventListener('DOMContentLoaded', async function () {
   loadSettings();
   buildSettingsPanel();
   showLoadingState();
@@ -2211,20 +2241,20 @@ document.addEventListener('DOMContentLoaded', async function() {
     renderGrid(State.allPokemon, true);
     setTimeout(playAllVideos, 100);
     var searchInput = document.getElementById('searchInput');
-    var typeFilter  = document.getElementById('typeFilter');
-    var genFilter   = document.getElementById('genFilter');
+    var typeFilter = document.getElementById('typeFilter');
+    var genFilter = document.getElementById('genFilter');
     if (searchInput) {
       var _searchDebounce;
-      searchInput.addEventListener('input', function() {
+      searchInput.addEventListener('input', function () {
         clearTimeout(_searchDebounce);
-        _searchDebounce = setTimeout(function() {
+        _searchDebounce = setTimeout(function () {
           filterPokemon();
           setTimeout(playAllVideos, 100);
         }, 160);
       });
     }
-    if (typeFilter)  typeFilter.addEventListener('change',  function() { filterPokemon(); setTimeout(playAllVideos, 100); }, { passive: true });
-    if (genFilter)   genFilter.addEventListener('change',   function() { filterPokemon(); setTimeout(playAllVideos, 100); }, { passive: true });
+    if (typeFilter) typeFilter.addEventListener('change', function () { filterPokemon(); setTimeout(playAllVideos, 100); }, { passive: true });
+    if (genFilter) genFilter.addEventListener('change', function () { filterPokemon(); setTimeout(playAllVideos, 100); }, { passive: true });
   }
 
   if (document.getElementById('pokemonDetail')) {
@@ -2250,7 +2280,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
   if (document.getElementById('pdexGrid')) {
     loadPersonalPokedex();
-    setTimeout(function() { staggerPdexCards(); initPdexCounters(); }, 50);
+    setTimeout(function () { staggerPdexCards(); initPdexCounters(); }, 50);
   }
 
   initScrollReveal();
@@ -2259,10 +2289,10 @@ document.addEventListener('DOMContentLoaded', async function() {
   var backToTop = document.getElementById('backToTop');
   if (backToTop) {
     var _scrollTick = false;
-    window.addEventListener('scroll', function() {
+    window.addEventListener('scroll', function () {
       if (!_scrollTick) {
         _scrollTick = true;
-        requestAnimationFrame(function() {
+        requestAnimationFrame(function () {
           backToTop.classList.toggle('visible', window.scrollY > 400);
           _scrollTick = false;
         });
@@ -2274,62 +2304,62 @@ document.addEventListener('DOMContentLoaded', async function() {
 
 // ====================== Compare Page ======================
 var TYPE_CHART = {
-  Normal:   { Rock:0.5, Ghost:0, Steel:0.5 },
-  Fire:     { Fire:0.5, Water:0.5, Grass:2, Ice:2, Bug:2, Rock:0.5, Dragon:0.5, Steel:2 },
-  Water:    { Fire:2, Water:0.5, Grass:0.5, Ground:2, Rock:2, Dragon:0.5 },
-  Electric: { Water:2, Electric:0.5, Grass:0.5, Ground:0, Flying:2, Dragon:0.5 },
-  Grass:    { Fire:0.5, Water:2, Grass:0.5, Poison:0.5, Ground:2, Flying:0.5, Bug:0.5, Rock:2, Dragon:0.5, Steel:0.5 },
-  Ice:      { Fire:0.5, Water:0.5, Grass:2, Ice:0.5, Ground:2, Flying:2, Dragon:2, Steel:0.5 },
-  Fighting: { Normal:2, Ice:2, Poison:0.5, Flying:0.5, Psychic:0.5, Bug:0.5, Rock:2, Ghost:0, Dark:2, Steel:2, Fairy:0.5 },
-  Poison:   { Grass:2, Poison:0.5, Ground:0.5, Rock:0.5, Ghost:0.5, Steel:0, Fairy:2 },
-  Ground:   { Fire:2, Electric:2, Grass:0.5, Poison:2, Flying:0, Bug:0.5, Rock:2, Steel:2 },
-  Flying:   { Electric:0.5, Grass:2, Fighting:2, Bug:2, Rock:0.5, Steel:0.5 },
-  Psychic:  { Fighting:2, Poison:2, Psychic:0.5, Dark:0, Steel:0.5 },
-  Bug:      { Fire:0.5, Grass:2, Fighting:0.5, Flying:0.5, Psychic:2, Ghost:0.5, Dark:2, Steel:0.5, Fairy:0.5 },
-  Rock:     { Fire:2, Ice:2, Fighting:0.5, Ground:0.5, Flying:2, Bug:2, Steel:0.5 },
-  Ghost:    { Normal:0, Psychic:2, Ghost:2, Dark:0.5 },
-  Dragon:   { Dragon:2, Steel:0.5, Fairy:0 },
-  Dark:     { Fighting:0.5, Psychic:2, Ghost:2, Dark:0.5, Fairy:0.5 },
-  Steel:    { Fire:0.5, Water:0.5, Electric:0.5, Ice:2, Rock:2, Steel:0.5, Fairy:2 },
-  Fairy:    { Fire:0.5, Fighting:2, Poison:0.5, Dragon:2, Dark:2, Steel:0.5 },
+  Normal: { Rock: 0.5, Ghost: 0, Steel: 0.5 },
+  Fire: { Fire: 0.5, Water: 0.5, Grass: 2, Ice: 2, Bug: 2, Rock: 0.5, Dragon: 0.5, Steel: 2 },
+  Water: { Fire: 2, Water: 0.5, Grass: 0.5, Ground: 2, Rock: 2, Dragon: 0.5 },
+  Electric: { Water: 2, Electric: 0.5, Grass: 0.5, Ground: 0, Flying: 2, Dragon: 0.5 },
+  Grass: { Fire: 0.5, Water: 2, Grass: 0.5, Poison: 0.5, Ground: 2, Flying: 0.5, Bug: 0.5, Rock: 2, Dragon: 0.5, Steel: 0.5 },
+  Ice: { Fire: 0.5, Water: 0.5, Grass: 2, Ice: 0.5, Ground: 2, Flying: 2, Dragon: 2, Steel: 0.5 },
+  Fighting: { Normal: 2, Ice: 2, Poison: 0.5, Flying: 0.5, Psychic: 0.5, Bug: 0.5, Rock: 2, Ghost: 0, Dark: 2, Steel: 2, Fairy: 0.5 },
+  Poison: { Grass: 2, Poison: 0.5, Ground: 0.5, Rock: 0.5, Ghost: 0.5, Steel: 0, Fairy: 2 },
+  Ground: { Fire: 2, Electric: 2, Grass: 0.5, Poison: 2, Flying: 0, Bug: 0.5, Rock: 2, Steel: 2 },
+  Flying: { Electric: 0.5, Grass: 2, Fighting: 2, Bug: 2, Rock: 0.5, Steel: 0.5 },
+  Psychic: { Fighting: 2, Poison: 2, Psychic: 0.5, Dark: 0, Steel: 0.5 },
+  Bug: { Fire: 0.5, Grass: 2, Fighting: 0.5, Flying: 0.5, Psychic: 2, Ghost: 0.5, Dark: 2, Steel: 0.5, Fairy: 0.5 },
+  Rock: { Fire: 2, Ice: 2, Fighting: 0.5, Ground: 0.5, Flying: 2, Bug: 2, Steel: 0.5 },
+  Ghost: { Normal: 0, Psychic: 2, Ghost: 2, Dark: 0.5 },
+  Dragon: { Dragon: 2, Steel: 0.5, Fairy: 0 },
+  Dark: { Fighting: 0.5, Psychic: 2, Ghost: 2, Dark: 0.5, Fairy: 0.5 },
+  Steel: { Fire: 0.5, Water: 0.5, Electric: 0.5, Ice: 2, Rock: 2, Steel: 0.5, Fairy: 2 },
+  Fairy: { Fire: 0.5, Fighting: 2, Poison: 0.5, Dragon: 2, Dark: 2, Steel: 0.5 },
 };
 
-var ALL_TYPES = ['Normal','Fire','Water','Electric','Grass','Ice','Fighting','Poison','Ground','Flying','Psychic','Bug','Rock','Ghost','Dragon','Dark','Steel','Fairy'];
+var ALL_TYPES = ['Normal', 'Fire', 'Water', 'Electric', 'Grass', 'Ice', 'Fighting', 'Poison', 'Ground', 'Flying', 'Psychic', 'Bug', 'Rock', 'Ghost', 'Dragon', 'Dark', 'Steel', 'Fairy'];
 
 var STAT_LABELS = { hp: 'HP', attack: 'Attack', defense: 'Defense', spAttack: 'Sp. Atk', spDefense: 'Sp. Def', speed: 'Speed' };
 
 function loadComparePage() {
   // Populate Pokémon pickers
-  var opts = State.allPokemon.map(function(p) {
-    var num = p.number || String(p.id).padStart(4,'0');
+  var opts = State.allPokemon.map(function (p) {
+    var num = p.number || String(p.id).padStart(4, '0');
     return '<option value="' + p.id + '">#' + num + ' ' + p.name + '</option>';
   }).join('');
 
-  ['picker1','picker2'].forEach(function(id) {
+  ['picker1', 'picker2'].forEach(function (id) {
     var el = document.getElementById(id);
     if (el) el.innerHTML += opts;
   });
 
   // Populate move picker
-  var moveOpts = Object.keys(State.allMoves).sort().map(function(name) {
+  var moveOpts = Object.keys(State.allMoves).sort().map(function (name) {
     return '<option value="' + name + '">' + name + '</option>';
   }).join('');
   var calcMove = document.getElementById('calcMove');
   if (calcMove) calcMove.innerHTML += moveOpts;
 
   // Populate type pickers
-  var typeOpts = ALL_TYPES.map(function(t) {
+  var typeOpts = ALL_TYPES.map(function (t) {
     return '<option value="' + t + '">' + t + '</option>';
   }).join('');
-  ['calcAttackerType','calcDefType1','calcDefType2'].forEach(function(id) {
+  ['calcAttackerType', 'calcDefType1', 'calcDefType2'].forEach(function (id) {
     var el = document.getElementById(id);
     if (el) el.innerHTML += typeOpts;
   });
 }
 
-window.runCompare = function() {
-  var id1  = parseInt(document.getElementById('picker1').value);
-  var id2  = parseInt(document.getElementById('picker2').value);
+window.runCompare = function () {
+  var id1 = parseInt(document.getElementById('picker1').value);
+  var id2 = parseInt(document.getElementById('picker2').value);
   var result = document.getElementById('compareResult');
   if (!result) return;
 
@@ -2341,54 +2371,54 @@ window.runCompare = function() {
 
   var stats = Object.keys(STAT_LABELS);
   var maxVals = {};
-  stats.forEach(function(k) {
+  stats.forEach(function (k) {
     maxVals[k] = Math.max((p1.baseStats || {})[k] || 0, (p2.baseStats || {})[k] || 0, 1);
   });
 
-  var total1 = stats.reduce(function(t,k){ return t + ((p1.baseStats||{})[k]||0); }, 0);
-  var total2 = stats.reduce(function(t,k){ return t + ((p2.baseStats||{})[k]||0); }, 0);
+  var total1 = stats.reduce(function (t, k) { return t + ((p1.baseStats || {})[k] || 0); }, 0);
+  var total2 = stats.reduce(function (t, k) { return t + ((p2.baseStats || {})[k] || 0); }, 0);
 
   function statRows(poke, other) {
-    return stats.map(function(k) {
-      var val   = (poke.baseStats  || {})[k] || 0;
-      var oval  = (other.baseStats || {})[k] || 0;
-      var pct   = ((val / 255) * 100).toFixed(1);
-      var wins  = val > oval;
+    return stats.map(function (k) {
+      var val = (poke.baseStats || {})[k] || 0;
+      var oval = (other.baseStats || {})[k] || 0;
+      var pct = ((val / 255) * 100).toFixed(1);
+      var wins = val > oval;
       var color = wins ? '#3eca6e' : val === oval ? '#facc15' : '#f87171';
       return (
         '<div class="cmp-stat-row">' +
-          '<span class="stat-label">' + STAT_LABELS[k] + '</span>' +
-          '<span class="stat-value stat-value-anim" style="color:' + color + '" data-target="' + val + '">0</span>' +
-          '<div class="stat-bar-bg">' +
-            '<div class="stat-bar-fill stat-bar-anim" style="width:0%;background:' + color + '" data-width="' + pct + '"></div>' +
-          '</div>' +
+        '<span class="stat-label">' + STAT_LABELS[k] + '</span>' +
+        '<span class="stat-value stat-value-anim" style="color:' + color + '" data-target="' + val + '">0</span>' +
+        '<div class="stat-bar-bg">' +
+        '<div class="stat-bar-fill stat-bar-anim" style="width:0%;background:' + color + '" data-width="' + pct + '"></div>' +
+        '</div>' +
         '</div>'
       );
     }).join('');
   }
 
   function pokeCard(poke, total, other) {
-    var sprite  = poke.video || poke.sprite;
-    var wins    = total > (other.baseStats ? Object.keys(STAT_LABELS).reduce(function(t,k){ return t+((other.baseStats||{})[k]||0); },0) : 0);
-    var num     = poke.number || String(poke.id).padStart(4,'0');
+    var sprite = poke.video || poke.sprite;
+    var wins = total > (other.baseStats ? Object.keys(STAT_LABELS).reduce(function (t, k) { return t + ((other.baseStats || {})[k] || 0); }, 0) : 0);
+    var num = poke.number || String(poke.id).padStart(4, '0');
     return (
       '<div class="cmp-card' + (wins ? ' cmp-winner' : '') + '">' +
-        (wins ? '<div class="cmp-winner-badge">Winner</div>' : '') +
-        '<div class="cmp-sprite-wrap">' + buildSpriteEl(sprite, poke.name, 'cmp-sprite') + '</div>' +
-        '<p class="cmp-number">#' + num + '</p>' +
-        '<h3 class="cmp-name"><a href="pokemon.html?id=' + poke.id + '" class="move-link">' + poke.name + '</a></h3>' +
-        '<div class="badge-row" style="justify-content:center;margin-bottom:0.75rem">' + buildTypeBadges(poke.types) + '</div>' +
-        '<div class="cmp-stats">' + statRows(poke, other) + '</div>' +
-        '<div class="cmp-total" style="color:' + (wins?'#4ade80':total===total2?'#facc15':'#f87171') + '">Total: ' + total + '</div>' +
+      (wins ? '<div class="cmp-winner-badge">Winner</div>' : '') +
+      '<div class="cmp-sprite-wrap">' + buildSpriteEl(sprite, poke.name, 'cmp-sprite') + '</div>' +
+      '<p class="cmp-number">#' + num + '</p>' +
+      '<h3 class="cmp-name"><a href="pokemon.html?id=' + poke.id + '" class="move-link">' + poke.name + '</a></h3>' +
+      '<div class="badge-row" style="justify-content:center;margin-bottom:0.75rem">' + buildTypeBadges(poke.types) + '</div>' +
+      '<div class="cmp-stats">' + statRows(poke, other) + '</div>' +
+      '<div class="cmp-total" style="color:' + (wins ? '#4ade80' : total === total2 ? '#facc15' : '#f87171') + '">Total: ' + total + '</div>' +
       '</div>'
     );
   }
 
   result.innerHTML =
     '<div class="cmp-result">' +
-      pokeCard(p1, total1, p2) +
-      '<div class="cmp-divider">VS</div>' +
-      pokeCard(p2, total2, p1) +
+    pokeCard(p1, total1, p2) +
+    '<div class="cmp-divider">VS</div>' +
+    pokeCard(p2, total2, p1) +
     '</div>';
 
   animateStatBars(result);
@@ -2396,19 +2426,19 @@ window.runCompare = function() {
   observeNewRevealTargets(result);
 };
 
-window.runCalc = function() {
-  var moveName  = document.getElementById('calcMove').value;
-  var atkType   = document.getElementById('calcAttackerType').value;
-  var defType1  = document.getElementById('calcDefType1').value;
-  var defType2  = document.getElementById('calcDefType2').value;
-  var result    = document.getElementById('calcResult');
+window.runCalc = function () {
+  var moveName = document.getElementById('calcMove').value;
+  var atkType = document.getElementById('calcAttackerType').value;
+  var defType1 = document.getElementById('calcDefType1').value;
+  var defType2 = document.getElementById('calcDefType2').value;
+  var result = document.getElementById('calcResult');
   if (!result) return;
 
   if (!moveName || !defType1) { result.innerHTML = ''; return; }
 
-  var move      = State.allMoves[moveName];
-  var moveType  = move ? move.type : atkType;
-  var power     = parseInt(move && move.power) || 0;
+  var move = State.allMoves[moveName];
+  var moveType = move ? move.type : atkType;
+  var power = parseInt(move && move.power) || 0;
 
   // Type effectiveness
   function effectiveness(attackType, defType) {
@@ -2419,25 +2449,25 @@ window.runCalc = function() {
 
   var mult1 = effectiveness(moveType, defType1);
   var mult2 = defType2 ? effectiveness(moveType, defType2) : 1;
-  var total  = mult1 * mult2;
+  var total = mult1 * mult2;
 
-  var color  = total >= 2 ? '#4ade80' : total === 1 ? '#facc15' : total > 0 ? '#f87171' : '#6b7280';
-  var label  = total === 0 ? 'No effect' : total < 1 ? 'Not very effective' : total === 1 ? 'Normal effectiveness' : 'Super effective!';
+  var color = total >= 2 ? '#4ade80' : total === 1 ? '#facc15' : total > 0 ? '#f87171' : '#6b7280';
+  var label = total === 0 ? 'No effect' : total < 1 ? 'Not very effective' : total === 1 ? 'Normal effectiveness' : 'Super effective!';
 
-  var stab   = moveType && atkType && moveType === atkType ? 1.5 : 1;
+  var stab = moveType && atkType && moveType === atkType ? 1.5 : 1;
   var baseDmg = power ? Math.round(power * total * stab) : null;
 
   result.innerHTML =
     '<div class="calc-result">' +
-      '<div class="calc-multiplier" style="color:' + color + '">' + total + 'x</div>' +
-      '<div class="calc-label-text" style="color:' + color + '">' + label + '</div>' +
-      '<div class="calc-breakdown">' +
-        '<span class="calc-chip">Move: <strong>' + moveName + '</strong></span>' +
-        '<span class="calc-chip">Type: <strong>' + (moveType||'?') + '</strong></span>' +
-        (power ? '<span class="calc-chip">Base Power: <strong>' + power + '</strong></span>' : '') +
-        (stab > 1 ? '<span class="calc-chip stab">STAB ×1.5</span>' : '') +
-        (baseDmg ? '<span class="calc-chip">Estimated Power: <strong>' + baseDmg + '</strong></span>' : '') +
-      '</div>' +
+    '<div class="calc-multiplier" style="color:' + color + '">' + total + 'x</div>' +
+    '<div class="calc-label-text" style="color:' + color + '">' + label + '</div>' +
+    '<div class="calc-breakdown">' +
+    '<span class="calc-chip">Move: <strong>' + moveName + '</strong></span>' +
+    '<span class="calc-chip">Type: <strong>' + (moveType || '?') + '</strong></span>' +
+    (power ? '<span class="calc-chip">Base Power: <strong>' + power + '</strong></span>' : '') +
+    (stab > 1 ? '<span class="calc-chip stab">STAB ×1.5</span>' : '') +
+    (baseDmg ? '<span class="calc-chip">Estimated Power: <strong>' + baseDmg + '</strong></span>' : '') +
+    '</div>' +
     '</div>';
   staggerMoveRows(content);
 };
@@ -2445,15 +2475,15 @@ window.runCalc = function() {
 
 // ====================== Games Timeline Page ======================
 var REGION_COLORS = {
-  Kanto:  '#e53935',
-  Johto:  '#fdd835',
-  Hoenn:  '#1e88e5',
+  Kanto: '#e53935',
+  Johto: '#fdd835',
+  Hoenn: '#1e88e5',
   Sinnoh: '#8e24aa',
-  Unova:  '#757575',
-  Kalos:  '#3949ab',
-  Alola:  '#fb8c00',
-  Galar:  '#6d4c41',
-  Paldea:  '#c0ca33',
+  Unova: '#757575',
+  Kalos: '#3949ab',
+  Alola: '#fb8c00',
+  Galar: '#6d4c41',
+  Paldea: '#c0ca33',
 };
 
 function loadGamesPage() {
@@ -2466,13 +2496,13 @@ function loadGamesPage() {
     return;
   }
 
-  var sorted = games.slice().sort(function(a, b) { return a.row - b.row; });
+  var sorted = games.slice().sort(function (a, b) { return a.row - b.row; });
 
-  var html = sorted.map(function(row, rowIndex) {
-    var cards = (row.entries || []).map(function(game) {
-      var genLabel    = game.generation ? 'Gen ' + game.generation : '';
+  var html = sorted.map(function (row, rowIndex) {
+    var cards = (row.entries || []).map(function (game) {
+      var genLabel = game.generation ? 'Gen ' + game.generation : '';
       var regionColor = REGION_COLORS[game.region] || '#9ca3af';
-      var gameColor   = game.color || null;
+      var gameColor = game.color || null;
 
       // Build inline CSS variables
       var styleVars = '';
@@ -2492,18 +2522,18 @@ function loadGamesPage() {
 
       return (
         '<div class="game-card" style="' + styleVars + '">' +
-          '<div class="game-card-top">' +
-            (game.logo
-              ? '<img src="' + game.logo + '" alt="' + game.name + '" class="game-logo" onerror="this.style.display=\'none\'">'
-              : '<div class="game-logo-placeholder">🎮</div>') +
-            '<div class="game-badge-row">' +
-              (genLabel ? '<span class="game-badge">' + genLabel + '</span>' : '') +
-              (game.region ? '<span class="game-badge game-badge-region">' + game.region + '</span>' : '') +
-            '</div>' +
-          '</div>' +
-          '<h3 class="game-name">' + game.name + '</h3>' +
-          (game.year ? '<p class="game-year">' + game.year + '</p>' : '') +
-          (game.description ? '<p class="game-desc">' + game.description + '</p>' : '') +
+        '<div class="game-card-top">' +
+        (game.logo
+          ? '<img src="' + game.logo + '" alt="' + game.name + '" class="game-logo" onerror="this.style.display=\'none\'">'
+          : '<div class="game-logo-placeholder">🎮</div>') +
+        '<div class="game-badge-row">' +
+        (genLabel ? '<span class="game-badge">' + genLabel + '</span>' : '') +
+        (game.region ? '<span class="game-badge game-badge-region">' + game.region + '</span>' : '') +
+        '</div>' +
+        '</div>' +
+        '<h3 class="game-name">' + game.name + '</h3>' +
+        (game.year ? '<p class="game-year">' + game.year + '</p>' : '') +
+        (game.description ? '<p class="game-desc">' + game.description + '</p>' : '') +
         '</div>'
       );
     }).join('<div class="game-same-row-divider">+</div>');
@@ -2514,7 +2544,7 @@ function loadGamesPage() {
 
     return (
       '<div class="game-row">' +
-        '<div class="game-row-inner">' + cards + '</div>' +
+      '<div class="game-row-inner">' + cards + '</div>' +
       '</div>' +
       connector
     );
@@ -2525,7 +2555,7 @@ function loadGamesPage() {
 
 
 // ====================== Personal Pokédex ======================
-var _pdexFilter  = 'all';
+var _pdexFilter = 'all';
 var _pdexProgress = {}; // { id: { seen: bool, captured: bool } }
 
 function loadPersonalPokedex() {
@@ -2533,7 +2563,7 @@ function loadPersonalPokedex() {
   try {
     var saved = localStorage.getItem('pdexProgress');
     if (saved) _pdexProgress = JSON.parse(saved);
-  } catch(e) {}
+  } catch (e) { }
 
   loadVariantProgress();
 
@@ -2546,39 +2576,39 @@ function loadPersonalPokedex() {
 }
 
 function savePdexProgress() {
-  try { localStorage.setItem('pdexProgress', JSON.stringify(_pdexProgress)); } catch(e) {}
+  try { localStorage.setItem('pdexProgress', JSON.stringify(_pdexProgress)); } catch (e) { }
 }
 
 function updatePdexStats() {
-  var total     = State.allPokemon.length;
-  var captured  = 0;
-  var seen      = 0;
+  var total = State.allPokemon.length;
+  var captured = 0;
+  var seen = 0;
   var legendary = 0;
-  var mythical  = 0;
+  var mythical = 0;
 
-  State.allPokemon.forEach(function(poke) {
+  State.allPokemon.forEach(function (poke) {
     var p = _pdexProgress[poke.id] || {};
     if (p.captured) {
       captured++;
       if (poke.legendary) legendary++;
-      if (poke.mythical)  mythical++;
+      if (poke.mythical) mythical++;
     }
     if (p.seen || p.captured) seen++;
   });
 
-  var capPct  = total ? Math.round((captured / total) * 100) : 0;
-  var seenPct = total ? Math.round((seen     / total) * 100) : 0;
+  var capPct = total ? Math.round((captured / total) * 100) : 0;
+  var seenPct = total ? Math.round((seen / total) * 100) : 0;
 
-  var capPctEl  = document.getElementById('capturedPct');
+  var capPctEl = document.getElementById('capturedPct');
   var seenPctEl = document.getElementById('seenPct');
-  var legEl     = document.getElementById('legendaryCount');
-  var mythEl    = document.getElementById('mythicalCount');
-  if (capPctEl)  { capPctEl.textContent  = capPct + '%';  capPctEl.dataset.target  = capPct;  capPctEl.dataset.pct = '1'; }
+  var legEl = document.getElementById('legendaryCount');
+  var mythEl = document.getElementById('mythicalCount');
+  if (capPctEl) { capPctEl.textContent = capPct + '%'; capPctEl.dataset.target = capPct; capPctEl.dataset.pct = '1'; }
   if (seenPctEl) { seenPctEl.textContent = seenPct + '%'; seenPctEl.dataset.target = seenPct; seenPctEl.dataset.pct = '1'; }
-  if (legEl)     { legEl.textContent     = legendary;     legEl.dataset.target     = legendary; }
-  if (mythEl)    { mythEl.textContent    = mythical;      mythEl.dataset.target    = mythical; }
-  document.getElementById('capturedCount').textContent  = captured + '/' + total;
-  document.getElementById('seenCount').textContent      = seen + '/' + total;
+  if (legEl) { legEl.textContent = legendary; legEl.dataset.target = legendary; }
+  if (mythEl) { mythEl.textContent = mythical; mythEl.dataset.target = mythical; }
+  document.getElementById('capturedCount').textContent = captured + '/' + total;
+  document.getElementById('seenCount').textContent = seen + '/' + total;
 
   // Update missing button label
   var missing = total - captured;
@@ -2590,15 +2620,15 @@ function renderPdexGrid() {
   var grid = document.getElementById('pdexGrid');
   if (!grid) return;
 
-  var list = State.allPokemon.filter(function(poke) {
+  var list = State.allPokemon.filter(function (poke) {
     var p = _pdexProgress[poke.id] || {};
     switch (_pdexFilter) {
-      case 'captured':  return p.captured;
-      case 'seen':      return (p.seen || p.captured) && !p.captured ? true : p.seen && !p.captured;
+      case 'captured': return p.captured;
+      case 'seen': return (p.seen || p.captured) && !p.captured ? true : p.seen && !p.captured;
       case 'legendary': return poke.legendary;
-      case 'mythical':  return poke.mythical;
-      case 'missing':   return !p.captured;
-      default:          return true;
+      case 'mythical': return poke.mythical;
+      case 'missing': return !p.captured;
+      default: return true;
     }
   });
 
@@ -2607,25 +2637,25 @@ function renderPdexGrid() {
     return;
   }
 
-  grid.innerHTML = list.map(function(poke) {
-    var p        = _pdexProgress[poke.id] || {};
-    var sprite   = poke.video || poke.sprite;
-    var num      = poke.number || String(poke.id).padStart(4, '0');
-    var isSeen   = p.seen || p.captured;
-    var isCap    = p.captured;
+  grid.innerHTML = list.map(function (poke) {
+    var p = _pdexProgress[poke.id] || {};
+    var sprite = poke.video || poke.sprite;
+    var num = poke.number || String(poke.id).padStart(4, '0');
+    var isSeen = p.seen || p.captured;
+    var isCap = p.captured;
 
     return (
       '<div class="pdex-card' + (isCap ? ' pdex-captured' : isSeen ? ' pdex-seen' : '') + '">' +
-        '<div class="pdex-card-btns">' +
-          '<button class="pdex-btn pdex-btn-seen' + (isSeen ? ' active' : '') + '" onclick="toggleSeen(' + poke.id + ')" title="Mark as Seen">👁</button>' +
-          '<button class="pdex-btn pdex-btn-cap'  + (isCap  ? ' active' : '') + '" onclick="toggleCaptured(' + poke.id + ')" title="Mark as Captured">✓</button>' +
-        '</div>' +
-        '<div class="pdex-sprite-wrap">' +
-          (isSeen
-            ? buildSpriteEl(sprite, poke.name, 'pdex-sprite')
-            : '<div class="pdex-sprite-unknown">?</div>') +
-        '</div>' +
-        '<a href="pokemon.html?id=' + poke.id + '" class="pdex-num">#' + num + '</a>' +
+      '<div class="pdex-card-btns">' +
+      '<button class="pdex-btn pdex-btn-seen' + (isSeen ? ' active' : '') + '" onclick="toggleSeen(' + poke.id + ')" title="Mark as Seen">👁</button>' +
+      '<button class="pdex-btn pdex-btn-cap' + (isCap ? ' active' : '') + '" onclick="toggleCaptured(' + poke.id + ')" title="Mark as Captured">✓</button>' +
+      '</div>' +
+      '<div class="pdex-sprite-wrap">' +
+      (isSeen
+        ? buildSpriteEl(sprite, poke.name, 'pdex-sprite')
+        : '<div class="pdex-sprite-unknown">?</div>') +
+      '</div>' +
+      '<a href="pokemon.html?id=' + poke.id + '" class="pdex-num">#' + num + '</a>' +
       '</div>'
     );
   }).join('');
@@ -2642,7 +2672,7 @@ function renderPdexVariantGrid() {
   if (!grid) return;
 
   var entries = [];
-  State.allPokemon.forEach(function(poke) {
+  State.allPokemon.forEach(function (poke) {
     if (!poke.variants || !poke.variants.length) return;
     // Synthesize a "Normal" entry representing the base form
     entries.push({
@@ -2655,7 +2685,7 @@ function renderPdexVariantGrid() {
         shinyVideo: poke.shinyVideo
       }
     });
-    poke.variants.forEach(function(variant) {
+    poke.variants.forEach(function (variant) {
       entries.push({ poke: poke, variant: variant });
     });
   });
@@ -2666,16 +2696,16 @@ function renderPdexVariantGrid() {
   }
 
   // Apply the same filter as the main grid
-  entries = entries.filter(function(e) {
+  entries = entries.filter(function (e) {
     var key = variantKey(e.poke.id, e.variant.name);
     var p = _variantProgress[key] || {};
     switch (_pdexFilter) {
-      case 'captured':  return p.captured;
-      case 'seen':      return p.seen && !p.captured;
+      case 'captured': return p.captured;
+      case 'seen': return p.seen && !p.captured;
       case 'legendary': return e.poke.legendary;
-      case 'mythical':  return e.poke.mythical;
-      case 'missing':   return !p.captured;
-      default:          return true;
+      case 'mythical': return e.poke.mythical;
+      case 'missing': return !p.captured;
+      default: return true;
     }
   });
 
@@ -2684,34 +2714,34 @@ function renderPdexVariantGrid() {
     return;
   }
 
-  grid.innerHTML = entries.map(function(e) {
-    var poke    = e.poke;
+  grid.innerHTML = entries.map(function (e) {
+    var poke = e.poke;
     var variant = e.variant;
-    var key     = variantKey(poke.id, variant.name);
-    var p       = _variantProgress[key] || {};
-    var sprite  = variant.video || variant.sprite || poke.video || poke.sprite;
-    var isSeen  = p.seen || p.captured;
-    var isCap   = p.captured;
-    var num     = poke.number || String(poke.id).padStart(4, '0');
+    var key = variantKey(poke.id, variant.name);
+    var p = _variantProgress[key] || {};
+    var sprite = variant.video || variant.sprite || poke.video || poke.sprite;
+    var isSeen = p.seen || p.captured;
+    var isCap = p.captured;
+    var num = poke.number || String(poke.id).padStart(4, '0');
 
-    var isNormal   = variant.name === 'Normal';
+    var isNormal = variant.name === 'Normal';
     var displayName = isNormal ? poke.name : variant.name;
 
     return (
       '<div class="pdex-card pdex-variant-card' + (isNormal ? ' pdex-variant-base' : '') + (isCap ? ' pdex-captured' : isSeen ? ' pdex-seen' : '') + '">' +
-        '<div class="pdex-card-btns">' +
-          '<button class="pdex-btn pdex-btn-seen' + (isSeen ? ' active' : '') + '" onclick="toggleVariantSeen(' + poke.id + ', \'' + variant.name.replace(/'/g, "\\'") + '\'); renderPdexVariantGrid();" title="Mark as Seen">👁</button>' +
-          '<button class="pdex-btn pdex-btn-cap'  + (isCap  ? ' active' : '') + '" onclick="toggleVariantCaptured(' + poke.id + ', \'' + variant.name.replace(/'/g, "\\'") + '\'); renderPdexVariantGrid();" title="Mark as Captured">✓</button>' +
-        '</div>' +
-        '<div class="pdex-sprite-wrap">' +
-          (isSeen
-            ? buildSpriteEl(sprite, displayName, 'pdex-sprite')
-            : '<div class="pdex-sprite-unknown">?</div>') +
-        '</div>' +
-        '<a href="pokemon.html?id=' + poke.id + '" class="pdex-num pdex-variant-name">' +
-          '<span class="pdex-variant-name-main">' + displayName + '</span>' +
-          '<span class="pdex-variant-name-sub">#' + num + '</span>' +
-        '</a>' +
+      '<div class="pdex-card-btns">' +
+      '<button class="pdex-btn pdex-btn-seen' + (isSeen ? ' active' : '') + '" onclick="toggleVariantSeen(' + poke.id + ', \'' + variant.name.replace(/'/g, "\\'") + '\'); renderPdexVariantGrid();" title="Mark as Seen">👁</button>' +
+      '<button class="pdex-btn pdex-btn-cap' + (isCap ? ' active' : '') + '" onclick="toggleVariantCaptured(' + poke.id + ', \'' + variant.name.replace(/'/g, "\\'") + '\'); renderPdexVariantGrid();" title="Mark as Captured">✓</button>' +
+      '</div>' +
+      '<div class="pdex-sprite-wrap">' +
+      (isSeen
+        ? buildSpriteEl(sprite, displayName, 'pdex-sprite')
+        : '<div class="pdex-sprite-unknown">?</div>') +
+      '</div>' +
+      '<a href="pokemon.html?id=' + poke.id + '" class="pdex-num pdex-variant-name">' +
+      '<span class="pdex-variant-name-main">' + displayName + '</span>' +
+      '<span class="pdex-variant-name-sub">#' + num + '</span>' +
+      '</a>' +
       '</div>'
     );
   }).join('');
@@ -2719,7 +2749,7 @@ function renderPdexVariantGrid() {
   setTimeout(playAllVideos, 100);
 }
 
-window.toggleSeen = function(id) {
+window.toggleSeen = function (id) {
   var p = _pdexProgress[id] || {};
   if (p.seen && !p.captured) {
     // unsee
@@ -2734,7 +2764,7 @@ window.toggleSeen = function(id) {
   staggerPdexCards();
 };
 
-window.toggleCaptured = function(id) {
+window.toggleCaptured = function (id) {
   var p = _pdexProgress[id] || {};
   if (p.captured) {
     // uncapture but keep seen
@@ -2751,9 +2781,9 @@ window.toggleCaptured = function(id) {
   staggerPdexCards();
 };
 
-window.setPdexFilter = function(filter) {
+window.setPdexFilter = function (filter) {
   _pdexFilter = filter;
-  document.querySelectorAll('.pdex-filter').forEach(function(btn) {
+  document.querySelectorAll('.pdex-filter').forEach(function (btn) {
     btn.classList.remove('active');
     if (btn.getAttribute('onclick') === "setPdexFilter('" + filter + "')") {
       btn.classList.add('active');
@@ -2764,32 +2794,32 @@ window.setPdexFilter = function(filter) {
   staggerPdexCards();
 };
 
-window.exportProgress = function() {
+window.exportProgress = function () {
   var combined = {
-    pokedex:  _pdexProgress,
+    pokedex: _pdexProgress,
     variants: _variantProgress
   };
   var data = JSON.stringify(combined, null, 2);
   var blob = new Blob([data], { type: 'application/json' });
-  var url  = URL.createObjectURL(blob);
-  var a    = document.createElement('a');
-  a.href     = url;
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
   a.download = 'pokedex-progress.json';
   a.click();
   URL.revokeObjectURL(url);
 };
 
-window.importProgress = function(event) {
+window.importProgress = function (event) {
   var file = event.target.files[0];
   if (!file) return;
   var reader = new FileReader();
-  reader.onload = function(e) {
+  reader.onload = function (e) {
     try {
       var parsed = JSON.parse(e.target.result);
       // New format: { pokedex: {...}, variants: {...} }
       // Old format: flat object of pdex progress only
       if (parsed.pokedex || parsed.variants) {
-        _pdexProgress   = parsed.pokedex  || {};
+        _pdexProgress = parsed.pokedex || {};
         _variantProgress = parsed.variants || {};
       } else {
         _pdexProgress = parsed;
@@ -2799,14 +2829,14 @@ window.importProgress = function(event) {
       updatePdexStats();
       renderPdexGrid();
       renderPdexVariantGrid();
-    } catch(err) {
+    } catch (err) {
       alert('Invalid progress file.');
     }
   };
   reader.readAsText(file);
 };
 
-window.resetProgress = function() {
+window.resetProgress = function () {
   if (!confirm('Reset all progress? This cannot be undone.')) return;
   _pdexProgress = {};
   _variantProgress = {};
