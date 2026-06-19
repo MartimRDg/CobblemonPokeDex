@@ -297,12 +297,12 @@ function renderTop5() {
     var sumA = a.baseStats ? Object.values(a.baseStats).reduce(function (t, v) { return t + v; }, 0) : 0;
     var sumB = b.baseStats ? Object.values(b.baseStats).reduce(function (t, v) { return t + v; }, 0) : 0;
     return sumB - sumA;
-  }).slice(0, 5);
+  }).slice(0, 6);
 
   grid.innerHTML = ranked.map(function (poke, i) {
     var total = poke.baseStats ? Object.values(poke.baseStats).reduce(function (t, v) { return t + v; }, 0) : 0;
     var num = poke.number || String(poke.id).padStart(4, '0');
-    var medals = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣'];
+    var medals = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣', '6️⃣'];
     return (
       '<div class="top5-card">' +
       '<div class="top5-rank">' + medals[i] + '</div>' +
