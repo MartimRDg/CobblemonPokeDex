@@ -1174,6 +1174,544 @@
     {
       "_comment": "Base Stats",
 
+      "id": 506,
+      "name": "Lillipup",
+      "number": "0506",
+      "types": ["Normal"],
+      "generation": 5,
+      "rarity": "Common",
+      "rideable": false,
+      "flying": false,
+      "legendary": false,
+      "mythical": false,
+      "catchRate": 255,
+
+      "abilities": ["Vital Spirit", "Pickup", "Run Away (Hidden)"],
+
+      "baseStats": {
+        "hp": 45,
+        "attack": 60,
+        "defense": 45,
+        "spAttack": 25,
+        "spDefense": 45,
+        "speed": 55
+       },
+
+       "evYield": {
+        "attack": 1
+       },
+
+       "drops": [
+        { "item": "Bone", "chance": 100, "quantity": "0-1", "image": "assets/images/items/bone.png"},
+        { "item": "Blue Wool", "chance": 100, "quantity": "1", "image": "assets/images/items/blue_wool.png"},
+        { "item": "Chilan Berry", "chance": 2.5, "quantity": "1", "image": "assets/images/items/chilan_berry.png"}
+       ],
+
+      "weaknesses": ["Fighting"],
+      "resistances": ["None"],
+      "immunities": ["Ghost"],
+      
+      "spawnOptions": [
+        {
+         "label": "Any",
+         "bucket": "Common",
+         "level": "3-28",
+         "context": "Grounded",
+         "preset": "Natural, Urban",
+         "biomes": ["Overworld"],
+         "notbiomes": ["Desert"],
+         "requirements": "N/A"
+        },
+        {
+         "label": "Any",
+         "bucket": "Common",
+         "level": "3-28",
+         "context": "Grounded",
+         "preset": "Natural",
+         "biomes": ["Overworld"],
+         "notBiomes": ["Desert"],
+         "village_Structure": true,
+         "requirements": "N/A"
+        }
+      ],
+
+      "video": "assets/videos/lillipup.gif",
+      "shinyVideo":"assets/videos/lillipup-shiny.gif",
+
+      "_comment2": "Evolutions",
+      
+      "evolutions": [
+       { "id": 506, "name": "Lillipup", "level": null },
+       { "id": 507, "name": "Herdier", "level": 16 },
+       { "id": 508, "name": "Stoutland", "level": 32 }
+      ],
+
+      "_comment3": "Movesets",
+
+      "moves": {
+        "level": [
+         { "level": 1, "name": "Leer" },
+         { "level": 1, "name": "Tackle" },
+         { "level": 1, "name": "Odor Sleuth" },
+         { "level": 4, "name": "Work Up" },
+         { "level": 8, "name": "Bite" },
+         { "level": 12, "name": "Retaliate" },
+         { "level": 17, "name": "Baby-Doll Eyes" },
+         { "level": 20, "name": "Play Rough" },
+         { "level": 24, "name": "Crunch" },
+         { "level": 28, "name": "Take Down" },
+         { "level": 32, "name": "Helping Hand" },
+         { "level": 36, "name": "Reversal" },
+         { "level": 40, "name": "Roar" },
+         { "level": 44, "name": "Last Resort" },
+         { "level": 48, "name": "Giga Impact" }
+        ],
+        "tm": [
+         { "name": "Aerial Ace" },
+         { "name": "After You" },
+         { "name": "Baby-Doll Eyes" },
+         { "name": "Charm" },
+         { "name": "Covet" },  
+         { "name": "Crunch" },
+         { "name": "Dig" },
+         { "name": "Endure" },
+         { "name": "Facade" },
+         { "name": "Fire Fang"},
+         { "name": "Giga Impact" },
+         { "name": "Helping Hand" },
+         { "name": "Hyper Voice" },
+         { "name": "Ice Fang" },
+         { "name": "Last Resort" },
+         { "name": "Mud-Slap" },
+         { "name": "Payback" },
+         { "name": "Play Rough" },
+         { "name": "Protect" },
+         { "name": "Psychic Fangs" },
+         { "name": "Rain Dance" },
+         { "name": "Rest" },
+         { "name": "Retaliate" },
+         { "name": "Reversal" },
+         { "name": "Roar" },
+         { "name": "Rock Smash" },
+         { "name": "Rock Tomb" },
+         { "name": "Shadow Ball" },
+         { "name": "Shock Wave" },
+         { "name": "Sleep Talk" },
+         { "name": "Snarl" },
+         { "name": "Substitute" },
+         { "name": "Sunny Day" },
+         { "name": "Take Down" },
+         { "name": "Tera Blast" },
+         { "name": "Thunderbolt" },
+         { "name": "Thunder Fang" },
+         { "name": "Thunder Wave" },
+         { "name": "Uproar" },
+         { "name": "Wild Charge" },
+         { "name": "Work Up" }
+        ],
+        "egg": [
+         { "name": "After You" },
+         { "name": "Covet" },
+         { "name": "Howl" },
+         { "name": "Lick" },
+         { "name": "Mud-Slap" },
+         { "name": "Pursuit" },
+         { "name": "Sand Attack" },
+         { "name": "Yawn" }
+        ],
+        "tutor": [
+         { "name": "Aerial Ace" },
+         { "name": "After You" },
+         { "name": "Baby-Doll Eyes" },
+         { "name": "Covet" },
+         { "name": "Fire Fang" },
+         { "name": "Giga Impact" },
+         { "name": "Helping Hand" },
+         { "name": "Hyper Voice" },
+         { "name": "Ice Fang" },
+         { "name": "Last Resort" },
+         { "name": "Mud-Slap" },
+         { "name": "Play Rough" },
+         { "name": "Rest" },
+         { "name": "Rock Smash" },
+         { "name": "Shadow Ball" },
+         { "name": "Shock Wave" },
+         { "name": "Sleep Talk" },
+         { "name": "Snarl" },
+         { "name": "Thunderbolt" },
+         { "name": "Thunder Fang" },
+         { "name": "Uproar" },
+         { "name": "Wild Charge" }
+       ]
+     }
+    },
+    {
+      "_comment": "Base Stats",
+
+      "id": 507,
+      "name": "Herdier",
+      "number": "0507",
+      "types": ["Normal"],
+      "generation": 5,
+      "rarity": "Common",
+      "rideable": false,
+      "flying": false,
+      "legendary": false,
+      "mythical": false,
+      "catchRate": 120,
+
+      "abilities": ["Intimidate", "Sand Rush", "Scrappy (Hidden)"],
+
+      "baseStats": {
+        "hp": 65,
+        "attack": 80,
+        "defense": 65,
+        "spAttack": 35,
+        "spDefense": 65,
+        "speed": 60
+       },
+
+       "evYield": {
+        "attack": 2
+       },
+
+       "drops": [
+        { "item": "Bone", "chance": 100, "quantity": "0-2", "image": "assets/images/items/bone.png"},
+        { "item": "Blue Wool", "chance": 100, "quantity": "1-2", "image": "assets/images/items/blue_wool.png"},
+        { "item": "Chilan Berry", "chance": 5, "quantity": "1", "image": "assets/images/items/chilan_berry.png"}
+       ],
+
+      "weaknesses": ["Fighting"],
+      "resistances": ["None"],
+      "immunities": ["Ghost"],
+      
+      "spawnOptions": [
+        {
+         "label": "Any",
+         "bucket": "Common",
+         "level": "16-37",
+         "context": "Grounded",
+         "preset": "Natural, Urban",
+         "biomes": ["Overworld"],
+         "notbiomes": ["Desert"],
+         "requirements": "N/A"
+        },
+        {
+         "label": "Any",
+         "bucket": "Common",
+         "level": "16-37",
+         "context": "Grounded",
+         "preset": "Natural",
+         "biomes": ["Overworld"],
+         "notBiomes": ["Desert"],
+         "village_Structure": true,
+         "requirements": "N/A"
+        }
+      ],
+
+      "video": "assets/videos/herdier.gif",
+      "shinyVideo":"assets/videos/herdier-shiny.gif",
+
+      "_comment2": "Evolutions",
+      
+      "evolutions": [
+       { "id": 506, "name": "Lillipup", "level": null },
+       { "id": 507, "name": "Herdier", "level": 16 },
+       { "id": 508, "name": "Stoutland", "level": 32 }
+      ],
+
+      "_comment3": "Movesets",
+
+      "moves": {
+        "level": [
+         { "level": 1, "name": "Leer" },
+         { "level": 1, "name": "Tackle" },
+         { "level": 1, "name": "Odor Sleuth" },
+         { "level": 1, "name": "Bite" },
+         { "level": 1, "name": "Work Up" },
+         { "level": 12, "name": "Retaliate" },
+         { "level": 19, "name": "Baby-Doll Eyes" },
+         { "level": 24, "name": "Play Rough" },
+         { "level": 30, "name": "Crunch" },
+         { "level": 36, "name": "Take Down" },
+         { "level": 42, "name": "Helping Hand" },
+         { "level": 48, "name": "Reversal" },
+         { "level": 54, "name": "Roar" },
+         { "level": 60, "name": "Last Resort" },
+         { "level": 66, "name": "Giga Impact" }
+        ],
+        "tm": [
+         { "name": "Aerial Ace" },
+         { "name": "After You" },
+         { "name": "Baby-Doll Eyes" },
+         { "name": "Charm" },
+         { "name": "Covet" },  
+         { "name": "Crunch" },
+         { "name": "Dig" },
+         { "name": "Endure" },
+         { "name": "Facade" },
+         { "name": "Fire Fang"},
+         { "name": "Giga Impact" },
+         { "name": "Helping Hand" },
+         { "name": "Hyper Voice" },
+         { "name": "Ice Fang" },
+         { "name": "Last Resort" },
+         { "name": "Mud-Slap" },
+         { "name": "Payback" },
+         { "name": "Play Rough" },
+         { "name": "Protect" },
+         { "name": "Psychic Fangs" },
+         { "name": "Rain Dance" },
+         { "name": "Rest" },
+         { "name": "Retaliate" },
+         { "name": "Reversal" },
+         { "name": "Roar" },
+         { "name": "Rock Smash" },
+         { "name": "Rock Tomb" },
+         { "name": "Shadow Ball" },
+         { "name": "Shock Wave" },
+         { "name": "Sleep Talk" },
+         { "name": "Snarl" },
+         { "name": "Strength" },
+         { "name": "Substitute" },
+         { "name": "Sunny Day" },
+         { "name": "Surf" },
+         { "name": "Take Down" },
+         { "name": "Tera Blast" },
+         { "name": "Thunderbolt" },
+         { "name": "Thunder Fang" },
+         { "name": "Thunder Wave" },
+         { "name": "Uproar" },
+         { "name": "Wild Charge" },
+         { "name": "Work Up" }
+        ],
+        "egg": [
+         { "name": "After You" },
+         { "name": "Covet" },
+         { "name": "Howl" },
+         { "name": "Lick" },
+         { "name": "Mud-Slap" },
+         { "name": "Pursuit" },
+         { "name": "Sand Attack" },
+         { "name": "Yawn" }
+        ],
+        "tutor": [
+         { "name": "Aerial Ace" },
+         { "name": "After You" },
+         { "name": "Baby-Doll Eyes" },
+         { "name": "Covet" },
+         { "name": "Fire Fang" },
+         { "name": "Giga Impact" },
+         { "name": "Helping Hand" },
+         { "name": "Hyper Voice" },
+         { "name": "Ice Fang" },
+         { "name": "Last Resort" },
+         { "name": "Mud-Slap" },
+         { "name": "Play Rough" },
+         { "name": "Rest" },
+         { "name": "Rock Smash" },
+         { "name": "Shadow Ball" },
+         { "name": "Shock Wave" },
+         { "name": "Sleep Talk" },
+         { "name": "Snarl" },
+         { "name": "Thunderbolt" },
+         { "name": "Thunder Fang" },
+         { "name": "Uproar" },
+         { "name": "Wild Charge" }
+       ]
+     }
+    },
+    {
+      "_comment": "Base Stats",
+
+      "id": 508,
+      "name": "Stoutland",
+      "number": "0508",
+      "types": ["Normal"],
+      "generation": 5,
+      "rarity": "Common",
+      "rideable": false,
+      "flying": false,
+      "legendary": false,
+      "mythical": false,
+      "catchRate": 45,
+
+      "abilities": ["Intimidate", "Sand Rush", "Scrappy (Hidden)"],
+
+      "baseStats": {
+        "hp": 85,
+        "attack": 110,
+        "defense": 90,
+        "spAttack": 45,
+        "spDefense": 90,
+        "speed": 80
+       },
+
+       "evYield": {
+        "attack": 3
+       },
+
+       "drops": [
+        { "item": "Bone", "chance": 100, "quantity": "0-3", "image": "assets/images/items/bone.png"},
+        { "item": "Blue Wool", "chance": 100, "quantity": "2-3", "image": "assets/images/items/blue_wool.png"},
+        { "item": "Chilan Berry", "chance": 10, "quantity": "1", "image": "assets/images/items/chilan_berry.png"}
+       ],
+
+      "weaknesses": ["Fighting"],
+      "resistances": ["None"],
+      "immunities": ["Ghost"],
+      
+      "spawnOptions": [
+        {
+         "label": "Any",
+         "bucket": "Common",
+         "level": "32-50",
+         "context": "Grounded",
+         "preset": "Natural, Urban",
+         "biomes": ["Overworld"],
+         "notbiomes": ["Desert"],
+         "requirements": "N/A"
+        },
+        {
+         "label": "Any",
+         "bucket": "Common",
+         "level": "32-50",
+         "context": "Grounded",
+         "preset": "Natural",
+         "biomes": ["Overworld"],
+         "notBiomes": ["Desert"],
+         "village_Structure": true,
+         "requirements": "N/A"
+        }
+      ],
+
+      "video": "assets/videos/stoutland.gif",
+      "shinyVideo":"assets/videos/stoutland-shiny.gif",
+
+      "_comment2": "Evolutions",
+      
+      "evolutions": [
+       { "id": 506, "name": "Lillipup", "level": null },
+       { "id": 507, "name": "Herdier", "level": 16 },
+       { "id": 508, "name": "Stoutland", "level": 32 }
+      ],
+
+      "_comment3": "Movesets",
+
+      "moves": {
+        "level": [
+         { "level": 1, "name": "Ice Fang" },
+         { "level": 1, "name": "Fire Fang" },
+         { "level": 1, "name": "Thunder Fang" },
+         { "level": 1, "name": "Leer" },
+         { "level": 1, "name": "Tackle" },
+         { "level": 1, "name": "Odor Sleuth" },
+         { "level": 1, "name": "Bite" },
+         { "level": 1, "name": "Work Up" },
+         { "level": 12, "name": "Retaliate" },
+         { "level": 19, "name": "Baby-Doll Eyes" },
+         { "level": 24, "name": "Play Rough" },
+         { "level": 30, "name": "Crunch" },
+         { "level": 38, "name": "Take Down" },
+         { "level": 46, "name": "Helping Hand" },
+         { "level": 54, "name": "Reversal" },
+         { "level": 62, "name": "Roar" },
+         { "level": 70, "name": "Last Resort" },
+         { "level": 78, "name": "Giga Impact" }
+        ],
+        "tm": [
+         { "name": "Aerial Ace" },
+         { "name": "After You" },
+         { "name": "Baby-Doll Eyes" },
+         { "name": "Charm" },
+         { "name": "Covet" },  
+         { "name": "Crunch" },
+         { "name": "Dig" },
+         { "name": "Endure" },
+         { "name": "Facade" },
+         { "name": "Fire Fang"},
+         { "name": "Giga Impact" },
+         { "name": "Helping Hand" },
+         { "name": "Hyper Beam" },
+         { "name": "Hyper Voice" },
+         { "name": "Ice Fang" },
+         { "name": "Iron Head" },
+         { "name": "Last Resort" },
+         { "name": "Mud-Slap" },
+         { "name": "Payback" },
+         { "name": "Play Rough" },
+         { "name": "Protect" },
+         { "name": "Psychic Fangs" },
+         { "name": "Rain Dance" },
+         { "name": "Rest" },
+         { "name": "Retaliate" },
+         { "name": "Reversal" },
+         { "name": "Roar" },
+         { "name": "Rock Smash" },
+         { "name": "Rock Tomb" },
+         { "name": "Shadow Ball" },
+         { "name": "Shock Wave" },
+         { "name": "Sleep Talk" },
+         { "name": "Snarl" },
+         { "name": "Stomping Tantrum" },
+         { "name": "Strength" },
+         { "name": "Substitute" },
+         { "name": "Sunny Day" },
+         { "name": "Superpower" },
+         { "name": "Surf" },
+         { "name": "Take Down" },
+         { "name": "Tera Blast" },
+         { "name": "Thunder" },
+         { "name": "Thunderbolt" },
+         { "name": "Thunder Fang" },
+         { "name": "Thunder Wave" },
+         { "name": "Uproar" },
+         { "name": "Wild Charge" },
+         { "name": "Work Up" }
+        ],
+        "egg": [
+         { "name": "After You" },
+         { "name": "Covet" },
+         { "name": "Howl" },
+         { "name": "Lick" },
+         { "name": "Mud-Slap" },
+         { "name": "Pursuit" },
+         { "name": "Sand Attack" },
+         { "name": "Yawn" }
+        ],
+        "tutor": [
+         { "name": "Aerial Ace" },
+         { "name": "After You" },
+         { "name": "Baby-Doll Eyes" },
+         { "name": "Covet" },
+         { "name": "Fire Fang" },
+         { "name": "Giga Impact" },
+         { "name": "Helping Hand" },
+         { "name": "Hyper Beam" },
+         { "name": "Hyper Voice" },
+         { "name": "Ice Fang" },
+         { "name": "Iron Head" },
+         { "name": "Last Resort" },
+         { "name": "Mud-Slap" },
+         { "name": "Play Rough" },
+         { "name": "Rest" },
+         { "name": "Rock Smash" },
+         { "name": "Shadow Ball" },
+         { "name": "Shock Wave" },
+         { "name": "Sleep Talk" },
+         { "name": "Snarl" },
+         { "name": "Stomping Tantrum" },
+         { "name": "Superpower" },
+         { "name": "Thunderbolt" },
+         { "name": "Thunder Fang" },
+         { "name": "Uproar" },
+         { "name": "Wild Charge" }
+       ]
+     }
+    },
+    {
+      "_comment": "Base Stats",
+
       "id": 741,
       "name": "Oricorio Baile",
       "number": "0741",

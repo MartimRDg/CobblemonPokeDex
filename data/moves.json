@@ -1543,6 +1543,190 @@
       "accuracy": 100,
       "pp": 10,
       "description": "The user transforms into a copy of the target, right down to having the same move set."
+    },
+    "Leer": {
+      "type": "Normal",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 30,
+      "description": "The user gives opposing Pokémon an intimidating leer that lowers their Defense stats."
+    },
+    "Odor Sleuth": {
+      "type": "Normal",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 40,
+      "description": "Enables a Ghost-type target to be hit by Normal- and Fighting-type attacks. This also enables an evasive target to be hit."
+    },
+    "Retaliate": {
+      "type": "Normal",
+      "category": "Physical",
+      "power": 70,
+      "accuracy": 100,
+      "pp": 5,
+      "description": "The user takes revenge for a fainted ally. This move's power is boosted if an ally fainted in the previous turn."
+    },
+    "Baby-Doll Eyes": {
+      "type": "Fairy",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 30,
+      "description": "The user stares at the target with its baby-doll eyes, which lowers the target's Attack stat. This move always goes first."
+    },
+    "Play Rough": {
+      "type": "Fairy",
+      "category": "Physical",
+      "power": 90,
+      "accuracy": 90,
+      "pp": 10,
+      "description": "The user attacks by playing rough with the target. This may also lower the target's Attack stat."
+    },
+     "Last Resort": {
+      "type": "Normal",
+      "category": "Physical",
+      "power": 140,
+      "accuracy": 100,
+      "pp": 5,
+      "description": "This move can be used only after the user has used all the other moves it knows in the battle."
+    },
+     "After You": {
+      "type": "Normal",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 15,
+      "description": "The user helps the target and makes it use its move right after the user."
+    },
+    "Hyper Voice": {
+      "type": "Normal",
+      "category": "Special",
+      "power": 90,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user attacks by letting loose a horribly loud, resounding cry."
+    },
+    "Psychic Fangs": {
+      "type": "Psychic",
+      "category": "Physical",
+      "power": 85,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user attacks by biting the target with its psychic capabilities. This move can also break barriers, such as Light Screen and Reflect."
+    },
+     "Shadow Ball": {
+      "type": "Ghost",
+      "category": "Special",
+      "power": 80,
+      "accuracy": 100,
+      "pp": 15,
+      "description": "The user attacks by hurling a shadowy blob at the target. This may also lower the target's Sp. Def stat."
+    },
+    "Shock Wave": {
+      "type": "Electric",
+      "category": "Special",
+      "power": 60,
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user strikes the target with a quick jolt of electricity. This attack never misses."
+    },
+    "Snarl": {
+      "type": "Dark",
+      "category": "Special",
+      "power": 55,
+      "accuracy": 95,
+      "pp": 15,
+      "description": "The user yells as if it's ranting about something, which lowers the Sp. Atk stats of opposing Pokémon."
+    },
+    "Thunderbolt": {
+      "type": "Electric",
+      "category": "Special",
+      "power": 90,
+      "accuracy": 100,
+      "pp": 15,
+      "description": "The user attacks the target with a strong electric blast. This may also leave the target with paralysis."
+    },
+    "Thunder Fang": {
+      "type": "Electric",
+      "category": "Physical",
+      "power": 65,
+      "accuracy": 95,
+      "pp": 15,
+      "description": "The user bites with electrified fangs. This may also make the target flinch or leave it with paralysis."
+    },
+     "Thunder Wave": {
+      "type": "Electric",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 90,
+      "pp": 20,
+      "description": "The user launches a weak jolt of electricity that paralyzes the target."
+    },
+    "Uproar": {
+      "type": "Normal",
+      "category": "Special",
+      "power": 90,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user attacks in an uproar for three turns. During that time, no Pokémon can fall asleep."
+    },
+     "Wild Charge": {
+      "type": "Electric",
+      "category": "Physical",
+      "power": 90,
+      "accuracy": 100,
+      "pp": 15,
+      "description": "The user shrouds itself in electricity and smashes into the target. This also damages the user a little."
+    },
+    "Howl": {
+      "type": "Normal",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 40,
+      "description": "The user howls loudly to rouse itself and its allies. This boosts their Attack stats."
+    },
+    "Lick": {
+      "type": "Ghost",
+      "category": "Physical",
+      "power": 30,
+      "accuracy": 100,
+      "pp": 30,
+      "description": "The user licks the target with a long tongue to inflict damage. This may also leave the target with paralysis."
+    },
+    "Sand Attack": {
+      "type": "Ground",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 15,
+      "description": "Sand is hurled in the target's face, lowering the target's accuracy."
+    },
+    "Yawn": {
+      "type": "Normal",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user lets loose a huge yawn that lulls the target into falling asleep on the next turn."
+    },
+    "Iron Head": {
+      "type": "Steel",
+      "category": "Physical",
+      "power": 80,
+      "accuracy": 100,
+      "pp": 15,
+      "description": "The user slams the target with its steel-hard head. This may also make the target flinch."
+    },
+    "Thunder": {
+      "type": "Electric",
+      "category": "Special",
+      "power": 110,
+      "accuracy": 70,
+      "pp": 10,
+      "description": "A wicked thunderbolt is dropped on the target to inflict damage. This may also leave the target with paralysis."
     }
   }
 }

@@ -459,7 +459,8 @@ var BIOME_GROUPS = {
   'sky': ['terralith:skylands_autumn', 'terralith:skylands_spring', 'terralith:skylands_summer', 'terralith:skylands_winter'],
   'spooky': ['minecraft:dark_forest', '#c:spooky', '#wythers:dark_forest', 'biomesoplenty:ominous_woods', 'biomeswevegone:ebony_woods', 'biomeswevegone:overgrowth_woodlands', 'biomeswevegone:pale_bog', 'biomeswevegone:weeping_witch_forest', 'wythers:ancient_taiga', 'wythers:tangled_forest', 'wythers:twilight_meadow'],
   'overworld': ['#minecraft:overworld', '#c: overworld'],
-  'ocean': ['#minecraft:ocean', 'cold_ocean', 'deep_ocean', 'frozen_ocean', 'lukewarm_ocean', 'temperate_ocean', 'warm_ocean', '#c:ocean', 'clifftree:stone_ocean']
+  'ocean': ['#minecraft:ocean', 'cold_ocean', 'deep_ocean', 'frozen_ocean', 'lukewarm_ocean', 'temperate_ocean', 'warm_ocean', '#c:ocean', 'clifftree:stone_ocean'],
+  'desert': ['minecraft:desert', '#c:desert', '#clifftree:desert', '#wythers:desert', 'biomesoplenty:lush_desert', 'clifftree:desert_cliff', 'darkerdepths:sandy_catacombs', 'terralith:ancient_sands', 'terralith:desert_canyon', 'terralith:cave/desert_caves', 'terralith:desert_oasis', 'terralith:desert_spires', 'terralith:lush_desert', 'terralith:red_oasis', 'terralith:sandstone_valley', 'wythers:badlands_desert', 'wythers:desert_island', 'wythers:kwongan_heath', 'wythers:outback_desert', 'wythers:red_desert', 'wythers:sandy_jungle']
 };
 
 function getBiomeGroupTooltip(biomeName) {
@@ -555,6 +556,7 @@ function buildSpawnSection(poke) {
       isSlimeChunk: poke.isSlimeChunk,
       isDay: poke.isDay,
       seeSky: poke.seeSky,
+      village_Structure: poke.village_Structure,
       requirements: poke.spawnRequirements || null,
       label: null
     }];
@@ -587,6 +589,8 @@ function buildSpawnSection(poke) {
     var reqLines = [];
     if (opt.isRaining === true) reqLines.push({ label: 'Raining', value: 'Required' });
     if (opt.isRaining === false) reqLines.push({ label: 'Raining', value: 'Must not be raining' });
+    if (opt.village_Structure === true) reqLines.push({ label: 'Structure', value: 'Must be in a Village' });
+    if (opt.village_Structure === false) reqLines.push({ label: 'Structure', value: 'Cant be in a Village' });
     if (opt.isSlimeChunk === true) reqLines.push({ label: 'Slime Chunk', value: 'Required' });
     if (opt.isSlimeChunk === false) reqLines.push({ label: 'Slime Chunk', value: 'Must not be a slime chunk' });
     if (opt.isDay === true) reqLines.push({ label: 'Time range', value: 'Day' });

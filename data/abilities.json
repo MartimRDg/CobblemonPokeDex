@@ -38,6 +38,21 @@
     },
      "Imposter": {
       "description": "The Pokémon transforms itself into the Pokémon it's facing."
+    },
+    "Vital Spirit": {
+      "description": "The Pokémon is full of vitality, and that prevents it from falling asleep."
+    },
+    "Pickup": {
+      "description": "The Pokémon may pick up an item another Pokémon used during a battle. It may pick up items outside of battle, too."
+    },
+    "Run Away": {
+      "description": "Enables a sure getaway from wild Pokémon."
+    },
+     "Intimidate": {
+      "description": "When the Pokémon enters a battle, it intimidates opposing Pokémon and makes them cower, lowering their Attack stats."
+    },
+    "Sand Rush": {
+      "description": "Boosts the Pokémon's Speed stat in a sandstorm."
     }
   }
 }
