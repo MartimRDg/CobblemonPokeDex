@@ -1588,6 +1588,18 @@
       "video": "assets/videos/stoutland.gif",
       "shinyVideo":"assets/videos/stoutland-shiny.gif",
 
+       "_comment1": "Decks",
+
+      "decks": [
+        {
+         "name": "VGC 2022 SERIES 12 MOVESET",
+         "game": "Cobbleverse",
+         "version": "Shiny Stoutland",
+         "logo": "assets/games/cobbleverse.png",
+         "moves": ["After You", "Giga Impact", "Surf", "Play Rough"]
+        }
+      ],
+
       "_comment2": "Evolutions",
       
       "evolutions": [
