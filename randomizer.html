@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>
+    (function() {
+      try {
+        var s = JSON.parse(localStorage.getItem('cobblemon_settings') || '{}');
+        var t = s.theme || 'dark';
+        if (t !== 'dark') document.documentElement.classList.add('theme-' + t);
+        var fonts = ['font-sm','font-md','font-lg','font-xl'];
+        document.documentElement.classList.add(fonts[s.fontSize != null ? s.fontSize : 1] || 'font-md');
+        if (s.compact) document.documentElement.classList.add('compact');
+        if (s.animations === false) document.documentElement.classList.add('no-animations');
+      } catch(e) {}
+    })();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Randomizer — Cobblemon Pokédex</title>
+  <link rel="icon" type="image/png" href="assets/images/items/favicon.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header>
+    <h1><span>Cobblemon</span> Pokédex</h1>
+  </header>
+  <nav class="site-nav">
+    <div class="container">
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">📖 Pokédex</a>
+        <a href="compare.html" class="nav-link">⚔️ Compare & Calc</a>
+        <a href="randomizer.html" class="nav-link active">🎲 Randomizer</a>
+        <a href="games.html" class="nav-link">🎮 Games</a>
+        <a href="pokedex.html" class="nav-link">🗂️ My Pokédex</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container" style="margin-top: 2rem; padding-bottom: 4rem;">
+
+    <div class="rnd-page">
+
+      <div class="rnd-intro">
+        <p class="rnd-eyebrow">// random.select()</p>
+        <h2 class="rnd-h1">Roll the Pokédex</h2>
+        <p class="rnd-sub">Set your constraints below, then draw from whatever matches.</p>
+      </div>
+
+      <!-- Query builder -->
+      <div class="rnd-query">
+
+        <div class="rnd-row">
+          <div class="rnd-row-label">
+            <span class="rnd-row-num">01</span>
+            <span>Type</span>
+          </div>
+          <div id="rndTypeChips" class="rnd-chip-group"></div>
+        </div>
+
+        <div class="rnd-row">
+          <div class="rnd-row-label">
+            <span class="rnd-row-num">02</span>
+            <span>Generation</span>
+          </div>
+          <div id="rndGenChips" class="rnd-chip-group"></div>
+        </div>
+
+        <div class="rnd-row">
+          <div class="rnd-row-label">
+            <span class="rnd-row-num">03</span>
+            <span>Evolution stage</span>
+          </div>
+          <div class="rnd-chip-group">
+            <button class="rnd-chip" data-evo="0">Unevolved</button>
+            <button class="rnd-chip" data-evo="1">Evolved once</button>
+            <button class="rnd-chip" data-evo="2">Evolved twice</button>
+          </div>
+        </div>
+
+        <div class="rnd-row">
+          <div class="rnd-row-label">
+            <span class="rnd-row-num">04</span>
+            <span>Rarity</span>
+          </div>
+          <div class="rnd-chip-group">
+            <button class="rnd-chip" data-special="legendary">Legendary</button>
+            <button class="rnd-chip" data-special="mythical">Mythical</button>
+          </div>
+        </div>
+
+        <div class="rnd-row rnd-row-split">
+          <div class="rnd-row-half">
+            <div class="rnd-row-label">
+              <span class="rnd-row-num">05</span>
+              <span>Forms</span>
+            </div>
+            <div class="rnd-form-toggles">
+              <label class="rnd-toggle-pill">
+                <input type="checkbox" id="rndIncludeMega">
+                <span>Mega</span>
+              </label>
+              <label class="rnd-toggle-pill">
+                <input type="checkbox" id="rndIncludeGmax">
+                <span>Gigantamax</span>
+              </label>
+              <label class="rnd-toggle-pill" title="Regional variants aren't tracked in the Pokédex yet">
+                <input type="checkbox" id="rndIncludeRegional" disabled>
+                <span>Regional</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="rnd-row-half">
+            <div class="rnd-row-label">
+              <span class="rnd-row-num">06</span>
+              <span>Ability</span>
+            </div>
+            <div class="rnd-ability-search">
+              <input type="text" id="rndAbility" placeholder="Any ability…" list="rndAbilityList" autocomplete="off">
+              <datalist id="rndAbilityList"></datalist>
+            </div>
+          </div>
+        </div>
+
+        <div class="rnd-row">
+          <div class="rnd-row-label">
+            <span class="rnd-row-num">07</span>
+            <span>Min. stats</span>
+          </div>
+          <div id="rndStatSliders" class="rnd-stat-grid"></div>
+        </div>
+
+      </div>
+
+      <!-- Action bar -->
+      <div class="rnd-action-bar">
+        <div class="rnd-count-control">
+          <span class="rnd-count-label">Draw</span>
+          <select id="rndCount" class="rnd-count-select">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="6" selected>6</option>
+          </select>
+          <span class="rnd-count-label">Pokémon</span>
+        </div>
+
+        <div class="rnd-action-buttons">
+          <button class="rnd-reset-btn" onclick="resetRandomizerFilters()">Clear filters</button>
+          <button id="rndGenerateBtn" class="rnd-generate-btn" onclick="generateRandomPokemon()">
+            <span class="rnd-generate-icon">●</span> Generate
+          </button>
+        </div>
+      </div>
+
+      <!-- Results -->
+      <div id="rndResultPanel" class="rnd-result-panel">
+        <div class="rnd-empty-state">
+          <div class="rnd-empty-icon">◌</div>
+          <p>No draw yet. Adjust your filters above and hit <strong>Generate</strong>.</p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <button id="backToTop" class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>
+
+  <script src="script.js"></script>
+</body>
+</html>

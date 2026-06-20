@@ -302,7 +302,7 @@ function renderTop5() {
   grid.innerHTML = ranked.map(function (poke, i) {
     var total = poke.baseStats ? Object.values(poke.baseStats).reduce(function (t, v) { return t + v; }, 0) : 0;
     var num = poke.number || String(poke.id).padStart(4, '0');
-    var medals = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣', '6️⃣'];
+    var medals = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣'];
     return (
       '<div class="top5-card">' +
       '<div class="top5-rank">' + medals[i] + '</div>' +
@@ -2282,6 +2282,10 @@ document.addEventListener('DOMContentLoaded', async function () {
     loadGamesPage();
   }
 
+  if (document.getElementById('rndResultPanel')) {
+    loadRandomizerPage();
+  }
+
   if (document.getElementById('pdexGrid')) {
     loadPersonalPokedex();
     setTimeout(function () { staggerPdexCards(); initPdexCounters(); }, 50);
@@ -2850,3 +2854,244 @@ window.resetProgress = function () {
   renderPdexGrid();
   renderPdexVariantGrid();
 };
+
+// ====================== Randomizer Page ======================
+var RND = {
+  types: new Set(),
+  gens: new Set(),
+  evoStages: new Set(),
+  special: new Set(),
+  pool: [],
+};
+
+var STAT_KEYS = [
+  { key: 'hp', label: 'HP' },
+  { key: 'attack', label: 'Attack' },
+  { key: 'defense', label: 'Defense' },
+  { key: 'spAttack', label: 'Sp. Atk' },
+  { key: 'spDefense', label: 'Sp. Def' },
+  { key: 'speed', label: 'Speed' },
+];
+
+function getEvoStage(poke) {
+  var evo = poke.evolutions || [];
+  var names = evo.map(function (e) { return e.name; });
+  var idx = names.indexOf(poke.name);
+  return idx === -1 ? 0 : idx;
+}
+
+function buildRandomizerPool() {
+  // Base species always included
+  var pool = State.allPokemon.map(function (p) {
+    return Object.assign({}, p, { _kind: 'base', _baseId: p.id, _baseName: p.name });
+  });
+
+  var includeMega = document.getElementById('rndIncludeMega').checked;
+  var includeGmax = document.getElementById('rndIncludeGmax').checked;
+
+  State.allPokemon.forEach(function (p) {
+    if (includeMega && Array.isArray(p.megaEvolutions)) {
+      p.megaEvolutions.forEach(function (m) {
+        pool.push(Object.assign({}, p, m, {
+          _kind: 'mega',
+          _baseId: p.id,
+          _baseName: p.name,
+          name: m.name,
+          evolutions: p.evolutions,
+          generation: p.generation,
+          legendary: p.legendary,
+          mythical: p.mythical,
+        }));
+      });
+    }
+    if (includeGmax && Array.isArray(p.variants)) {
+      p.variants.forEach(function (v) {
+        if (!/gigantamax/i.test(v.name)) return;
+        pool.push(Object.assign({}, p, v, {
+          _kind: 'gmax',
+          _baseId: p.id,
+          _baseName: p.name,
+          name: v.name,
+          evolutions: p.evolutions,
+          generation: p.generation,
+          legendary: p.legendary,
+          mythical: p.mythical,
+        }));
+      });
+    }
+  });
+
+  return pool;
+}
+
+function buildRandomizerFilterUI() {
+  // Types
+  var types = [...new Set(State.allPokemon.flatMap(function (p) { return p.types || []; }))].sort();
+  var typeWrap = document.getElementById('rndTypeChips');
+  typeWrap.innerHTML = types.map(function (t) {
+    var tl = t.toLowerCase();
+    return '<button class="rnd-chip" data-type="' + tl + '" onclick="toggleRndSet(RND.types, \'' + tl + '\', this)">' + t + '</button>';
+  }).join('');
+
+  // Generations
+  var gens = [...new Set(State.allPokemon.map(function (p) { return p.generation; }).filter(Boolean))].sort(function (a, b) { return a - b; });
+  var genWrap = document.getElementById('rndGenChips');
+  genWrap.innerHTML = gens.map(function (g) {
+    return '<button class="rnd-chip" data-gen="' + g + '" onclick="toggleRndSet(RND.gens, ' + g + ', this)">Gen ' + g + '</button>';
+  }).join('');
+
+  // Stat sliders
+  var maxStat = 0;
+  State.allPokemon.forEach(function (p) {
+    var bs = p.baseStats || {};
+    STAT_KEYS.forEach(function (s) { if (bs[s.key] > maxStat) maxStat = bs[s.key]; });
+  });
+  maxStat = Math.max(maxStat, 100);
+
+  var sliderWrap = document.getElementById('rndStatSliders');
+  sliderWrap.innerHTML = STAT_KEYS.map(function (s) {
+    return (
+      '<div class="rnd-stat-cell">' +
+      '<div class="rnd-stat-cell-head">' +
+      '<span class="rnd-stat-cell-label">' + s.label + '</span>' +
+      '<span class="rnd-stat-cell-value" id="rndStatVal_' + s.key + '">0</span>' +
+      '</div>' +
+      '<input type="range" class="rnd-slider" id="rndStat_' + s.key + '" min="0" max="' + maxStat + '" value="0" step="1" ' +
+      'oninput="document.getElementById(\'rndStatVal_' + s.key + '\').textContent=this.value">' +
+      '</div>'
+    );
+  }).join('');
+
+  // Abilities
+  var abilities = [...new Set(State.allPokemon.flatMap(function (p) { return (p.abilities || []).map(function (a) { return a.replace(/\s*\(Hidden\)/i, '').trim(); }); }))].sort();
+  var abilityList = document.getElementById('rndAbilityList');
+  abilityList.innerHTML = abilities.map(function (a) { return '<option value="' + a + '">'; }).join('');
+
+  // Special chips
+  document.querySelectorAll('[data-special]').forEach(function (btn) {
+    btn.onclick = function () { toggleRndSet(RND.special, btn.getAttribute('data-special'), btn); };
+  });
+
+  // Evolution chips
+  document.querySelectorAll('[data-evo]').forEach(function (btn) {
+    btn.onclick = function () { toggleRndSet(RND.evoStages, parseInt(btn.getAttribute('data-evo'), 10), btn); };
+  });
+
+  // Regional variants aren't tagged in this dataset yet — toggle stays disabled with an explanation
+}
+
+function toggleRndSet(set, value, btn) {
+  if (set.has(value)) { set.delete(value); btn.classList.remove('active'); }
+  else { set.add(value); btn.classList.add('active'); }
+}
+
+function passesRndFilters(poke) {
+  // Types — match ANY selected type
+  if (RND.types.size > 0) {
+    var pTypes = (poke.types || []).map(function (t) { return t.toLowerCase(); });
+    var hasType = pTypes.some(function (t) { return RND.types.has(t); });
+    if (!hasType) return false;
+  }
+
+  // Generation
+  if (RND.gens.size > 0 && !RND.gens.has(poke.generation)) return false;
+
+  // Evolution stage (only meaningful for base-species entries)
+  if (RND.evoStages.size > 0) {
+    var stage = getEvoStage(poke);
+    if (!RND.evoStages.has(stage)) return false;
+  }
+
+  // Minimum stats
+  var bs = poke.baseStats || {};
+  for (var i = 0; i < STAT_KEYS.length; i++) {
+    var s = STAT_KEYS[i];
+    var minEl = document.getElementById('rndStat_' + s.key);
+    var min = minEl ? parseInt(minEl.value, 10) : 0;
+    if (min > 0 && (bs[s.key] || 0) < min) return false;
+  }
+
+  // Ability
+  var abilityQuery = document.getElementById('rndAbility').value.trim().toLowerCase();
+  if (abilityQuery) {
+    var pAbilities = (poke.abilities || []).map(function (a) { return a.replace(/\s*\(Hidden\)/i, '').trim().toLowerCase(); });
+    if (!pAbilities.some(function (a) { return a === abilityQuery || a.indexOf(abilityQuery) !== -1; })) return false;
+  }
+
+  // Special
+  if (RND.special.has('legendary') && !poke.legendary) return false;
+  if (RND.special.has('mythical') && !poke.mythical) return false;
+
+  return true;
+}
+
+function generateRandomPokemon() {
+  var count = parseInt(document.getElementById('rndCount').value, 10) || 1;
+  var pool = buildRandomizerPool().filter(passesRndFilters);
+
+  var panel = document.getElementById('rndResultPanel');
+
+  if (pool.length === 0) {
+    panel.innerHTML = '<div class="rnd-no-match">😕 No Pokémon match these filters. Try loosening some constraints.</div>';
+    return;
+  }
+
+  // Shuffle and pick without replacement (falls back to allowing repeats if pool is smaller than count)
+  var shuffled = pool.slice().sort(function () { return Math.random() - 0.5; });
+  var picks = [];
+  if (shuffled.length >= count) {
+    picks = shuffled.slice(0, count);
+  } else {
+    for (var i = 0; i < count; i++) {
+      picks.push(shuffled[Math.floor(Math.random() * shuffled.length)]);
+    }
+  }
+
+  panel.innerHTML = '<div class="rnd-results-grid">' + picks.map(buildRndResultCard).join('') + '</div>';
+  setTimeout(playAllVideos, 100);
+}
+
+function buildRndResultCard(poke) {
+  var num = (poke.number || String(poke._baseId).padStart(4, '0'));
+  var sprite = poke.video || poke.sprite || '';
+  var tag = '';
+  if (poke._kind === 'mega') tag = '<span class="rnd-result-tag">Mega</span>';
+  else if (poke._kind === 'gmax') tag = '<span class="rnd-result-tag">Gigantamax</span>';
+  else if (poke._kind === 'variant') tag = '<span class="rnd-result-tag">Variant</span>';
+
+  return (
+    '<a href="pokemon.html?id=' + poke._baseId + '" class="rnd-result-card">' +
+    tag +
+    buildSpriteEl(sprite, poke.name, 'rnd-result-sprite', 'assets/images/placeholder.png') +
+    '<p class="rnd-result-number">#' + num + '</p>' +
+    '<p class="rnd-result-name">' + poke.name + '</p>' +
+    '</a>'
+  );
+}
+
+function resetRandomizerFilters() {
+  RND.types = new Set();
+  RND.gens = new Set();
+  RND.evoStages = new Set();
+  RND.special = new Set();
+
+  document.querySelectorAll('.rnd-chip.active').forEach(function (b) { b.classList.remove('active'); });
+  document.getElementById('rndIncludeMega').checked = false;
+  document.getElementById('rndIncludeGmax').checked = false;
+  document.getElementById('rndAbility').value = '';
+  document.getElementById('rndCount').value = '6';
+
+  STAT_KEYS.forEach(function (s) {
+    var el = document.getElementById('rndStat_' + s.key);
+    var val = document.getElementById('rndStatVal_' + s.key);
+    if (el) el.value = 0;
+    if (val) val.textContent = '0';
+  });
+
+  var panel = document.getElementById('rndResultPanel');
+  panel.innerHTML = '<div class="rnd-empty-state"><div class="rnd-empty-icon">◌</div><p>No draw yet. Adjust your filters above and hit <strong>Generate</strong>.</p></div>';
+}
+
+function loadRandomizerPage() {
+  buildRandomizerFilterUI();
+}
