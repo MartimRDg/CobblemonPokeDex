@@ -1784,11 +1784,11 @@
 
       "decks": [
         {
-         "name": "Still in Progress",
+         "name": "Original",
          "game": "Cobbleverse",
          "version": "Xerneas",
          "logo": "assets/games/cobbleverse.png",
-         "moves": ["Transform"]
+         "moves": ["Geomancy", "Moonblast", "Thunderbolt", "Focus Blast"]
         }
       ],
 
