@@ -1727,6 +1727,214 @@
       "accuracy": 70,
       "pp": 10,
       "description": "A wicked thunderbolt is dropped on the target to inflict damage. This may also leave the target with paralysis."
+    },
+    "Gravity": {
+      "type": "Psychic",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 5,
+      "description": "Enables Flying types or Pokémon with the Levitate Ability to be hit by Ground-type moves for five turns. Moves that involve flying can't be used."
+    },
+    "Light Screen": {
+      "type": "Psychic",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 30,
+      "description": "A wondrous wall of light is put up to reduce damage from special moves for five turns."
+    },
+    "Aurora Beam": {
+      "type": "Ice",
+      "category": "Special",
+      "power": 65,
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The target is hit with a rainbow-colored beam. This may also lower the target's Attack stat."
+    },
+     "Nature Power": {
+      "type": "Normal",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 20,
+      "description": "This attack makes use of nature's power. Its effects vary depending on the user's environment."
+    },
+    "Night Slash": {
+      "type": "Dark",
+      "category": "Physical",
+      "power": 70,
+      "accuracy": 100,
+      "pp": 15,
+      "description": "The user slashes the target the instant an opportunity arises. This move has a heightened chance of landing a critical hit."
+    },
+    "Aromatherapy": {
+      "type": "Grass",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 5,
+      "description": "The user releases a soothing scent that heals all status conditions affecting the user's party."
+    },
+    "Horn Leech": {
+      "type": "Grass",
+      "category": "Physical",
+      "power": 75,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user drains the target's energy with its horns. The user's HP is restored by up to half the damage taken by the target."
+    },
+    "Misty Terrain": {
+      "type": "Fairy",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 10,
+      "description": "This protects Pokémon on the ground from status conditions and halves damage from Dragon-type moves for five turns."
+    },
+    "Ingrain": {
+      "type": "Grass",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user lays roots that restore its own HP every turn. Because the user is now rooted, it can't switch out."
+    },
+    "Geomancy": {
+      "type": "Fairy",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user absorbs energy on the first turn, then sharply boosts its Sp. Atk, Sp. Def, and Speed stats on the next turn."
+    },
+    "Moonblast": {
+      "type": "Fairy",
+      "category": "Special",
+      "power": 95,
+      "accuracy": 100,
+      "pp": 15,
+      "description": "Borrowing the power of the moon, the user attacks the target. This may also lower the target's Sp. Atk stat."
+    },
+    "Heal Pulse": {
+      "type": "Psychic",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user emits a healing pulse that restores the target's HP by up to half its max HP."
+    },
+    "Close Combat": {
+      "type": "Fighting",
+      "category": "Physical",
+      "power": 120,
+      "accuracy": 100,
+      "pp": 5,
+      "description": "The user fights the target up close, inflicting damage without guarding itself. This also lowers the user's Defense and Sp. Def stats."
+    },
+    "Dazzling Gleam": {
+      "type": "Fairy",
+      "category": "Special",
+      "power": 80,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user damages opposing Pokémon by emitting a powerful flash."
+    },
+    "Draining Kiss": {
+      "type": "Fairy",
+      "category": "Special",
+      "power": 50,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user steals the target's HP with a kiss. The user's HP is restored by over half the damage taken by the target."
+    },
+     "Flash": {
+      "type": "Normal",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user flashes a bright light that cuts the target's accuracy."
+    },
+    "Flash Cannon": {
+      "type": "Steel",
+      "category": "Special",
+      "power": 80,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user gathers all its light energy and releases it at once. This may also lower the target's Sp. Def stat."
+    },
+    "Grass Knot": {
+      "type": "Grass",
+      "category": "Special",
+      "power": 0,
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user snares the target with grass and trips it. The heavier the target, the greater the move's power."
+    },
+    "Hail": {
+      "type": "Ice",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user summons a hailstorm lasting five turns. It damages all Pokémon except Ice types."
+    },
+    "Misty Explosion": {
+      "type": "Fairy",
+      "category": "Special",
+      "power": 100,
+      "accuracy": 100,
+      "pp": 5,
+      "description": "The user attacks everything around it and faints upon using this move. This move's power is boosted on Misty Terrain."
+    },
+    "Psychic": {
+      "type": "Psychic",
+      "category": "Special",
+      "power": 90,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The target is hit with a strong telekinetic force to inflict damage. This may also lower the target's Sp. Def stat."
+    },
+    "Psyshock": {
+      "type": "Psychic",
+      "category": "Special",
+      "power": 80,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user materializes an odd psychic wave to attack the target. This move deals physical damage."
+    },
+    "Reflect": {
+      "type": "Psychic",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 20,
+      "description": "A wondrous wall of light is put up to reduce damage from physical moves for five turns."
+    },
+     "Terrain Pulse": {
+      "type": "Normal",
+      "category": "Special",
+      "power": 50,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user utilizes the energy of the terrain to attack. This move's type and power change depending on the terrain at the time the move is used."
+    },
+    "Wonder Room": {
+      "type": "Psychic",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user creates a bizarre area in which Pokémon's Defense and Sp. Def stats are swapped for five turns."
+    },
+    "Zen Headbutt": {
+      "type": "Psychic",
+      "category": "Physical",
+      "power": 80,
+      "accuracy": 90,
+      "pp": 15,
+      "description": "The user focuses its willpower to its head and attacks the target. This may also make the target flinch."
     }
   }
 }

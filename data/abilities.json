@@ -53,6 +53,9 @@
     },
     "Sand Rush": {
       "description": "Boosts the Pokémon's Speed stat in a sandstorm."
+    },
+     "Fairy Aura": {
+      "description": "Powers up the Fairy-type moves of all Pokémon on the field."
     }
   }
 }

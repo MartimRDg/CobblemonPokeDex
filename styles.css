@@ -3209,6 +3209,11 @@ html { background-color: #050709; }
   border-color: #7AC16D;
   color: #3cfc02;
 }
+.biome-related-chip.ns-cobblemon {
+  background: #f8f8f8;
+  border-color: #f32905;
+  color: #f03c05;
+}
 
 /* ---- Legend ---- */
 .biome-tooltip-legend {
@@ -3252,6 +3257,7 @@ html { background-color: #050709; }
 .biome-legend-dot.ns-blooming_biosphere    { background: #80B741; }
 .biome-legend-dot.ns-clifftree             { background: #A97063; }
 .biome-legend-dot.ns-biomeswevegone        { background: #3cfc02; }
+.biome-legend-dot.ns-cobblemon             { background: #fc3c02; }
 
 @media (max-width: 480px) {
   .biome-tooltip { width: 220px; }

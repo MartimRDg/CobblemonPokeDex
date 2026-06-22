@@ -460,7 +460,8 @@ var BIOME_GROUPS = {
   'spooky': ['minecraft:dark_forest', '#c:spooky', '#wythers:dark_forest', 'biomesoplenty:ominous_woods', 'biomeswevegone:ebony_woods', 'biomeswevegone:overgrowth_woodlands', 'biomeswevegone:pale_bog', 'biomeswevegone:weeping_witch_forest', 'wythers:ancient_taiga', 'wythers:tangled_forest', 'wythers:twilight_meadow'],
   'overworld': ['#minecraft:overworld', '#c: overworld'],
   'ocean': ['#minecraft:ocean', 'cold_ocean', 'deep_ocean', 'frozen_ocean', 'lukewarm_ocean', 'temperate_ocean', 'warm_ocean', '#c:ocean', 'clifftree:stone_ocean'],
-  'desert': ['minecraft:desert', '#c:desert', '#clifftree:desert', '#wythers:desert', 'biomesoplenty:lush_desert', 'clifftree:desert_cliff', 'darkerdepths:sandy_catacombs', 'terralith:ancient_sands', 'terralith:desert_canyon', 'terralith:cave/desert_caves', 'terralith:desert_oasis', 'terralith:desert_spires', 'terralith:lush_desert', 'terralith:red_oasis', 'terralith:sandstone_valley', 'wythers:badlands_desert', 'wythers:desert_island', 'wythers:kwongan_heath', 'wythers:outback_desert', 'wythers:red_desert', 'wythers:sandy_jungle']
+  'desert': ['minecraft:desert', '#c:desert', '#clifftree:desert', '#wythers:desert', 'biomesoplenty:lush_desert', 'clifftree:desert_cliff', 'darkerdepths:sandy_catacombs', 'terralith:ancient_sands', 'terralith:desert_canyon', 'terralith:cave/desert_caves', 'terralith:desert_oasis', 'terralith:desert_spires', 'terralith:lush_desert', 'terralith:red_oasis', 'terralith:sandstone_valley', 'wythers:badlands_desert', 'wythers:desert_island', 'wythers:kwongan_heath', 'wythers:outback_desert', 'wythers:red_desert', 'wythers:sandy_jungle'],
+  'forest': ['#cobblemon:is_forest', 'minecraft:flower_forest', '#cobblemon:is_magical', 'minecraft:meadow', 'minecraft:forest', '#cobblemon:is_floral']
 };
 
 function getBiomeGroupTooltip(biomeName) {
@@ -511,6 +512,7 @@ var NAMESPACE_LABELS = {
   'blooming_biosphere': 'Blooming Biosphere',
   'clifftree': 'CliffTree',
   'biomeswevegone': 'Oh The Biomes We\'ve Gone',
+  'cobblemon': 'Cobblemon',
   'other': 'Other'
 };
 
