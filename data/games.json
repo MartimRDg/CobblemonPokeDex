@@ -15,7 +15,7 @@
                 {
                     "name": "Pokémon LeafGreen",
                     "logo": "assets/games/leaf_green.png",
-                    "color": "#55b419",
+                    "color": "#56b719",
                     "year": 2004,
                     "generation": 3,
                     "region": "Kanto",
@@ -27,13 +27,13 @@
             "row": 2,
             "entries": [
                 {
-                    "name": "EXAMPLE",
-                    "logo": "assets/images/games/fire_red.png",
+                    "name": "Pokémon Emerald",
+                    "logo": "assets/games/emerald.png",
                     "color": "#35e544",
-                    "year": 9999,
-                    "generation": 67,
-                    "region": "Kanto",
-                    "description": "Special Pikachu Edition..."
+                    "year": 2004,
+                    "generation": 3,
+                    "region": "Hoenn",
+                    "description": "Pokémon Emerald Version[a] is a 2004 role-playing video game developed by Game Freak and published by The Pokémon Company and Nintendo for the Game Boy Advance. It was first released in Japan in 2004, and was later released internationally in 2005. It is the fifth version, after both Pokémon Ruby and Sapphire and Pokémon FireRed and LeafGreen, and is the final game of the third generation of the Pokémon video game series."
                 }
             ]
         }
