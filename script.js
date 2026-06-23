@@ -461,7 +461,10 @@ var BIOME_GROUPS = {
   'overworld': ['#minecraft:overworld', '#c: overworld'],
   'ocean': ['#minecraft:ocean', 'cold_ocean', 'deep_ocean', 'frozen_ocean', 'lukewarm_ocean', 'temperate_ocean', 'warm_ocean', '#c:ocean', 'clifftree:stone_ocean'],
   'desert': ['minecraft:desert', '#c:desert', '#clifftree:desert', '#wythers:desert', 'biomesoplenty:lush_desert', 'clifftree:desert_cliff', 'darkerdepths:sandy_catacombs', 'terralith:ancient_sands', 'terralith:desert_canyon', 'terralith:cave/desert_caves', 'terralith:desert_oasis', 'terralith:desert_spires', 'terralith:lush_desert', 'terralith:red_oasis', 'terralith:sandstone_valley', 'wythers:badlands_desert', 'wythers:desert_island', 'wythers:kwongan_heath', 'wythers:outback_desert', 'wythers:red_desert', 'wythers:sandy_jungle'],
-  'forest': ['#cobblemon:is_forest', 'minecraft:flower_forest', '#cobblemon:is_magical', 'minecraft:meadow', 'minecraft:forest', '#cobblemon:is_floral']
+  'forest': ['#cobblemon:is_forest', 'minecraft:flower_forest', '#cobblemon:is_magical', 'minecraft:meadow', 'minecraft:forest', '#cobblemon:is_floral'],
+  'snowy forest': ['biomesoplenty:auroral_garden', 'biomesoplenty:muskeg', 'biomesoplenty:snowy_maple_woods', 'blooming_biosphere:snowy_cherry_grove', 'terralith:alpha_islands_winter', 'terralith:ice_marsh', 'terralith:siberian_grove', 'terralith:snowy_cherry_grove', 'terralith:snowy_cherry_grove', 'terralith:snowy_maple_forest', 'wythers:huangshan_highlands', 'wythers:jade_highlands', 'wythers:snowy_fen'],
+  'snowy taiga': ['minecraft:grove', 'minecraft:snowy_taiga', 'biomesoplenty:snowy_coniferous_forest', 'biomesoplenty:snowy_coniferous_forest', 'biomesoplenty:snowy_maple_woods', 'clifftree:snowy_old_growth_taiga', 'terralith:alpine_grove', 'terralith:cold_shrubland', 'terralith:siberian_grove', 'terralith:snowy_maple_forest', 'terralith:snowy_shield', 'terralith:wintry_forest', 'terralith:wintry_lowlands', 'wythers:cold_island', 'wythers:snowy_thermal_taiga', 'wythers:deep_snowy_taiga'],
+  'tundra': ['minecraft:ice_spikes', 'minecraft:snowy_plains', '#c:snowy_plains', 'biomesoplenty:cold_desert', 'biomesoplenty:cold_desert', 'biomesoplenty:muskeg', 'biomesoplenty:snowy_fir_clearing', 'biomesoplenty:tundra', 'biomeswevegone:crimson_tundra', 'clifftree:bog', 'clifftree:tundra', 'terralith:cold_shrubland', 'terralith:gravel_desert', 'terralith:rocky_shrubland', 'terralith:snowy_badlands', 'terralith:yellowstone', 'wythers:crimson_tundra', 'wythers:frigid_island', 'wythers:ice_cap', 'wythers:icy_crags', 'wythers:snowy_tundra', 'wythers:tundra']
 };
 
 function getBiomeGroupTooltip(biomeName) {
@@ -554,6 +557,7 @@ function buildSpawnSection(poke) {
       preset: poke.spawnPreset || null,
       biomes: poke.spawnBiomes || [],
       notBiomes: poke.notBiomes || poke.notbiomes || [],
+      blocks: poke.blocks || null,
       isRaining: poke.isRaining,
       isSlimeChunk: poke.isSlimeChunk,
       isDay: poke.isDay,
@@ -566,22 +570,36 @@ function buildSpawnSection(poke) {
     // Normalise each provided spawnOption — JSON may use 'notbiomes' (lowercase)
     options = options.map(function (opt) {
       return Object.assign({}, opt, {
-        notBiomes: opt.notBiomes || opt.notbiomes || []
+        notBiomes: opt.notBiomes || opt.notbiomes || [],
+        blocks: opt.blocks || null
       });
     });
   }
 
   var total = options.length;
 
-  function buildBiomeTags(biomes, variant) {
-    return (biomes || []).map(function (b) {
-      var isNether = b.toLowerCase().indexOf('nether') !== -1;
-      var colorClass = variant === 'not' ? 'biome-not' : (isNether ? 'biome-nether' : 'biome-normal');
-      var related = getBiomeGroupTooltip(b);
-      var tooltip = related ? buildBiomeRelatedPopover(related) : '';
-      return '<span class="biome-tag ' + colorClass + (related ? ' has-tooltip' : '') + '">' + b + tooltip + '</span>';
-    }).join('') || '<span class="spawn-empty">' + (variant === 'not' ? 'None' : 'Unknown') + '</span>';
-  }
+ function buildBiomeTags(biomes, variant) {
+  return (biomes || []).map(function (b) {
+    var biomeLower = b.toLowerCase();
+    var isNether = biomeLower.indexOf('nether') !== -1;
+    var isAether = biomeLower.indexOf('aether') !== -1;
+
+    var colorClass = variant === 'not'
+      ? 'biome-not'
+      : (isAether
+          ? 'biome-aether'
+          : (isNether ? 'biome-nether' : 'biome-normal'));
+
+    var related = getBiomeGroupTooltip(b);
+    var tooltip = related ? buildBiomeRelatedPopover(related) : '';
+
+    return '<span class="biome-tag ' + colorClass +
+      (related ? ' has-tooltip' : '') +
+      '">' + b + tooltip + '</span>';
+  }).join('') || '<span class="spawn-empty">' +
+    (variant === 'not' ? 'None' : 'Unknown') +
+    '</span>';
+}
 
   function buildSlide(opt, idx) {
     var biomeHTML = buildBiomeTags(opt.biomes, 'normal');
@@ -600,9 +618,19 @@ function buildSpawnSection(poke) {
     if (opt.seeSky === true) reqLines.push({ label: 'See sky', value: 'Required' });
     if (opt.seeSky === false) reqLines.push({ label: 'See sky', value: 'Must not see sky' });
     if (opt.requirements && opt.requirements !== 'N/A') reqLines.push({ label: 'Other', value: opt.requirements });
+    if (opt.blocks) {
+      var blockChips = opt.blocks.split(',').map(function(b) {
+        var name = b.trim();
+        var ns = name.indexOf(':') !== -1 ? name.split(':')[0] : '';
+        var label = name.indexOf(':') !== -1 ? name.split(':')[1].replace(/_/g, ' ') : name.replace(/_/g, ' ');
+        var chipClass = ns === 'aether' ? 'biome-tag biome-block biome-block-aether' : 'biome-tag biome-block';
+        return '<span class="' + chipClass + '" title="' + name + '">' + label + '</span>';
+      }).join(' ');
+      reqLines.push({ label: 'Blocks', value: blockChips, raw: true, chips: true });
+    }
     var reqHTML = reqLines.length
       ? '<div class="spawn-card"><h3 class="spawn-card-title">Requirements</h3><ul class="spawn-detail-list">' +
-      reqLines.map(function (r) { return '<li><span>' + r.label + ':</span> ' + r.value + '</li>'; }).join('') +
+      reqLines.map(function (r) { return r.chips ? '<li class="spawn-req-chips-row"><span>' + r.label + ':</span><div class="spawn-req-chips">' + r.value + '</div></li>' : '<li><span>' + r.label + ':</span> ' + r.value + '</li>'; }).join('') +
       '</ul></div>'
       : '<div class="spawn-card"><h3 class="spawn-card-title">Requirements</h3><p class="spawn-empty">None</p></div>';
 
@@ -701,7 +729,7 @@ function buildEvolutionSection(poke) {
     var arrow = i > 0
       ? '<div class="evo-arrow">' +
       '<div class="evo-arrow-line"></div>' +
-      '<span class="evo-arrow-label">' + (evo.level ? 'Lv. ' + evo.level : evo.method || '?') + '</span>' +
+      '<span class="evo-arrow-label">' + (evo.level ? 'Lv. ' + evo.level : evo.requiresMove ? '📖 Must know ' + evo.requiresMove : evo.method || '?') + '</span>' +
       '<div class="evo-arrow-tip">▶</div>' +
       '</div>'
       : '';

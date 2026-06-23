@@ -56,6 +56,12 @@
     },
      "Fairy Aura": {
       "description": "Powers up the Fairy-type moves of all Pokémon on the field."
+    },
+     "Frisk": {
+      "description": "When it enters a battle, the Pokémon can check an opposing Pokémon's held item."
+    },
+     "Sap Sipper": {
+      "description": "The Pokémon takes no damage when hit by Grass-type moves. Instead, its Attack stat is boosted."
     }
   }
 }

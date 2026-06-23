@@ -2971,6 +2971,18 @@ html { background-color: #050709; }
   color: var(--text);
 }
 
+.spawn-req-chips-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.spawn-req-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
 /* --- Requirements --- */
 .spawn-req-text {
   font-size: 0.82rem;
@@ -3007,6 +3019,12 @@ html { background-color: #050709; }
   border-color: rgba(239,68,68,0.35);
 }
 
+.biome-aether {
+  background: rgba(211, 208, 208, 0.411);
+  color: #f5f5f5;
+  border-color: rgba(41, 40, 40, 0.35);
+}
+
 /* --- Mobile --- */
 @media (max-width: 768px) {
   .spawn-section { padding: 1.25rem 1rem; }
@@ -3038,6 +3056,22 @@ html { background-color: #050709; }
   border-color: rgba(239,68,68,0.25);
   text-decoration: line-through;
   text-decoration-color: rgba(248,113,113,0.5);
+}
+
+.biome-block {
+  background: rgba(180,120,60,0.13);
+  color: #d4a26a;
+  border-color: rgba(180,120,60,0.35);
+  font-family: var(--font-mono, monospace);
+  font-size: 0.78em;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.biome-block-aether {
+  background: rgba(140,180,255,0.13);
+  color: #a8c8ff;
+  border-color: rgba(140,180,255,0.35);
 }
 
 /* Biome tag with related-biomes tooltip */

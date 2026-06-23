@@ -821,6 +821,221 @@
     {
       "_comment": "Base Stats",
 
+      "id": 234,
+      "name": "Stantler",
+      "number": "0234",
+      "types": ["Normal"],
+      "generation": 2,
+      "rarity": "Common",
+      "rideable": false,
+      "flying": false,
+      "legendary": false,
+      "mythical": false,
+      "catchRate": 45,
+
+      "abilities": ["Intimidate", "Frisk", "Sap Sipper (Hidden)"],
+
+      "baseStats": {
+        "hp": 73,
+        "attack": 95,
+        "defense": 62,
+        "spAttack": 85,
+        "spDefense": 65,
+        "speed": 85
+       },
+
+       "evYield": {
+        "attack": 1
+       },
+
+       "drops": [
+        { "item": "Leather", "chance": 100, "quantity": "0-1", "image": "assets/images/items/leather.png"},
+        { "item": "Persim Berry", "chance": 2.5, "quantity": "1", "image": "assets/images/items/persim_berry.png"}
+       ],
+
+      "weaknesses": ["Fighting"],
+      "resistances": ["None"],
+      "immunities": ["Ghost"],
+      
+      "spawnOptions": [
+        {
+         "label": "Any",
+         "bucket": "Common",
+         "level": "22-47",
+         "context": "Grounded",
+         "preset": "Natural, Wild",
+         "biomes": ["Snowy Forest", "Snowy Taiga", "Tundra"],
+         "requirements": "N/A"
+        },
+        {
+         "label": "Any",
+         "bucket": "Common",
+         "level": "22-47",
+         "context": "Grounded",
+         "preset": "Natural, Wild",
+         "biomes": ["Aether"],
+         "blocks": "aether:holiday_leaves, aether:decorated_holiday_leaves",
+         "requirements": "N/A"
+        }
+      ],
+
+      "video": "assets/videos/stantler.gif",
+      "shinyVideo":"assets/videos/stantler-shiny.gif",
+
+      "_comment2": "Evolutions",
+      
+      "evolutions": [
+       { "id": 234, "name": "Stantler", "level": null },
+       { "id": 899, "name": "Wyrdeer", "level": null, "requiresMove": "Psyshield Bash"}
+      ],
+
+      "_comment3": "Movesets",
+
+      "moves": {
+        "level": [
+         { "level": 1, "name": "Tackle" },
+         { "level": 1, "name": "Me First" },
+         { "level": 1, "name": "Jump Kick" },
+         { "level": 1, "name": "Captivate" },
+         { "level": 3, "name": "Leer" },
+         { "level": 7, "name": "Astonish" },
+         { "level": 10, "name": "Hypnosis" },
+         { "level": 13, "name": "Stomp" },
+         { "level": 16, "name": "Sand Attack" },
+         { "level": 21, "name": "Psyshield Bash" },
+         { "level": 23, "name": "Confuse Ray" },
+         { "level": 27, "name": "Calm Mind" },
+         { "level": 32, "name": "Role Play" },
+         { "level": 37, "name": "Zen Headbutt" },
+         { "level": 49, "name": "Imprison" },
+         { "level": 55, "name": "Double-Edge" }
+
+        ],
+        "tm": [
+          { "name": "Agility" },
+          { "name": "Body Slam" },
+          { "name": "Bounce" },
+          { "name": "Bulldoze" },
+          { "name": "Calm Mind" },
+          { "name": "Captivate" },
+          { "name": "Charge Beam" },
+          { "name": "Confuse Ray" },
+          { "name": "Curse" },
+          { "name": "Dig" },
+          { "name": "Double-Edge" },
+          { "name": "Dream Eater" },
+          { "name": "Earth Power" },
+          { "name": "Earthquake" },
+          { "name": "Endure" },
+          { "name": "Energy Ball" },
+          { "name": "Entrainment" },
+          { "name": "Facade" },
+          { "name": "Flash" },
+          { "name": "Future Sight" },
+          { "name": "Giga Impact" },
+          { "name": "Gravity" },
+          { "name": "Headbutt" },
+          { "name": "Helping Hand" },
+          { "name": "Hyper Beam" },
+          { "name": "Imprison" },
+          { "name": "Iron Tail" },
+          { "name": "Last Resort" },
+          { "name": "Light Screen" },
+          { "name": "Lunge" },
+          { "name": "Magic Room" },
+          { "name": "Megahorn" },
+          { "name": "Protect" },
+          { "name": "Psybeam" },
+          { "name": "Psychic" },
+          { "name": "Psych Up" },
+          { "name": "Psyshock" },
+          { "name": "Rain Dance" },
+          { "name": "Reflect" },
+          { "name": "Rest" },
+          { "name": "Retaliate" },
+          { "name": "Roar" },
+          { "name": "Role Play" },
+          { "name": "Scary Face" },
+          { "name": "Shadow Ball" },
+          { "name": "Shock Wave" },
+          { "name": "Signal Beam" },
+          { "name": "Skill Swap" },
+          { "name": "Sleep Talk" },
+          { "name": "Solar Beam" },
+          { "name": "Spite" },
+          { "name": "Stored Power" },
+          { "name": "Substitute" },
+          { "name": "Sucker Punch" },
+          { "name": "Sunny Day" },
+          { "name": "Swagger" },
+          { "name": "Swift" },
+          { "name": "Take Down" },
+          { "name": "Tera Blast" },
+          { "name": "Thief" },
+          { "name": "Throat Chop" },
+          { "name": "Thunder" },
+          { "name": "Thunderbolt" },
+          { "name": "Thunder Wave" },
+          { "name": "Trailblaze" },
+          { "name": "Trick" },
+          { "name": "Trick Room" },
+          { "name": "Uproar" },
+          { "name": "Wild Charge" },
+          { "name": "Work Up" },
+          { "name": "Zen Headbutt" }
+        ],
+        "egg": [
+          { "name": "Bite" },
+          { "name": "Disable" },
+          { "name": "Double Kick" },
+          { "name": "Extrasensory" },
+          { "name": "Me First" },
+          { "name": "Megahorn" },
+          { "name": "Mud Sport" },
+          { "name": "Psyshield Bash" },
+          { "name": "Rage" },
+          { "name": "Spite" },
+          { "name": "Swagger" },
+          { "name": "Thrash" }
+        ],
+        "tutor": [
+          { "name": "Bounce" },
+          { "name": "Bulldoze" },
+          { "name": "Calm Mind" },
+          { "name": "Charge Beam" },
+          { "name": "Earth Power" },
+          { "name": "Energy Ball" },
+          { "name": "Giga Impact" },
+          { "name": "Gravity" },
+          { "name": "Helping Hand" },
+          { "name": "Hyper Beam" },
+          { "name": "Iron Tail" },
+          { "name": "Last Resort" },
+          { "name": "Magic Room" },
+          { "name": "Megahorn" },
+          { "name": "Psychic" },
+          { "name": "Rest" },
+          { "name": "Role Play" },
+          { "name": "Shadow Ball" },
+          { "name": "Shock Wave" },
+          { "name": "Signal Beam" },
+          { "name": "Skill Swap" },
+          { "name": "Sleep Talk" },
+          { "name": "Spite" },
+          { "name": "Sucker Punch" },
+          { "name": "Swift" },
+          { "name": "Throat Chop" },
+          { "name": "Thunderbolt" },
+          { "name": "Trick" },
+          { "name": "Uproar" },
+          { "name": "Wild Charge" },
+          { "name": "Zen Headbutt" }
+       ]
+     }
+    },
+    {
+      "_comment": "Base Stats",
+
       "id": 276,
       "name": "Taillow",
       "number": "0276",
@@ -1721,7 +1936,7 @@
        ]
      }
     },
-     {
+    {
       "_comment": "Base Stats",
 
       "id": 716,
@@ -2599,6 +2814,211 @@
          { "name": "Superpower" },
          { "name": "Throat Chop" },
          { "name": "Water Pulse" }
+       ]
+     }
+    },
+    {
+      "_comment": "Base Stats",
+
+      "id": 899,
+      "name": "Wyrdeer",
+      "number": "0899",
+      "types": ["Normal", "Psychic"],
+      "generation": 8,
+      "rarity": "Common",
+      "rideable": true,
+      "flying": false,
+      "legendary": false,
+      "mythical": false,
+      "catchRate": 45,
+
+      "abilities": ["Intimidate", "Frisk", "Sap Sipper (Hidden)"],
+
+      "baseStats": {
+        "hp": 103,
+        "attack": 105,
+        "defense": 72,
+        "spAttack": 105,
+        "spDefense": 75,
+        "speed": 65
+       },
+
+       "evYield": {
+        "attack": 1,
+        "spAttack": 1
+       },
+
+       "drops": [
+        { "item": "Leather", "chance": 100, "quantity": "0-2", "image": "assets/images/items/leather.png"},
+        { "item": "Persim Berry", "chance": 5, "quantity": "1", "image": "assets/images/items/persim_berry.png"}
+       ],
+
+      "weaknesses": ["Bug", "Dark"],
+      "resistances": ["Psychic"],
+      "immunities": ["Ghost"],
+      
+      "spawnOptions": [
+        {
+         "label": "Any",
+         "bucket": "Common",
+         "level": "42-53",
+         "context": "Grounded",
+         "preset": "Natural, Wild",
+         "biomes": ["Snowy Forest", "Snowy Taiga", "Tundra"],
+         "requirements": "N/A"
+        }
+      ],
+
+      "video": "assets/videos/wyrdeer.gif",
+      "shinyVideo":"assets/videos/wyrdeer-shiny.gif",
+
+      "riding": {
+       "ground": {
+         "acceleration": { "min": 60, "max": 80 },
+         "jump":         { "min": 45, "max": 55 },
+         "skill":        { "min": 40, "max": 60 },
+         "speed":        { "min": 45, "max": 65 },
+         "stamina":      { "min": 55, "max": 70 }
+        }
+      },
+
+      "_comment2": "Evolutions",
+      
+      "evolutions": [
+       { "id": 234, "name": "Stantler", "level": null },
+       { "id": 899, "name": "Wyrdeer", "level": null, "requiresMove": "Psyshield Bash"}
+      ],
+
+      "_comment3": "Movesets",
+
+      "moves": {
+        "level": [
+         { "level": 1, "name": "Psyshield Bash" },
+         { "level": 1, "name": "Tackle" },
+         { "level": 1, "name": "Me First" },
+         { "level": 1, "name": "Jump Kick" },
+         { "level": 1, "name": "Captivate" },
+         { "level": 3, "name": "Leer" },
+         { "level": 7, "name": "Astonish" },
+         { "level": 10, "name": "Hypnosis" },
+         { "level": 13, "name": "Stomp" },
+         { "level": 16, "name": "Sand Attack" },
+         { "level": 21, "name": "Take Down" },
+         { "level": 23, "name": "Confuse Ray" },
+         { "level": 27, "name": "Calm Mind" },
+         { "level": 32, "name": "Role Play" },
+         { "level": 37, "name": "Zen Headbutt" },
+         { "level": 49, "name": "Imprison" },
+         { "level": 55, "name": "Double-Edge" },
+         { "level": 62, "name": "Megahorn" }
+
+        ],
+        "tm": [
+          { "name": "Agility" },
+          { "name": "Body Slam" },
+          { "name": "Bulldoze" },
+          { "name": "Calm Mind" },
+          { "name": "Captivate" },
+          { "name": "Charge Beam" },
+          { "name": "Confuse Ray" },
+          { "name": "Curse" },
+          { "name": "Dig" },
+          { "name": "Double-Edge" },
+          { "name": "Earth Power" },
+          { "name": "Earthquake" },
+          { "name": "Endure" },
+          { "name": "Energy Ball" },
+          { "name": "Expanding Force" },
+          { "name": "Facade" },
+          { "name": "Future Sight" },
+          { "name": "Giga Impact" },
+          { "name": "Gravity" },
+          { "name": "Helping Hand" },
+          { "name": "High Horsepower" },
+          { "name": "Hyper Beam" },
+          { "name": "Imprison" },
+          { "name": "Iron Tail" },
+          { "name": "Light Screen" },
+          { "name": "Lunge" },
+          { "name": "Megahorn" },
+          { "name": "Protect" },
+          { "name": "Psybeam" },
+          { "name": "Psychic" },
+          { "name": "Psychic Noise" },
+          { "name": "Psych Up" },
+          { "name": "Psyshock" },
+          { "name": "Rain Dance" },
+          { "name": "Reflect" },
+          { "name": "Rest" },
+          { "name": "Roar" },
+          { "name": "Role Play" },
+          { "name": "Scary Face" },
+          { "name": "Shadow Ball" },
+          { "name": "Skill Swap" },
+          { "name": "Sleep Talk" },
+          { "name": "Solar Beam" },
+          { "name": "Spite" },
+          { "name": "Stored Power" },
+          { "name": "Substitute" },
+          { "name": "Sunny Day" },
+          { "name": "Swagger" },
+          { "name": "Swift" },
+          { "name": "Take Down" },
+          { "name": "Tera Blast" },
+          { "name": "Thief" },
+          { "name": "Throat Chop" },
+          { "name": "Thunder" },
+          { "name": "Thunderbolt" },
+          { "name": "Thunder Wave" },
+          { "name": "Trailblaze" },
+          { "name": "Trick" },
+          { "name": "Trick Room" },
+          { "name": "Uproar" },
+          { "name": "Wild Charge" },
+          { "name": "Zen Headbutt" }
+        ],
+        "egg": [
+          { "name": "Bite" },
+          { "name": "Disable" },
+          { "name": "Double Kick" },
+          { "name": "Extrasensory" },
+          { "name": "Me First" },
+          { "name": "Megahorn" },
+          { "name": "Mud Sport" },
+          { "name": "Psyshield Bash" },
+          { "name": "Rage" },
+          { "name": "Spite" },
+          { "name": "Swagger" },
+          { "name": "Thrash" }
+        ],
+        "tutor": [
+          { "name": "Bulldoze" },
+          { "name": "Calm Mind" },
+          { "name": "Charge Beam" },
+          { "name": "Earth Power" },
+          { "name": "Energy Ball" },
+          { "name": "Expanding Force" },
+          { "name": "Giga Impact" },
+          { "name": "Gravity" },
+          { "name": "Helping Hand" },
+          { "name": "High Horsepower" },
+          { "name": "Hyper Beam" },
+          { "name": "Iron Tail" },
+          { "name": "Megahorn" },
+          { "name": "Psychic" },
+          { "name": "Rest" },
+          { "name": "Role Play" },
+          { "name": "Shadow Ball" },
+          { "name": "Skill Swap" },
+          { "name": "Sleep Talk" },
+          { "name": "Spite" },
+          { "name": "Swift" },
+          { "name": "Throat Chop" },
+          { "name": "Thunderbolt" },
+          { "name": "Trick" },
+          { "name": "Uproar" },
+          { "name": "Wild Charge" },
+          { "name": "Zen Headbutt" }
        ]
      }
     }

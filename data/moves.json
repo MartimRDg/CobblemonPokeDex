@@ -1935,6 +1935,270 @@
       "accuracy": 90,
       "pp": 15,
       "description": "The user focuses its willpower to its head and attacks the target. This may also make the target flinch."
+    },
+    "Me First": {
+      "type": "Normal",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user cuts ahead of the target to copy and use the target's intended move with greater power. This move fails if it isn't used first."
+    },
+    "Jump Kick": {
+      "type": "Fighting",
+      "category": "Physical",
+      "power": 100,
+      "accuracy": 95,
+      "pp": 10,
+      "description": "The user jumps up high, then strikes with a kick. If the kick misses, the user hurts itself."
+    },
+    "Astonish": {
+      "type": "Ghost",
+      "category": "Physical",
+      "power": 30,
+      "accuracy": 100,
+      "pp": 15,
+      "description": "The user attacks the target by crying out in a startling fashion. This may also make the target flinch."
+    },
+    "Hypnosis": {
+      "type": "Psychic",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 60,
+      "pp": 20,
+      "description": "The user employs hypnotic suggestion to make the target fall asleep."
+    },
+    "Stomp": {
+      "type": "Normal",
+      "category": "Physical",
+      "power": 65,
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user attacks by stomping on the target with a big foot. This may also make the target flinch."
+    },
+    "Psyshield Bash": {
+      "type": "Psychic",
+      "category": "Physical",
+      "power": 70,
+      "accuracy": 90,
+      "pp": 10,
+      "description": "Cloaking itself in psychic energy, the user slams into the target. This also boosts the user's Defense stat."
+    },
+    "Confuse Ray": {
+      "type": "Ghost",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The target is exposed to a sinister ray that causes confusion."
+    },
+    "Imprison": {
+      "type": "Psychic",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 10,
+      "description": "If opposing Pokémon know any move also known by the user, they are prevented from using it."
+    },
+    "Bounce": {
+      "type": "Flying",
+      "category": "Physical",
+      "power": 85,
+      "accuracy": 85,
+      "pp": 5,
+      "description": "The user bounces up high on the first turn, then drops onto the target on the next turn. This may also leave the target with paralysis."
+    },
+    "Charge Beam": {
+      "type": "Electric",
+      "category": "Special",
+      "power": 50,
+      "accuracy": 90,
+      "pp": 10,
+      "description": "The user attacks the target with an electric charge. The residual electricity may also boost the user's Sp. Atk stat."
+    },
+    "Curse": {
+      "type": "Ghost",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 10,
+      "description": "A move that has different effects depending on whether the user is a Ghost type or not."
+    },
+    "Dream Eater": {
+      "type": "Psychic",
+      "category": "Special",
+      "power": 100,
+      "accuracy": 100,
+      "pp": 15,
+      "description": "The user eats the dreams of a sleeping target. The user's HP is restored by up to half the damage taken by the target."
+    },
+    "Energy Ball": {
+      "type": "Grass",
+      "category": "Special",
+      "power": 90,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user draws power from nature and fires it at the target. This may also lower the target's Sp. Def stat."
+    },
+    "Entrainment": {
+      "type": "Normal",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 15,
+      "description": "The user dances with an odd rhythm that compels the target to mimic it, making the target's Ability the same as the user's."
+    },
+    "Future Sight": {
+      "type": "Psychic",
+      "category": "Special",
+      "power": 120,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "Two turns after this move is used, a hunk of psychic energy attacks the target."
+    },
+    "Lunge": {
+      "type": "Bug",
+      "category": "Physical",
+      "power": 80,
+      "accuracy": 100,
+      "pp": 15,
+      "description": "The user makes a lunge at the target, attacking with full force. This also lowers the target's Attack stat."
+    },
+    "Magic Room": {
+      "type": "Psychic",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user creates a bizarre area in which Pokémon's held items lose their effects for five turns."
+    },
+    "Psybeam": {
+      "type": "Psychic",
+      "category": "Special",
+      "power": 65,
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The target is attacked with a peculiar ray. This may also confuse the target."
+    },
+    "Signal Beam": {
+      "type": "Bug",
+      "category": "Special",
+      "power": 75,
+      "accuracy": 100,
+      "pp": 15,
+      "description": "The user attacks with a sinister beam of light. This may also confuse the target."
+    },
+    "Skill Swap": {
+      "type": "Psychic",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user employs its psychic power to exchange Abilities with the target."
+    },
+    "Spite": {
+      "type": "Ghost",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user unleashes its grudge on the move last used by the target by cutting 4 PP from it."
+    },
+    "Stored Power": {
+      "type": "Psychic",
+      "category": "Special",
+      "power": 20,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user attacks the target with stored power. The more the user's stats are boosted, the greater the move's power."
+    },
+    "Sucker Punch": {
+      "type": "Dark",
+      "category": "Physical",
+      "power": 70,
+      "accuracy": 100,
+      "pp": 5,
+      "description": "This move enables the user to attack first. This move fails if the target is not readying an attack."
+    },
+    "Swagger": {
+      "type": "Normal",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 85,
+      "pp": 15,
+      "description": "The user enrages and confuses the target. However, this also sharply boosts the target's Attack stat."
+    },
+    "Trick": {
+      "type": "Psychic",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user catches the target off guard and swaps the target's held item with its own."
+    },
+    "Trick Room": {
+      "type": "Psychic",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 5,
+      "description": "The user creates a bizarre area in which slower Pokémon get to move first for five turns."
+    },
+    "Disable": {
+      "type": "Normal",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 20,
+      "description": "For four turns, the target will be unable to use whichever move it last used."
+    },
+    "Double Kick": {
+      "type": "Fighting",
+      "category": "Physical",
+      "power": 30,
+      "accuracy": 100,
+      "pp": 30,
+      "description": "The user attacks by kicking the target twice in a row using two feet."
+    },
+    "Extrasensory": {
+      "type": "Psychic",
+      "category": "Special",
+      "power": 80,
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user attacks with an odd, unseeable power. This may also make the target flinch."
+    },
+    "Mud Sport": {
+      "type": "Ground",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 15,
+      "description": "The user kicks up mud on the battlefield. This weakens Electric-type moves for five turns."
+    },
+    "Thrash": {
+      "type": "Normal",
+      "category": "Physical",
+      "power": 120,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user rampages and attacks for two to three turns. The user then becomes confused."
+    },
+    "Expanding Force": {
+      "type": "Psychic",
+      "category": "Special",
+      "power": 80,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user attacks the target with its psychic power. When the ground is Psychic Terrain, this move's power is boosted and it damages all opposing Pokémon."
+    },
+    "Psychic Noise": {
+      "type": "Psychic",
+      "category": "Special",
+      "power": 75,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user attacks the target with unpleasant sound waves. For two turns, the target is prevented from recovering HP through moves, Abilities, or held items."
     }
   }
 }
