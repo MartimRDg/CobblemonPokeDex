@@ -795,6 +795,13 @@
          "version": "Ditto",
          "logo": "assets/games/cobbleverse.png",
          "moves": ["Transform"]
+        },
+        {
+         "name": "Not much of a choice, huh?",
+         "game": "Pokemon Fire Red Version",
+         "version": "Ditto",
+         "logo": "assets/games/fire_red.png",
+         "moves": ["Transform"]
         }
       ],
 
