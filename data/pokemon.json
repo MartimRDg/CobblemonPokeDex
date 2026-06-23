@@ -2882,6 +2882,16 @@
         }
       },
 
+      "decks": [
+        {
+         "name": "Original",
+         "game": "Cobbleverse",
+         "version": "Shiny Wyrdeer",
+         "logo": "assets/games/cobbleverse.png",
+         "moves": ["Psyshield Bash", "Double-Edge", "Earthquake", "Megahorn"]
+        }
+      ],
+
       "_comment2": "Evolutions",
       
       "evolutions": [
