@@ -3261,6 +3261,18 @@
       "sprite": "assets/images/glimmora.png",
       "shinySprite":"assets/images/glimmora-shiny.png",
 
+       "_comment1": "Decks",
+
+      "decks": [
+        {
+         "name": "Original",
+         "game": "Cobbleverse",
+         "version": "Mega Glimmora",
+         "logo": "assets/games/cobbleverse.png",
+         "moves": ["Power Gem", "Sludge Wave", "Earth Power", "Spiky Shield"]
+        }
+      ],
+
       "_comment2": "Evolutions",
       
       "evolutions": [
