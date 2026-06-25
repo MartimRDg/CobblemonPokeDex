@@ -62,6 +62,15 @@
     },
      "Sap Sipper": {
       "description": "The Pokémon takes no damage when hit by Grass-type moves. Instead, its Attack stat is boosted."
+    },
+     "Toxic Debris": {
+      "description": "Scatters poison spikes at the feet of the opposing team when the Pokémon takes damage from physical moves."
+    },
+     "Corrosion": {
+      "description": "The Pokémon can poison the target even if it's a Steel or Poison type."
+    },
+     "Levitate": {
+      "description": "By floating in the air, the Pokémon receives full immunity to all Ground-type moves."
     }
   }
 }

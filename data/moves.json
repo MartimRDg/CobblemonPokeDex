@@ -2199,6 +2199,150 @@
       "accuracy": 100,
       "pp": 10,
       "description": "The user attacks the target with unpleasant sound waves. For two turns, the target is prevented from recovering HP through moves, Abilities, or held items."
+    },
+    "Rock Throw": {
+      "type": "Rock",
+      "category": "Physical",
+      "power": 50,
+      "accuracy": 90,
+      "pp": 15,
+      "description": "The user picks up and throws a small rock at the target to inflict damage."
+    },
+    "Harden": {
+      "type": "Normal",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 30,
+      "description": "The user stiffens all the muscles in its body to boost its Defense stat."
+    },
+    "Smack Down": {
+      "type": "Rock",
+      "category": "Physical",
+      "power": 50,
+      "accuracy": 100,
+      "pp": 15,
+      "description": "The user throws a stone or similar projectile to attack the target. If the target is in the air, it will be knocked down to the ground."
+    },
+    "Acid Spray": {
+      "type": "Poison",
+      "category": "Special",
+      "power": 40,
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user attacks by spitting fluid that works to melt the target. This also harshly lowers the target's Sp. Def stat."
+    },
+    "Venoshock": {
+      "type": "Poison",
+      "category": "Special",
+      "power": 65,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user drenches the target in a special poisonous liquid. This move's power is doubled if the target is poisoned."
+    },
+    "Self-Destruct": {
+      "type": "Normal",
+      "category": "Physical",
+      "power": 200,
+      "accuracy": 100,
+      "pp": 5,
+      "description": "The user attacks everything around it by causing an explosion. The user faints upon using this move."
+    },
+    "Power Gem": {
+      "type": "Rock",
+      "category": "Special",
+      "power": 80,
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user attacks with a ray of light that sparkles as if it were made of gemstones."
+    },
+    "Acid Armor": {
+      "type": "Poison",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user alters its cellular structure to liquefy itself, sharply boosting its Defense stat."
+    },
+    "Sludge Wave": {
+      "type": "Poison",
+      "category": "Special",
+      "power": 95,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user strikes everything around it by swamping the area with a giant sludge wave. This may also poison those it hits."
+    },
+    "Explosion": {
+      "type": "Normal",
+      "category": "Physical",
+      "power": 250,
+      "accuracy": 100,
+      "pp": 5,
+      "description": "The user attacks everything around it by causing a tremendous explosion. The user faints upon using this move."
+    },
+    "Gunk Shot": {
+      "type": "Poison",
+      "category": "Physical",
+      "power": 120,
+      "accuracy": 80,
+      "pp": 5,
+      "description": "The user shoots filthy garbage at the target to attack. This may also poison the target."
+    },
+    "Sludge Bomb": {
+      "type": "Poison",
+      "category": "Special",
+      "power": 90,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user hurls unsanitary sludge at the target to inflict damage. This may also poison the target."
+    },
+    "Spikes": {
+      "type": "Ground",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user lays a trap of spikes at the feet of the opposing team. The spikes will damage opposing Pokémon that switch into battle."
+    },
+    "Toxic": {
+      "type": "Poison",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 90,
+      "pp": 10,
+      "description": "A move that leaves the target badly poisoned. Its poison damage worsens every turn."
+    },
+    "Toxic Spikes": {
+      "type": "Poison",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user lays a trap of poison spikes at the feet of the opposing team. The spikes will poison opposing Pokémon that switch into battle."
+    },
+    "Memento": {
+      "type": "Dark",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user faints. In return, the target's Attack and Sp. Atk stats are harshly lowered."
+    },
+    "Mortal Spin": {
+      "type": "Poison",
+      "category": "Physical",
+      "power": 30,
+      "accuracy": 100,
+      "pp": 15,
+      "description": "The user performs a spin attack that can also eliminate the effects of such moves as Bind, Wrap, and Leech Seed. This also poisons opposing Pokémon."
+    },
+    "Spiky Shield": {
+      "type": "Grass",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 10,
+      "description": "In addition to protecting the user from attacks, this move also damages any attacker that makes direct contact."
     }
   }
 }
