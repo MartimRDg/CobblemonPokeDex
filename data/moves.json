@@ -2343,6 +2343,118 @@
       "accuracy": 100,
       "pp": 10,
       "description": "In addition to protecting the user from attacks, this move also damages any attacker that makes direct contact."
+    },
+    "Chip Away": {
+      "type": "Normal",
+      "category": "Physical",
+      "power": 70,
+      "accuracy": 100,
+      "pp": 20,
+      "description": "Looking for an opening, the user strikes consistently. The target's stat changes don't affect this attack's damage."
+    },
+    "Screech": {
+      "type": "Normal",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 85,
+      "pp": 40,
+      "description": "An earsplitting screech harshly lowers the target's Defense stat."
+    },
+    "Dark Pulse": {
+      "type": "Dark",
+      "category": "Special",
+      "power": 80,
+      "accuracy": 100,
+      "pp": 15,
+      "description": "The user releases a horrible aura imbued with ill intent. This may also make the target flinch."
+    },
+    "Torment": {
+      "type": "Dark",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 15,
+      "description": "The user torments and enrages the target, making it incapable of using the same move twice in a row."
+    },
+    "Lash Out": {
+      "type": "Dark",
+      "category": "Physical",
+      "power": 75,
+      "accuracy": 100,
+      "pp": 5,
+      "description": "The user lashes out to vent its frustration toward the target. This move's power is doubled if the user's stats were lowered during this turn."
+    },
+    "Aqua Tail": {
+      "type": "Water",
+      "category": "Physical",
+      "power": 90,
+      "accuracy": 90,
+      "pp": 10,
+      "description": "The user attacks by swinging its tail as if it were a vicious wave in a raging storm."
+    },
+    "Avalanche": {
+      "type": "Ice",
+      "category": "Physical",
+      "power": 60,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "This move's power is doubled if the target has inflicted damage on the user in the same turn."
+    },
+    "Foul Play": {
+      "type": "Dark",
+      "category": "Physical",
+      "power": 95,
+      "accuracy": 100,
+      "pp": 15,
+      "description": "The user turns the target's strength against it. The higher the target's Attack stat, the greater the damage this move inflicts."
+    },
+    "Hard Press": {
+      "type": "Steel",
+      "category": "Physical",
+      "power": 0,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The target is crushed with an arm, a claw, or the like to inflict damage. The more HP the target has left, the greater the move's power."
+    },
+    "Heavy Slam": {
+      "type": "Steel",
+      "category": "Physical",
+      "power": 0,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user slams into the target with its heavy body. The more the user outweighs the target, the greater the move's power."
+    },
+    "Ice Punch": {
+      "type": "Ice",
+      "category": "Physical",
+      "power": 75,
+      "accuracy": 100,
+      "pp": 15,
+      "description": "The target is attacked with an icy punch. This may also leave the target frozen."
+    },
+    "Knock Off": {
+      "type": "Dark",
+      "category": "Physical",
+      "power": 65,
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user slaps down the target's held item, making it unusable for that battle. This move does more damage if the target has a held item."
+    },
+    "Low Kick": {
+      "type": "Fighting",
+      "category": "Physical",
+      "power": 0,
+      "accuracy": 100,
+      "pp": 20,
+      "description": "A powerful low kick that makes the target fall over. The heavier the target, the greater the move's power."
+    },
+    "Rock Climb": {
+      "type": "Normal",
+      "category": "Physical",
+      "power": 90,
+      "accuracy": 85,
+      "pp": 20,
+      "description": "The user attacks the target by smashing into it with incredible force. This may also confuse the target."
     }
   }
 }

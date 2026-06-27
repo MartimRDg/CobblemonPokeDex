@@ -71,6 +71,18 @@
     },
      "Levitate": {
       "description": "By floating in the air, the Pokémon receives full immunity to all Ground-type moves."
+    },
+    "Sand Veil": {
+      "description": "Boosts the Pokémon's evasiveness in a sandstorm."
+    },
+    "Shred Skin": {
+      "description": "The Pokémon may cure its own status conditions by shedding its skin."
+    },
+    "Sand Stream": {
+      "description": "The Pokémon summons a sandstorm when it enters a battle."
+    },
+    "Unnerve": {
+      "description": "Unnerves opposing Pokémon and makes them unable to eat Berries."
     }
   }
 }
