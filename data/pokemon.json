@@ -1500,6 +1500,13 @@
          "version": "Tyranitar",
          "logo": "assets/games/fire_red.png",
          "moves": ["Crunch", "Thrash", "Sandstorm", "Rock Slide"]
+        },
+        {
+         "name": "Dragon Dance Sweeper",
+         "game": "Cobbleverse",
+         "version": "Mega Tyranitar",
+         "logo": "assets/games/cobbleverse.png",
+         "moves": ["Dragon Dance", "Stone Edge", "Crunch", "Earthquake"]
         }
       ],
 
