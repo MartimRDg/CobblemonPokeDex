@@ -16,7 +16,7 @@
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title id="pageTitle">Pokémon — Cobblemon Pokédex</title>
+  <title>Community Reports — Cobblemon Pokédex</title>
   <link rel="icon" type="image/png" href="assets/images/items/favicon.png">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="styles.css">
@@ -34,21 +34,31 @@
         <a href="randomizer.html" class="nav-link">🎲 Randomizer</a>
         <a href="games.html" class="nav-link">🎮 Games</a>
         <a href="pokedex.html" class="nav-link">🗂️ My Pokédex</a>
-        <a href="reports.html" class="nav-link">📢 Reports</a>
+        <a href="reports.html" class="nav-link active">📢 Reports</a>
       </div>
     </div>
   </nav>
 
-  <div class="container" style="margin-top: 2rem; padding-bottom: 4rem;">
-
-    <a href="index.html" class="back-link">← Back to Pokédex</a>
-
-    <div id="pokemonDetail"></div>
-
+  <div class="container" style="margin-top:2rem;padding-bottom:4rem;">
+    <div id="rpApp"></div>
   </div>
 
   <button id="backToTop" class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>
 
-  <script src="script.js"></script>
+  <!-- Auth Modal -->
+  <div id="rpAuthOverlay" class="rp-overlay" style="display:none;">
+    <div class="rp-modal">
+      <div id="rpAuthContent"></div>
+    </div>
+  </div>
+
+  <!-- Generic Modal (create/edit/admin actions) -->
+  <div id="rpModalOverlay" class="rp-overlay" style="display:none;" onclick="rpCloseModal(event)">
+    <div class="rp-modal" onclick="event.stopPropagation()">
+      <div id="rpModalContent"></div>
+    </div>
+  </div>
+
+<script src="script.js"></script>
 </body>
 </html>

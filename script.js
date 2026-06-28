@@ -2323,6 +2323,11 @@ document.addEventListener('DOMContentLoaded', async function () {
     setTimeout(function () { staggerPdexCards(); initPdexCounters(); }, 50);
   }
 
+  if (document.getElementById('rpApp')) {
+    rpLoad();
+    rpRender();
+  }
+
   initScrollReveal();
 
   // Back to top visibility
@@ -3126,4 +3131,831 @@ function resetRandomizerFilters() {
 
 function loadRandomizerPage() {
   buildRandomizerFilterUI();
+}
+
+// ====================== Reports Page ======================
+// =====================================================
+//  Cobblemon Reports System
+// =====================================================
+
+// ---- Constants ----
+var ADMIN_USERNAME = 'Admin';
+var ADMIN_PASSWORD = 'cobblemon2024admin'; // change this to your preferred password
+var STORE_KEY      = 'cobblemon_reports';
+var AUTH_KEY       = 'cobblemon_auth';
+
+var CATEGORIES = [
+  { id: 'bug',        label: '🐛 Website Bug',       cls: 'rp-tag-bug' },
+  { id: 'wrong-info', label: '❌ Wrong Info',         cls: 'rp-tag-wrong-info' },
+  { id: 'missing',    label: '📭 Missing Info',       cls: 'rp-tag-missing' },
+  { id: 'suggestion', label: '💡 Suggestion',         cls: 'rp-tag-suggestion' },
+  { id: 'error',      label: '⚠️ Other Error',        cls: 'rp-tag-error' },
+];
+
+// ---- State ----
+var RP = {
+  user: null,         // { username, role: 'admin'|'member' }
+  reports: [],        // array of report objects
+  filterStatus: 'all',
+  filterCat: 'all',
+  search: '',
+};
+
+// ---- Storage ----
+function rpLoad() {
+  try {
+    var raw = localStorage.getItem(STORE_KEY);
+    RP.reports = raw ? JSON.parse(raw) : [];
+  } catch(e) { RP.reports = []; }
+  try {
+    var auth = localStorage.getItem(AUTH_KEY);
+    RP.user = auth ? JSON.parse(auth) : null;
+  } catch(e) { RP.user = null; }
+}
+
+function rpSave() {
+  localStorage.setItem(STORE_KEY, JSON.stringify(RP.reports));
+}
+
+// ---- ID & Time helpers ----
+function rpId() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+}
+function rpTime(ts) {
+  var d = new Date(ts);
+  return d.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' }) +
+         ' · ' + d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
+}
+function rpRelTime(ts) {
+  var diff = Date.now() - ts;
+  if (diff < 60000)   return 'just now';
+  if (diff < 3600000) return Math.floor(diff/60000) + 'm ago';
+  if (diff < 86400000)return Math.floor(diff/3600000) + 'h ago';
+  return Math.floor(diff/86400000) + 'd ago';
+}
+
+// ---- Category helpers ----
+function rpCatObj(id) {
+  return CATEGORIES.find(function(c){return c.id===id;}) || CATEGORIES[0];
+}
+
+// ---- Toast ----
+function rpToast(msg, type) {
+  var old = document.getElementById('rpToast');
+  if (old) old.remove();
+  var el = document.createElement('div');
+  el.id = 'rpToast';
+  el.className = 'rp-toast ' + (type||'');
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(function(){ el.style.opacity='0'; el.style.transition='opacity 0.4s'; setTimeout(function(){ el.remove(); },400); }, 2500);
+}
+
+// ---- Auth ----
+function rpIsAdmin()  { return RP.user && RP.user.role === 'admin'; }
+function rpIsBanned() { return RP.user && RP.user.banned; }
+
+function rpGetMembers() {
+  var raw = localStorage.getItem('cobblemon_members');
+  return raw ? JSON.parse(raw) : {};
+}
+function rpSaveMembers(m) {
+  localStorage.setItem('cobblemon_members', JSON.stringify(m));
+}
+
+function rpLogin(username, password, isRegister) {
+  username = username.trim();
+  if (!username) return 'Username is required.';
+  if (!password)  return 'Password is required.';
+  if (username.length < 3) return 'Username must be at least 3 characters.';
+
+  // Admin login
+  if (username === ADMIN_USERNAME) {
+    if (password !== ADMIN_PASSWORD) return 'Wrong admin password.';
+    RP.user = { username: ADMIN_USERNAME, role: 'admin' };
+    localStorage.setItem(AUTH_KEY, JSON.stringify(RP.user));
+    return null;
+  }
+
+  var members = rpGetMembers();
+
+  if (isRegister) {
+    if (members[username]) return 'Username already taken.';
+    if (password.length < 6) return 'Password must be at least 6 characters.';
+    members[username] = { password: password, banned: false };
+    rpSaveMembers(members);
+    RP.user = { username: username, role: 'member' };
+    localStorage.setItem(AUTH_KEY, JSON.stringify(RP.user));
+    return null;
+  } else {
+    if (!members[username]) return 'Account not found. Register first.';
+    if (members[username].password !== password) return 'Wrong password.';
+    var banned = members[username].banned;
+    RP.user = { username: username, role: 'member', banned: banned };
+    localStorage.setItem(AUTH_KEY, JSON.stringify(RP.user));
+    return null;
+  }
+}
+
+function rpLogout() {
+  RP.user = null;
+  localStorage.removeItem(AUTH_KEY);
+  rpRender();
+}
+
+// ---- Report CRUD ----
+function rpCreateReport(title, category, body) {
+  if (!title.trim() || !body.trim()) return 'Title and description are required.';
+  RP.reports.unshift({
+    id: rpId(),
+    title: title.trim(),
+    category: category,
+    body: body.trim(),
+    author: RP.user.username,
+    status: 'open',
+    createdAt: Date.now(),
+    comments: [],
+    denyReason: null,
+    acceptNote: null,
+  });
+  rpSave();
+  return null;
+}
+
+function rpEditReport(id, title, category, body) {
+  var r = rpFindReport(id);
+  if (!r) return;
+  r.title = title.trim();
+  r.category = category;
+  r.body = body.trim();
+  r.editedAt = Date.now();
+  rpSave();
+}
+
+function rpDeleteReport(id) {
+  RP.reports = RP.reports.filter(function(r){ return r.id !== id; });
+  rpSave();
+}
+
+function rpAcceptReport(id, note) {
+  var r = rpFindReport(id);
+  if (!r) return;
+  r.status = 'accepted';
+  r.acceptNote = note || null;
+  r.denyReason = null;
+  rpSave();
+}
+
+function rpDenyReport(id, reason) {
+  var r = rpFindReport(id);
+  if (!r) return;
+  r.status = 'denied';
+  r.denyReason = reason || 'No reason provided.';
+  r.acceptNote = null;
+  rpSave();
+}
+
+function rpReopenReport(id) {
+  var r = rpFindReport(id);
+  if (!r) return;
+  r.status = 'open';
+  r.denyReason = null;
+  r.acceptNote = null;
+  rpSave();
+}
+
+function rpFindReport(id) {
+  return RP.reports.find(function(r){ return r.id === id; });
+}
+
+// ---- Comment CRUD ----
+function rpAddComment(reportId, text) {
+  var r = rpFindReport(reportId);
+  if (!r || !text.trim()) return;
+  r.comments.push({
+    id: rpId(),
+    author: RP.user.username,
+    text: text.trim(),
+    createdAt: Date.now(),
+  });
+  rpSave();
+}
+
+function rpDeleteComment(reportId, commentId) {
+  var r = rpFindReport(reportId);
+  if (!r) return;
+  r.comments = r.comments.filter(function(c){ return c.id !== commentId; });
+  rpSave();
+}
+
+// ---- Ban ----
+function rpBanUser(username) {
+  var members = rpGetMembers();
+  if (members[username]) {
+    members[username].banned = true;
+    rpSaveMembers(members);
+    rpToast('🚫 ' + username + ' has been banned.', 'error');
+  }
+}
+function rpUnbanUser(username) {
+  var members = rpGetMembers();
+  if (members[username]) {
+    members[username].banned = false;
+    rpSaveMembers(members);
+    rpToast('✅ ' + username + ' has been unbanned.', 'success');
+  }
+}
+function rpIsUserBanned(username) {
+  var members = rpGetMembers();
+  return members[username] && members[username].banned;
+}
+
+// ---- Filter ----
+function rpGetFiltered() {
+  return RP.reports.filter(function(r) {
+    if (RP.filterStatus !== 'all' && r.status !== RP.filterStatus) return false;
+    if (RP.filterCat !== 'all' && r.category !== RP.filterCat) return false;
+    if (RP.search) {
+      var q = RP.search.toLowerCase();
+      if (r.title.toLowerCase().indexOf(q) === -1 &&
+          r.body.toLowerCase().indexOf(q) === -1 &&
+          r.author.toLowerCase().indexOf(q) === -1) return false;
+    }
+    return true;
+  });
+}
+
+// =====================================================
+//  Render
+// =====================================================
+function rpRender() {
+  var app = document.getElementById('rpApp');
+  if (!app) return;
+
+  if (!RP.user) {
+    app.innerHTML = rpRenderLanding();
+    return;
+  }
+
+  // Refresh ban status from members store
+  if (RP.user.role !== 'admin') {
+    var members = rpGetMembers();
+    if (members[RP.user.username]) {
+      RP.user.banned = members[RP.user.username].banned;
+      localStorage.setItem(AUTH_KEY, JSON.stringify(RP.user));
+    }
+  }
+
+  var html = '';
+
+  // Page heading
+  html += '<h2 class="rp-page-title">📢 Community Reports</h2>';
+  html += '<p class="rp-page-sub">Report wrong info, bugs, or suggest improvements. Everyone can comment.</p>';
+
+  // Top bar
+  html += '<div class="rp-topbar">';
+  html += rpRenderUserPill();
+  if (!rpIsBanned()) {
+    html += '<button class="rp-new-btn" onclick="rpOpenCreateModal()">+ New Report</button>';
+  }
+  html += '</div>';
+
+  // Banned notice
+  if (rpIsBanned()) {
+    html += '<div class="rp-banned-notice">🚫 You have been banned and cannot create reports or comments. You can still read existing reports.</div>';
+  }
+
+  // Filters
+  html += rpRenderFilters();
+
+  // List
+  var filtered = rpGetFiltered();
+  html += '<div class="rp-list">';
+  if (filtered.length === 0) {
+    html += '<div class="rp-empty"><div class="rp-empty-icon">📭</div><p class="rp-empty-text">No reports match your filters.</p></div>';
+  } else {
+    filtered.forEach(function(r) { html += rpRenderCard(r); });
+  }
+  html += '</div>';
+
+  app.innerHTML = html;
+}
+
+function rpRenderLanding() {
+  return (
+    '<h2 class="rp-page-title">📢 Community Reports</h2>' +
+    '<p class="rp-page-sub">Log in or create an account to submit reports, suggest improvements, or comment.</p>' +
+    '<div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1.5rem;">' +
+      '<button class="rp-new-btn" onclick="rpShowLogin()">Log in</button>' +
+      '<button class="rp-btn rp-btn-ghost" onclick="rpShowRegister()" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:var(--radius-sm);font-family:var(--font-base);font-size:0.88rem;font-weight:600;padding:0.6rem 1.25rem;cursor:pointer;">Register</button>' +
+    '</div>' +
+    '<div style="margin-top:2.5rem;">' + rpRenderPublicList() + '</div>'
+  );
+}
+
+function rpRenderPublicList() {
+  var html = '<div class="rp-list">';
+  if (RP.reports.length === 0) {
+    html += '<div class="rp-empty"><div class="rp-empty-icon">📭</div><p class="rp-empty-text">No reports yet.</p></div>';
+  } else {
+    RP.reports.slice(0,10).forEach(function(r) { html += rpRenderCardReadOnly(r); });
+  }
+  html += '</div>';
+  return html;
+}
+
+function rpRenderUserPill() {
+  var isAdmin = rpIsAdmin();
+  return (
+    '<div class="rp-user-pill">' +
+      '<div class="rp-user-avatar' + (isAdmin?' admin':'') + '">' + RP.user.username.charAt(0).toUpperCase() + '</div>' +
+      '<span class="rp-user-name">' + rpEsc(RP.user.username) + '</span>' +
+      '<span class="rp-user-role ' + (isAdmin?'rp-role-admin':'rp-role-member') + '">' + (isAdmin?'Admin':'Member') + '</span>' +
+      '<button class="rp-logout-btn" onclick="rpLogout()">Logout</button>' +
+    '</div>'
+  );
+}
+
+function rpRenderFilters() {
+  var statuses = [
+    {id:'all',    label:'All'},
+    {id:'open',   label:'Open'},
+    {id:'accepted',label:'Accepted'},
+    {id:'denied', label:'Denied'},
+  ];
+
+  var html = '<div class="rp-filters">';
+
+  statuses.forEach(function(s) {
+    var active = RP.filterStatus === s.id ? ' active' : '';
+    html += '<button class="rp-filter-btn' + active + '" onclick="rpSetFilter(\'status\',\'' + s.id + '\')">' + s.label + '</button>';
+  });
+
+  html += '<span style="width:1px;height:20px;background:var(--border);display:inline-block;margin:0 0.25rem;"></span>';
+
+  CATEGORIES.forEach(function(c) {
+    var active = RP.filterCat === c.id ? ' active' : '';
+    html += '<button class="rp-filter-btn' + active + '" onclick="rpSetFilter(\'cat\',\'' + c.id + '\')">' + c.label + '</button>';
+  });
+
+  html += '<input class="rp-filter-search" type="text" placeholder="Search…" value="' + rpEsc(RP.search) + '" oninput="rpSetSearch(this.value)">';
+  html += '</div>';
+  return html;
+}
+
+function rpRenderCard(r) {
+  var cat = rpCatObj(r.category);
+  var isOwn = RP.user && r.author === RP.user.username;
+  var isAdmin = rpIsAdmin();
+  var isBanned = rpIsBanned();
+  var authorBanned = rpIsUserBanned(r.author);
+
+  var html = '<div class="rp-card" id="card-' + r.id + '">';
+
+  // Header
+  html += '<div class="rp-card-header">';
+  html += '<div class="rp-card-meta">';
+  html += '<div class="rp-card-title">' + rpEsc(r.title) + (r.editedAt ? ' <span style="font-size:0.7rem;color:var(--text-dim);font-weight:400;">(edited)</span>' : '') + '</div>';
+  html += '<div class="rp-card-info">';
+  html += '<span class="rp-tag ' + cat.cls + '">' + cat.label + '</span>';
+  html += rpStatusBadge(r.status);
+  html += '<span>by <strong style="color:var(--text)">' + rpEsc(r.author) + '</strong>';
+  if (authorBanned) html += ' <span class="rp-banned-tag">BANNED</span>';
+  html += '</span>';
+  html += '<span>' + rpRelTime(r.createdAt) + '</span>';
+  html += '</div>'; // info
+  html += '</div>'; // meta
+  html += '</div>'; // header
+
+  // Body
+  html += '<div class="rp-card-body">' + rpEsc(r.body) + '</div>';
+
+  // Status notes
+  if (r.status === 'denied' && r.denyReason) {
+    html += '<div class="rp-deny-reason"><strong>⛔ Denied:</strong> ' + rpEsc(r.denyReason) + '</div>';
+  }
+  if (r.status === 'accepted' && r.acceptNote) {
+    html += '<div class="rp-accept-note"><strong>✅ Note:</strong> ' + rpEsc(r.acceptNote) + '</div>';
+  }
+
+  // Actions
+  html += '<div class="rp-card-actions">';
+  // Comments toggle
+  html += '<button class="rp-comments-toggle" onclick="rpToggleComments(\'' + r.id + '\')">💬 ' + r.comments.length + ' comment' + (r.comments.length !== 1 ? 's' : '') + '</button>';
+
+  // Member: delete own
+  if (isOwn && !isAdmin) {
+    html += '<button class="rp-btn rp-btn-ghost rp-btn-sm" onclick="rpConfirmDeleteReport(\'' + r.id + '\')">🗑 Delete</button>';
+  }
+
+  html += '</div>'; // card-actions
+
+  // Admin actions
+  if (isAdmin) {
+    html += '<div class="rp-admin-actions">';
+    if (r.status !== 'accepted') {
+      html += '<button class="rp-btn rp-btn-ghost rp-btn-sm" style="border-color:rgba(59,130,246,0.4);color:#93c5fd;" onclick="rpOpenAcceptModal(\'' + r.id + '\')">✅ Accept</button>';
+    }
+    if (r.status !== 'denied') {
+      html += '<button class="rp-btn rp-btn-ghost rp-btn-sm" style="border-color:rgba(239,68,68,0.4);color:#f87171;" onclick="rpOpenDenyModal(\'' + r.id + '\')">⛔ Deny</button>';
+    }
+    if (r.status !== 'open') {
+      html += '<button class="rp-btn rp-btn-ghost rp-btn-sm" onclick="rpReopenDo(\'' + r.id + '\')">🔄 Reopen</button>';
+    }
+    html += '<button class="rp-btn rp-btn-ghost rp-btn-sm" onclick="rpOpenEditModal(\'' + r.id + '\')">✏️ Edit</button>';
+    html += '<button class="rp-btn rp-btn-danger rp-btn-sm" onclick="rpConfirmDeleteReport(\'' + r.id + '\')">🗑 Remove</button>';
+    if (r.author !== ADMIN_USERNAME) {
+      if (!authorBanned) {
+        html += '<button class="rp-btn rp-btn-danger rp-btn-sm" onclick="rpBanDo(\'' + rpEscAttr(r.author) + '\')">🚫 Ban</button>';
+      } else {
+        html += '<button class="rp-btn rp-btn-ghost rp-btn-sm" onclick="rpUnbanDo(\'' + rpEscAttr(r.author) + '\')">✅ Unban</button>';
+      }
+    }
+    html += '</div>';
+  }
+
+  // Comments section
+  html += '<div class="rp-comments" id="comments-' + r.id + '">';
+  html += rpRenderComments(r);
+  html += '</div>';
+
+  html += '</div>'; // card
+  return html;
+}
+
+function rpRenderCardReadOnly(r) {
+  var cat = rpCatObj(r.category);
+  var html = '<div class="rp-card">';
+  html += '<div class="rp-card-header"><div class="rp-card-meta">';
+  html += '<div class="rp-card-title">' + rpEsc(r.title) + '</div>';
+  html += '<div class="rp-card-info">';
+  html += '<span class="rp-tag ' + cat.cls + '">' + cat.label + '</span>';
+  html += rpStatusBadge(r.status);
+  html += '<span>by <strong style="color:var(--text)">' + rpEsc(r.author) + '</strong></span>';
+  html += '<span>' + rpRelTime(r.createdAt) + '</span>';
+  html += '</div></div></div>';
+  html += '<div class="rp-card-body">' + rpEsc(r.body) + '</div>';
+  html += '<p style="font-size:0.8rem;color:var(--text-dim);margin-top:0.25rem;">💬 ' + r.comments.length + ' comment' + (r.comments.length!==1?'s':'') + ' — <button onclick="rpShowLogin()" style="background:none;border:none;color:var(--accent);cursor:pointer;font-size:0.8rem;padding:0;">Log in to comment</button></p>';
+  html += '</div>';
+  return html;
+}
+
+function rpRenderComments(r) {
+  var html = '';
+  if (r.comments.length === 0) {
+    html += '<p style="font-size:0.8rem;color:var(--text-dim);margin-bottom:0.75rem;">No comments yet.</p>';
+  } else {
+    r.comments.forEach(function(c) {
+      var isAdminComment = c.author === ADMIN_USERNAME;
+      var canDel = rpIsAdmin() || (RP.user && c.author === RP.user.username);
+      html += '<div class="rp-comment">';
+      html += '<div class="rp-comment-avatar' + (isAdminComment?' admin-av':'') + '">' + c.author.charAt(0).toUpperCase() + '</div>';
+      html += '<div class="rp-comment-body">';
+      html += '<div class="rp-comment-meta">';
+      html += '<span class="rp-comment-author' + (isAdminComment?' admin-name':'') + '">' + rpEsc(c.author) + '</span>';
+      if (isAdminComment) html += ' <span class="rp-user-role rp-role-admin" style="font-size:0.62rem;">Admin</span>';
+      html += '<span class="rp-comment-time">' + rpRelTime(c.createdAt) + '</span>';
+      if (canDel) {
+        html += '<button class="rp-comment-del" onclick="rpDeleteCommentDo(\'' + r.id + '\',\'' + c.id + '\')" title="Delete comment">✕</button>';
+      }
+      html += '</div>';
+      html += '<div class="rp-comment-text">' + rpEsc(c.text) + '</div>';
+      html += '</div></div>';
+    });
+  }
+
+  // Comment form (if not banned)
+  if (!rpIsBanned()) {
+    html += '<div class="rp-comment-form">';
+    html += '<input class="rp-comment-input" type="text" id="cinput-' + r.id + '" placeholder="Write a comment…" maxlength="500" onkeydown="rpCommentKey(event,\'' + r.id + '\')">';
+    html += '<button class="rp-comment-send" onclick="rpSendComment(\'' + r.id + '\')">Send</button>';
+    html += '</div>';
+  }
+
+  return html;
+}
+
+function rpStatusBadge(status) {
+  var map = {
+    open: '<span class="rp-status rp-status-open">● Open</span>',
+    accepted: '<span class="rp-status rp-status-accepted">✓ Accepted</span>',
+    denied: '<span class="rp-status rp-status-denied">✕ Denied</span>',
+  };
+  return map[status] || map.open;
+}
+
+// =====================================================
+//  Auth modals
+// =====================================================
+function rpShowLogin() {
+  var overlay = document.getElementById('rpAuthOverlay');
+  overlay.style.display = 'flex';
+  document.getElementById('rpAuthContent').innerHTML = rpLoginForm();
+}
+function rpShowRegister() {
+  var overlay = document.getElementById('rpAuthOverlay');
+  overlay.style.display = 'flex';
+  document.getElementById('rpAuthContent').innerHTML = rpRegisterForm();
+}
+function rpHideAuth() {
+  document.getElementById('rpAuthOverlay').style.display = 'none';
+}
+
+function rpLoginForm() {
+  return (
+    '<p class="rp-modal-title">Welcome back</p>' +
+    '<p class="rp-modal-sub">Log in to submit reports and comments.</p>' +
+    '<div class="rp-field"><label class="rp-label">Username</label><input class="rp-input" id="authUser" type="text" autocomplete="username" placeholder="Your username"></div>' +
+    '<div class="rp-field"><label class="rp-label">Password</label><input class="rp-input" id="authPass" type="password" autocomplete="current-password" placeholder="••••••••" onkeydown="if(event.key===\'Enter\')rpDoLogin()"></div>' +
+    '<p class="rp-error" id="authErr"></p>' +
+    '<button class="rp-btn rp-btn-primary" style="margin-top:0.5rem;" onclick="rpDoLogin()">Log in</button>' +
+    '<div class="rp-switch-auth">No account? <button onclick="rpShowRegister()">Register</button></div>' +
+    '<div style="text-align:center;margin-top:0.75rem;"><button onclick="rpHideAuth()" style="background:none;border:none;color:var(--text-muted);font-size:0.8rem;cursor:pointer;">Cancel</button></div>'
+  );
+}
+function rpRegisterForm() {
+  return (
+    '<p class="rp-modal-title">Create account</p>' +
+    '<p class="rp-modal-sub">Join to submit reports and engage with the community.</p>' +
+    '<div class="rp-field"><label class="rp-label">Username</label><input class="rp-input" id="authUser" type="text" autocomplete="username" placeholder="Pick a username"></div>' +
+    '<div class="rp-field"><label class="rp-label">Password</label><input class="rp-input" id="authPass" type="password" autocomplete="new-password" placeholder="At least 6 characters" onkeydown="if(event.key===\'Enter\')rpDoRegister()"></div>' +
+    '<p class="rp-error" id="authErr"></p>' +
+    '<button class="rp-btn rp-btn-primary" style="margin-top:0.5rem;" onclick="rpDoRegister()">Register</button>' +
+    '<div class="rp-switch-auth">Already have an account? <button onclick="rpShowLogin()">Log in</button></div>' +
+    '<div style="text-align:center;margin-top:0.75rem;"><button onclick="rpHideAuth()" style="background:none;border:none;color:var(--text-muted);font-size:0.8rem;cursor:pointer;">Cancel</button></div>'
+  );
+}
+
+function rpDoLogin() {
+  var u = document.getElementById('authUser').value;
+  var p = document.getElementById('authPass').value;
+  var err = rpLogin(u, p, false);
+  if (err) { rpShowErr('authErr', err); return; }
+  rpHideAuth();
+  rpRender();
+  rpToast('👋 Welcome back, ' + RP.user.username + '!', 'success');
+}
+function rpDoRegister() {
+  var u = document.getElementById('authUser').value;
+  var p = document.getElementById('authPass').value;
+  var err = rpLogin(u, p, true);
+  if (err) { rpShowErr('authErr', err); return; }
+  rpHideAuth();
+  rpRender();
+  rpToast('✅ Account created! Welcome, ' + RP.user.username + '!', 'success');
+}
+
+function rpShowErr(id, msg) {
+  var el = document.getElementById(id);
+  if (el) { el.textContent = msg; el.style.display = 'block'; }
+}
+
+// =====================================================
+//  Generic Modal
+// =====================================================
+function rpCloseModal(e) {
+  document.getElementById('rpModalOverlay').style.display = 'none';
+}
+function rpOpenModal(html) {
+  document.getElementById('rpModalContent').innerHTML = html;
+  document.getElementById('rpModalOverlay').style.display = 'flex';
+}
+
+// ---- Create ----
+function rpOpenCreateModal() {
+  rpOpenModal(
+    '<p class="rp-modal-title">New Report</p>' +
+    '<p class="rp-modal-sub">Describe the issue or suggestion clearly.</p>' +
+    '<div class="rp-field"><label class="rp-label">Title</label><input class="rp-input" id="mTitle" maxlength="120" placeholder="Short, clear title…"></div>' +
+    '<div class="rp-field"><label class="rp-label">Category</label><select class="rp-input rp-select" id="mCat">' +
+      CATEGORIES.map(function(c){ return '<option value="'+c.id+'">'+c.label+'</option>'; }).join('') +
+    '</select></div>' +
+    '<div class="rp-field"><label class="rp-label">Description</label><textarea class="rp-input rp-textarea" id="mBody" maxlength="1500" placeholder="Describe the issue in detail…"></textarea></div>' +
+    '<p class="rp-error" id="mErr"></p>' +
+    '<div class="rp-modal-actions">' +
+      '<button class="rp-btn rp-btn-ghost" onclick="rpCloseModal()">Cancel</button>' +
+      '<button class="rp-btn rp-btn-primary" onclick="rpDoCreate()">Submit Report</button>' +
+    '</div>'
+  );
+  setTimeout(function(){ var t=document.getElementById('mTitle'); if(t) t.focus(); },50);
+}
+
+function rpDoCreate() {
+  var title = document.getElementById('mTitle').value;
+  var cat   = document.getElementById('mCat').value;
+  var body  = document.getElementById('mBody').value;
+  var err = rpCreateReport(title, cat, body);
+  if (err) { rpShowErr('mErr', err); return; }
+  rpCloseModal();
+  rpRender();
+  rpToast('📢 Report submitted!', 'success');
+}
+
+// ---- Edit (admin only) ----
+function rpOpenEditModal(id) {
+  var r = rpFindReport(id);
+  if (!r) return;
+  rpOpenModal(
+    '<p class="rp-modal-title">Edit Report</p>' +
+    '<div class="rp-field"><label class="rp-label">Title</label><input class="rp-input" id="mTitle" maxlength="120" value="' + rpEscAttr(r.title) + '"></div>' +
+    '<div class="rp-field"><label class="rp-label">Category</label><select class="rp-input rp-select" id="mCat">' +
+      CATEGORIES.map(function(c){ return '<option value="'+c.id+'"'+(c.id===r.category?' selected':'')+'>'+c.label+'</option>'; }).join('') +
+    '</select></div>' +
+    '<div class="rp-field"><label class="rp-label">Description</label><textarea class="rp-input rp-textarea" id="mBody" maxlength="1500">' + rpEsc(r.body) + '</textarea></div>' +
+    '<p class="rp-error" id="mErr"></p>' +
+    '<div class="rp-modal-actions">' +
+      '<button class="rp-btn rp-btn-ghost" onclick="rpCloseModal()">Cancel</button>' +
+      '<button class="rp-btn rp-btn-primary" onclick="rpDoEdit(\'' + id + '\')">Save Changes</button>' +
+    '</div>'
+  );
+}
+function rpDoEdit(id) {
+  var title = document.getElementById('mTitle').value;
+  var cat   = document.getElementById('mCat').value;
+  var body  = document.getElementById('mBody').value;
+  if (!title.trim() || !body.trim()) { rpShowErr('mErr','Title and description required.'); return; }
+  rpEditReport(id, title, cat, body);
+  rpCloseModal();
+  rpRender();
+  rpToast('✏️ Report updated.', 'success');
+}
+
+// ---- Accept ----
+function rpOpenAcceptModal(id) {
+  rpOpenModal(
+    '<p class="rp-modal-title">Accept Report</p>' +
+    '<p class="rp-modal-sub">Optionally leave a note for the reporter.</p>' +
+    '<div class="rp-field"><label class="rp-label">Note (optional)</label><textarea class="rp-input rp-textarea" id="mNote" maxlength="300" placeholder="e.g. Fixed in next update…" style="min-height:70px;"></textarea></div>' +
+    '<div class="rp-modal-actions">' +
+      '<button class="rp-btn rp-btn-ghost" onclick="rpCloseModal()">Cancel</button>' +
+      '<button class="rp-btn rp-btn-primary" style="background:#3b82f6;color:#fff;" onclick="rpAcceptDo(\'' + id + '\')">✅ Accept</button>' +
+    '</div>'
+  );
+}
+function rpAcceptDo(id) {
+  var note = document.getElementById('mNote').value;
+  rpAcceptReport(id, note);
+  rpCloseModal();
+  rpRender();
+  rpToast('✅ Report accepted.', 'success');
+}
+
+// ---- Deny ----
+function rpOpenDenyModal(id) {
+  rpOpenModal(
+    '<p class="rp-modal-title">Deny Report</p>' +
+    '<p class="rp-modal-sub">Provide a reason so the author understands why.</p>' +
+    '<div class="rp-field"><label class="rp-label">Reason</label><textarea class="rp-input rp-textarea" id="mReason" maxlength="300" placeholder="e.g. This is intentional behaviour…" style="min-height:80px;"></textarea></div>' +
+    '<p class="rp-error" id="mErr"></p>' +
+    '<div class="rp-modal-actions">' +
+      '<button class="rp-btn rp-btn-ghost" onclick="rpCloseModal()">Cancel</button>' +
+      '<button class="rp-btn rp-btn-danger" onclick="rpDenyDo(\'' + id + '\')">⛔ Deny</button>' +
+    '</div>'
+  );
+}
+function rpDenyDo(id) {
+  var reason = document.getElementById('mReason').value.trim();
+  if (!reason) { rpShowErr('mErr','Please provide a reason.'); return; }
+  rpDenyReport(id, reason);
+  rpCloseModal();
+  rpRender();
+  rpToast('⛔ Report denied.', '');
+}
+
+// ---- Reopen ----
+function rpReopenDo(id) {
+  rpReopenReport(id);
+  rpRender();
+  rpToast('🔄 Report reopened.', 'success');
+}
+
+// ---- Delete ----
+function rpConfirmDeleteReport(id) {
+  var r = rpFindReport(id);
+  if (!r) return;
+  rpOpenModal(
+    '<p class="rp-modal-title">Delete Report</p>' +
+    '<p class="rp-modal-sub" style="color:var(--text);">Are you sure you want to delete <strong>"' + rpEsc(r.title) + '"</strong>? This cannot be undone.</p>' +
+    '<div class="rp-modal-actions">' +
+      '<button class="rp-btn rp-btn-ghost" onclick="rpCloseModal()">Cancel</button>' +
+      '<button class="rp-btn rp-btn-danger" onclick="rpDoDeleteReport(\'' + id + '\')">🗑 Delete</button>' +
+    '</div>'
+  );
+}
+function rpDoDeleteReport(id) {
+  rpDeleteReport(id);
+  rpCloseModal();
+  rpRender();
+  rpToast('🗑 Report deleted.', '');
+}
+
+// ---- Ban ----
+function rpBanDo(username) {
+  rpOpenModal(
+    '<p class="rp-modal-title">Ban User</p>' +
+    '<p class="rp-modal-sub" style="color:var(--text);">Ban <strong>' + rpEsc(username) + '</strong>? They will be unable to create reports or comments.</p>' +
+    '<div class="rp-modal-actions">' +
+      '<button class="rp-btn rp-btn-ghost" onclick="rpCloseModal()">Cancel</button>' +
+      '<button class="rp-btn rp-btn-danger" onclick="rpDoBan(\'' + rpEscAttr(username) + '\')">🚫 Ban</button>' +
+    '</div>'
+  );
+}
+function rpDoBan(username) {
+  rpBanUser(username);
+  rpCloseModal();
+  rpRender();
+}
+function rpUnbanDo(username) {
+  rpUnbanUser(username);
+  rpRender();
+}
+
+// =====================================================
+//  Comments interactions
+// =====================================================
+function rpToggleComments(reportId) {
+  var el = document.getElementById('comments-' + reportId);
+  if (!el) return;
+  el.classList.toggle('open');
+}
+
+function rpCommentKey(e, reportId) {
+  if (e.key === 'Enter') rpSendComment(reportId);
+}
+
+function rpSendComment(reportId) {
+  var input = document.getElementById('cinput-' + reportId);
+  if (!input) return;
+  var text = input.value.trim();
+  if (!text) return;
+  rpAddComment(reportId, text);
+  input.value = '';
+  // Re-render just the comments section
+  var commentsEl = document.getElementById('comments-' + reportId);
+  if (commentsEl) {
+    var r = rpFindReport(reportId);
+    if (r) {
+      var wasOpen = commentsEl.classList.contains('open');
+      commentsEl.innerHTML = rpRenderComments(r);
+      if (wasOpen) commentsEl.classList.add('open');
+    }
+  }
+  // Update comment count in toggle
+  var toggles = document.querySelectorAll('.rp-comments-toggle');
+  toggles.forEach(function(btn) {
+    if (btn.getAttribute('onclick') && btn.getAttribute('onclick').indexOf(reportId) !== -1) {
+      var r2 = rpFindReport(reportId);
+      if (r2) btn.textContent = '💬 ' + r2.comments.length + ' comment' + (r2.comments.length!==1?'s':'');
+    }
+  });
+}
+
+function rpDeleteCommentDo(reportId, commentId) {
+  rpDeleteComment(reportId, commentId);
+  var commentsEl = document.getElementById('comments-' + reportId);
+  if (commentsEl) {
+    var r = rpFindReport(reportId);
+    if (r) {
+      var wasOpen = commentsEl.classList.contains('open');
+      commentsEl.innerHTML = rpRenderComments(r);
+      if (wasOpen) commentsEl.classList.add('open');
+    }
+  }
+  rpToast('Comment deleted.', '');
+}
+
+// =====================================================
+//  Filter interactions
+// =====================================================
+function rpSetFilter(type, val) {
+  if (type === 'status') RP.filterStatus = val;
+  if (type === 'cat')    RP.filterCat    = val;
+  rpRender();
+}
+function rpSetSearch(val) {
+  RP.search = val;
+  // Partial re-render: update just the list
+  var filtered = rpGetFiltered();
+  var list = document.querySelector('.rp-list');
+  if (!list) return;
+  if (filtered.length === 0) {
+    list.innerHTML = '<div class="rp-empty"><div class="rp-empty-icon">📭</div><p class="rp-empty-text">No reports match your filters.</p></div>';
+  } else {
+    list.innerHTML = filtered.map(rpRenderCard).join('');
+  }
+}
+
+// =====================================================
+//  Escape helpers
+// =====================================================
+function rpEsc(s) {
+  return String(s||'')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
+}
+function rpEscAttr(s) {
+  return String(s||'').replace(/'/g,'\\\'');
 }
