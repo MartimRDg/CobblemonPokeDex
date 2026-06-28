@@ -2876,6 +2876,18 @@
       "video": "assets/videos/beartic.gif",
       "shinyVideo":"assets/videos/beartic-shiny.gif",
 
+      "_comment1": "Decks",
+
+      "decks": [
+        {
+         "name": "Original",
+         "game": "Cobbleverse",
+         "version": "Beartic",
+         "logo": "assets/games/cobbleverse.png",
+         "moves": ["Icicle Crash", "Earthquake", "Close Combat", "Aqua Jet"]
+        }
+      ],
+
       "_comment2": "Evolutions",
       
       "evolutions": [
