@@ -2324,8 +2324,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   }
 
   if (document.getElementById('rpApp')) {
-    rpLoad();
-    rpRender();
+    rpInit();
   }
 
   initScrollReveal();
@@ -3135,69 +3134,136 @@ function loadRandomizerPage() {
 
 // ====================== Reports Page ======================
 // =====================================================
-//  Cobblemon Reports System
+//  Cobblemon Reports — Firebase Firestore Backend
 // =====================================================
 
 // ---- Constants ----
 var ADMIN_USERNAME = 'Admin';
-var ADMIN_PASSWORD = 'cobblemon2024admin'; // change this to your preferred password
-var STORE_KEY      = 'cobblemon_reports';
+var ADMIN_PASSWORD = 'cobblemon2024admin';
 var AUTH_KEY       = 'cobblemon_auth';
+var MEMBERS_KEY    = 'cobblemon_members';
+var NOTIF_KEY      = 'cobblemon_notifs';
 
 var CATEGORIES = [
-  { id: 'bug',        label: '🐛 Website Bug',       cls: 'rp-tag-bug' },
-  { id: 'wrong-info', label: '❌ Wrong Info',         cls: 'rp-tag-wrong-info' },
-  { id: 'missing',    label: '📭 Missing Info',       cls: 'rp-tag-missing' },
-  { id: 'suggestion', label: '💡 Suggestion',         cls: 'rp-tag-suggestion' },
-  { id: 'error',      label: '⚠️ Other Error',        cls: 'rp-tag-error' },
+  { id: 'bug',        label: '🐛 Website Bug',    cls: 'rp-tag-bug',        needsTarget: false },
+  { id: 'wrong-info', label: '❌ Wrong Info',      cls: 'rp-tag-wrong-info', needsTarget: true  },
+  { id: 'missing',    label: '📭 Missing Info',    cls: 'rp-tag-missing',    needsTarget: true  },
+  { id: 'suggestion', label: '💡 Suggestion',      cls: 'rp-tag-suggestion', needsTarget: false },
+  { id: 'error',      label: '⚠️ Other Error',     cls: 'rp-tag-error',      needsTarget: false },
 ];
+
+var PRIORITIES = [
+  { id: 'low',    label: 'Low',    cls: 'rp-pri-low'    },
+  { id: 'medium', label: 'Medium', cls: 'rp-pri-medium' },
+  { id: 'high',   label: 'High',   cls: 'rp-pri-high'   },
+];
+
+var PAGE_SIZE = 10;
 
 // ---- State ----
 var RP = {
-  user: null,         // { username, role: 'admin'|'member' }
-  reports: [],        // array of report objects
+  user:         null,
+  reports:      [],
   filterStatus: 'all',
-  filterCat: 'all',
-  search: '',
+  filterCat:    'all',
+  filterPri:    'all',
+  sortBy:       'newest',
+  search:       '',
+  page:         1,
+  selected:     new Set(),
+  bulkMode:     false,
+  db:           null,
+  unsubscribe:  null,
 };
 
-// ---- Storage ----
-function rpLoad() {
+// =====================================================
+//  Firebase Init
+// =====================================================
+var firebaseConfig = {
+  apiKey:            "AIzaSyDLAhMZnoCVFJwI8yrI6lUxpLCJvi6XMfw",
+  authDomain:        "cobblemon-pokedex.firebaseapp.com",
+  projectId:         "cobblemon-pokedex",
+  storageBucket:     "cobblemon-pokedex.firebasestorage.app",
+  messagingSenderId: "759418734744",
+  appId:             "1:759418734744:web:6a8a80ae3a5d5219fc28ed",
+  measurementId:     "G-GHQCE6BZ1C"
+};
+
+function rpInit() {
+  var app = document.getElementById('rpApp');
+  if (!app) return;
+
+  app.innerHTML = '<div class="rp-loading">⏳ Connecting to database…</div>';
+
+  // Load auth from localStorage (session only, not shared)
+  try { RP.user = JSON.parse(localStorage.getItem(AUTH_KEY) || 'null'); } catch(e) { RP.user = null; }
+
+  // Init Firebase via CDN globals
   try {
-    var raw = localStorage.getItem(STORE_KEY);
-    RP.reports = raw ? JSON.parse(raw) : [];
-  } catch(e) { RP.reports = []; }
-  try {
-    var auth = localStorage.getItem(AUTH_KEY);
-    RP.user = auth ? JSON.parse(auth) : null;
-  } catch(e) { RP.user = null; }
+    var fbApp = firebase.initializeApp(firebaseConfig);
+    RP.db = firebase.firestore();
+    rpStartListening();
+  } catch(e) {
+    if (e.code === 'app/duplicate-app') {
+      RP.db = firebase.firestore();
+      rpStartListening();
+    } else {
+      app.innerHTML = '<div class="rp-banned-notice">❌ Could not connect to database: ' + e.message + '</div>';
+    }
+  }
 }
 
-function rpSave() {
-  localStorage.setItem(STORE_KEY, JSON.stringify(RP.reports));
+// Real-time listener — updates UI whenever Firestore changes
+function rpStartListening() {
+  if (RP.unsubscribe) RP.unsubscribe();
+
+  RP.unsubscribe = RP.db.collection('reports')
+    .orderBy('createdAt', 'desc')
+    .onSnapshot(function(snapshot) {
+      RP.reports = [];
+      snapshot.forEach(function(doc) {
+        RP.reports.push(Object.assign({ id: doc.id }, doc.data()));
+      });
+      rpRender();
+    }, function(err) {
+      console.error('Firestore error:', err);
+      var app = document.getElementById('rpApp');
+      if (app) app.innerHTML = '<div class="rp-banned-notice">❌ Database error: ' + err.message + '</div>';
+    });
 }
 
-// ---- ID & Time helpers ----
-function rpId() {
-  return Date.now().toString(36) + Math.random().toString(36).slice(2,6);
-}
-function rpTime(ts) {
-  var d = new Date(ts);
-  return d.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' }) +
-         ' · ' + d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
-}
+// =====================================================
+//  Helpers
+// =====================================================
+function rpId() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+
 function rpRelTime(ts) {
-  var diff = Date.now() - ts;
-  if (diff < 60000)   return 'just now';
-  if (diff < 3600000) return Math.floor(diff/60000) + 'm ago';
-  if (diff < 86400000)return Math.floor(diff/3600000) + 'h ago';
+  if (!ts) return '';
+  var ms = ts.toMillis ? ts.toMillis() : ts;
+  var diff = Date.now() - ms;
+  if (diff < 60000)    return 'just now';
+  if (diff < 3600000)  return Math.floor(diff/60000) + 'm ago';
+  if (diff < 86400000) return Math.floor(diff/3600000) + 'h ago';
   return Math.floor(diff/86400000) + 'd ago';
 }
 
-// ---- Category helpers ----
-function rpCatObj(id) {
-  return CATEGORIES.find(function(c){return c.id===id;}) || CATEGORIES[0];
+function rpTs(r, field) {
+  var v = r[field];
+  if (!v) return 0;
+  return v.toMillis ? v.toMillis() : v;
 }
+
+function rpCatObj(id) { return CATEGORIES.find(function(c){ return c.id===id; }) || CATEGORIES[0]; }
+function rpPriObj(id) { return PRIORITIES.find(function(p){ return p.id===id; }) || PRIORITIES[0]; }
+function rpIsAdmin()  { return RP.user && RP.user.role === 'admin'; }
+function rpIsBanned() { return RP.user && RP.user.banned; }
+function rpIsUserBanned(u) { var m=rpGetMembers(); return m[u] && m[u].banned; }
+function rpFindReport(id)  { return RP.reports.find(function(r){ return r.id===id; }); }
+
+function rpEsc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function rpEscAttr(s) { return String(s||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
 
 // ---- Toast ----
 function rpToast(msg, type) {
@@ -3208,181 +3274,319 @@ function rpToast(msg, type) {
   el.className = 'rp-toast ' + (type||'');
   el.textContent = msg;
   document.body.appendChild(el);
-  setTimeout(function(){ el.style.opacity='0'; el.style.transition='opacity 0.4s'; setTimeout(function(){ el.remove(); },400); }, 2500);
+  setTimeout(function(){
+    el.style.opacity='0'; el.style.transition='opacity 0.4s';
+    setTimeout(function(){ el.remove(); }, 400);
+  }, 2800);
 }
 
-// ---- Auth ----
-function rpIsAdmin()  { return RP.user && RP.user.role === 'admin'; }
-function rpIsBanned() { return RP.user && RP.user.banned; }
+// ---- Markdown ----
+function rpMarkdown(text) {
+  var s = rpEsc(text);
+  s = s.replace(/```([\s\S]*?)```/g, '<pre class="rp-md-pre"><code>$1</code></pre>');
+  s = s.replace(/`([^`]+)`/g, '<code class="rp-md-code">$1</code>');
+  s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+  s = s.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+  s = s.replace(/^[-•] (.+)$/gm, '<li>$1</li>');
+  s = s.replace(/(<li>.*<\/li>)/gs, '<ul class="rp-md-ul">$1</ul>');
+  s = s.replace(/@(\w+)/g, '<span class="rp-mention">@$1</span>');
+  s = s.replace(/\n/g, '<br>');
+  return s;
+}
 
+// =====================================================
+//  Members (localStorage — per-browser session data)
+// =====================================================
 function rpGetMembers() {
-  var raw = localStorage.getItem('cobblemon_members');
-  return raw ? JSON.parse(raw) : {};
+  try { return JSON.parse(localStorage.getItem(MEMBERS_KEY) || '{}'); } catch(e) { return {}; }
 }
-function rpSaveMembers(m) {
-  localStorage.setItem('cobblemon_members', JSON.stringify(m));
+function rpSaveMembers(m) { localStorage.setItem(MEMBERS_KEY, JSON.stringify(m)); }
+
+// Members are synced to Firestore so bans work across browsers
+function rpSyncMemberToFirestore(username, data) {
+  if (!RP.db) return;
+  RP.db.collection('members').doc(username).set(data, { merge: true });
+}
+function rpGetMemberFromFirestore(username, cb) {
+  if (!RP.db) { cb(null); return; }
+  RP.db.collection('members').doc(username).get().then(function(doc) {
+    cb(doc.exists ? doc.data() : null);
+  }).catch(function(){ cb(null); });
 }
 
-function rpLogin(username, password, isRegister) {
+// =====================================================
+//  Notifications (Firestore)
+// =====================================================
+function rpAddNotif(username, reportId, type, detail) {
+  if (!RP.db || username === ADMIN_USERNAME) return;
+  RP.db.collection('notifications').add({
+    username:  username,
+    reportId:  reportId,
+    type:      type,
+    detail:    detail || null,
+    ts:        firebase.firestore.FieldValue.serverTimestamp(),
+    read:      false,
+  });
+}
+
+function rpGetMyNotifs(cb) {
+  if (!RP.db || !RP.user) { cb([]); return; }
+  RP.db.collection('notifications')
+    .where('username', '==', RP.user.username)
+    .orderBy('ts', 'desc')
+    .limit(50)
+    .get()
+    .then(function(snap) {
+      var notifs = [];
+      snap.forEach(function(doc){ notifs.push(Object.assign({ id: doc.id }, doc.data())); });
+      cb(notifs);
+    }).catch(function(){ cb([]); });
+}
+
+function rpCountUnreadNotifs(cb) {
+  if (!RP.db || !RP.user || rpIsAdmin()) { cb(0); return; }
+  RP.db.collection('notifications')
+    .where('username', '==', RP.user.username)
+    .where('read', '==', false)
+    .get()
+    .then(function(snap){ cb(snap.size); })
+    .catch(function(){ cb(0); });
+}
+
+function rpMarkNotifsRead() {
+  if (!RP.db || !RP.user) return;
+  RP.db.collection('notifications')
+    .where('username', '==', RP.user.username)
+    .where('read', '==', false)
+    .get()
+    .then(function(snap) {
+      var batch = RP.db.batch();
+      snap.forEach(function(doc){ batch.update(doc.ref, { read: true }); });
+      return batch.commit();
+    });
+}
+
+// =====================================================
+//  Auth
+// =====================================================
+function rpLogin(username, password, isRegister, cb) {
   username = username.trim();
-  if (!username) return 'Username is required.';
-  if (!password)  return 'Password is required.';
-  if (username.length < 3) return 'Username must be at least 3 characters.';
+  if (!username) return cb('Username is required.');
+  if (!password)  return cb('Password is required.');
+  if (username.length < 3) return cb('Username must be at least 3 characters.');
+  if (/[<>"']/.test(username)) return cb('Username contains invalid characters.');
 
-  // Admin login
   if (username === ADMIN_USERNAME) {
-    if (password !== ADMIN_PASSWORD) return 'Wrong admin password.';
+    if (password !== ADMIN_PASSWORD) return cb('Wrong admin password.');
     RP.user = { username: ADMIN_USERNAME, role: 'admin' };
     localStorage.setItem(AUTH_KEY, JSON.stringify(RP.user));
-    return null;
+    return cb(null);
   }
 
-  var members = rpGetMembers();
-
-  if (isRegister) {
-    if (members[username]) return 'Username already taken.';
-    if (password.length < 6) return 'Password must be at least 6 characters.';
-    members[username] = { password: password, banned: false };
-    rpSaveMembers(members);
-    RP.user = { username: username, role: 'member' };
-    localStorage.setItem(AUTH_KEY, JSON.stringify(RP.user));
-    return null;
-  } else {
-    if (!members[username]) return 'Account not found. Register first.';
-    if (members[username].password !== password) return 'Wrong password.';
-    var banned = members[username].banned;
-    RP.user = { username: username, role: 'member', banned: banned };
-    localStorage.setItem(AUTH_KEY, JSON.stringify(RP.user));
-    return null;
-  }
+  // Check Firestore for member
+  rpGetMemberFromFirestore(username, function(member) {
+    if (isRegister) {
+      if (member) return cb('Username already taken.');
+      if (password.length < 6) return cb('Password must be at least 6 characters.');
+      var data = { password: password, banned: false, joinedAt: firebase.firestore.FieldValue.serverTimestamp() };
+      rpSyncMemberToFirestore(username, data);
+      // Also cache locally
+      var local = rpGetMembers();
+      local[username] = { password: password, banned: false };
+      rpSaveMembers(local);
+      RP.user = { username: username, role: 'member', banned: false };
+      localStorage.setItem(AUTH_KEY, JSON.stringify(RP.user));
+      cb(null);
+    } else {
+      if (!member) return cb('Account not found. Register first.');
+      if (member.password !== password) return cb('Wrong password.');
+      if (member.banned) {
+        RP.user = { username: username, role: 'member', banned: true };
+      } else {
+        RP.user = { username: username, role: 'member', banned: false };
+      }
+      localStorage.setItem(AUTH_KEY, JSON.stringify(RP.user));
+      cb(null);
+    }
+  });
 }
 
 function rpLogout() {
   RP.user = null;
   localStorage.removeItem(AUTH_KEY);
+  RP.bulkMode = false;
+  RP.selected.clear();
   rpRender();
 }
 
-// ---- Report CRUD ----
-function rpCreateReport(title, category, body) {
-  if (!title.trim() || !body.trim()) return 'Title and description are required.';
-  RP.reports.unshift({
-    id: rpId(),
-    title: title.trim(),
-    category: category,
-    body: body.trim(),
-    author: RP.user.username,
-    status: 'open',
-    createdAt: Date.now(),
-    comments: [],
+// =====================================================
+//  Report CRUD — Firestore
+// =====================================================
+function rpCreateReport(title, category, body, target, priority, cb) {
+  if (!title.trim() || !body.trim()) return cb('Title and description are required.');
+  var cat = rpCatObj(category);
+  if (cat.needsTarget && !target.trim()) return cb('Please specify the Pokémon or Move this relates to.');
+
+  // Duplicate check (client-side against loaded reports)
+  var titleLow = title.trim().toLowerCase();
+  var dup = RP.reports.find(function(r){ return r.status==='open' && r.title.toLowerCase()===titleLow; });
+  if (dup) return cb('DUPLICATE:' + dup.id);
+
+  RP.db.collection('reports').add({
+    title:      title.trim(),
+    category:   category,
+    body:       body.trim(),
+    target:     target.trim() || null,
+    priority:   priority || 'low',
+    author:     RP.user.username,
+    status:     'open',
+    createdAt:  firebase.firestore.FieldValue.serverTimestamp(),
+    comments:   [],
+    upvotes:    [],
     denyReason: null,
     acceptNote: null,
-  });
-  rpSave();
-  return null;
+    adminNote:  null,
+    editedAt:   null,
+  }).then(function(){ cb(null); }).catch(function(e){ cb(e.message); });
 }
 
-function rpEditReport(id, title, category, body) {
-  var r = rpFindReport(id);
-  if (!r) return;
-  r.title = title.trim();
-  r.category = category;
-  r.body = body.trim();
-  r.editedAt = Date.now();
-  rpSave();
+function rpUpdateReport(id, data) {
+  if (!RP.db) return;
+  RP.db.collection('reports').doc(id).update(data);
 }
 
 function rpDeleteReport(id) {
-  RP.reports = RP.reports.filter(function(r){ return r.id !== id; });
-  rpSave();
+  if (!RP.db) return;
+  RP.db.collection('reports').doc(id).delete();
+  RP.selected.delete(id);
 }
 
 function rpAcceptReport(id, note) {
-  var r = rpFindReport(id);
-  if (!r) return;
-  r.status = 'accepted';
-  r.acceptNote = note || null;
-  r.denyReason = null;
-  rpSave();
+  var r = rpFindReport(id); if (!r) return;
+  rpUpdateReport(id, { status:'accepted', acceptNote: note||null, denyReason: null });
+  rpAddNotif(r.author, id, 'accepted', note||null);
 }
 
 function rpDenyReport(id, reason) {
-  var r = rpFindReport(id);
-  if (!r) return;
-  r.status = 'denied';
-  r.denyReason = reason || 'No reason provided.';
-  r.acceptNote = null;
-  rpSave();
+  var r = rpFindReport(id); if (!r) return;
+  rpUpdateReport(id, { status:'denied', denyReason: reason||'No reason provided.', acceptNote: null });
+  rpAddNotif(r.author, id, 'denied', reason||null);
 }
 
 function rpReopenReport(id) {
-  var r = rpFindReport(id);
-  if (!r) return;
-  r.status = 'open';
-  r.denyReason = null;
-  r.acceptNote = null;
-  rpSave();
+  var r = rpFindReport(id); if (!r) return;
+  rpUpdateReport(id, { status:'open', denyReason: null, acceptNote: null });
+  rpAddNotif(r.author, id, 'reopened', null);
 }
 
-function rpFindReport(id) {
-  return RP.reports.find(function(r){ return r.id === id; });
-}
-
-// ---- Comment CRUD ----
-function rpAddComment(reportId, text) {
-  var r = rpFindReport(reportId);
-  if (!r || !text.trim()) return;
-  r.comments.push({
-    id: rpId(),
-    author: RP.user.username,
-    text: text.trim(),
-    createdAt: Date.now(),
+function rpEditReport(id, title, category, body, target, priority) {
+  rpUpdateReport(id, {
+    title:    title.trim(),
+    category: category,
+    body:     body.trim(),
+    target:   target.trim() || null,
+    priority: priority,
+    editedAt: firebase.firestore.FieldValue.serverTimestamp(),
   });
-  rpSave();
+}
+
+function rpSetAdminNote(id, note) { rpUpdateReport(id, { adminNote: note.trim()||null }); }
+function rpSetPriority(id, pri)   { rpUpdateReport(id, { priority: pri }); }
+
+// ---- Upvotes ----
+function rpToggleUpvote(id) {
+  if (!RP.user || !RP.db) return;
+  var r = rpFindReport(id); if (!r) return;
+  var u = RP.user.username;
+  var upvotes = r.upvotes || [];
+  var newUpvotes = upvotes.indexOf(u) === -1
+    ? upvotes.concat([u])
+    : upvotes.filter(function(x){ return x !== u; });
+  rpUpdateReport(id, { upvotes: newUpvotes });
+}
+
+// ---- Comments ----
+function rpAddComment(reportId, text) {
+  var r = rpFindReport(reportId); if (!r || !text.trim()) return;
+  var comment = { id: rpId(), author: RP.user.username, text: text.trim(), createdAt: Date.now() };
+  var comments = (r.comments || []).concat([comment]);
+  rpUpdateReport(reportId, { comments: comments });
+
+  // Notify @mentions
+  var mentions = text.match(/@(\w+)/g) || [];
+  mentions.forEach(function(m) {
+    var uname = m.slice(1);
+    if (uname !== RP.user.username) rpAddNotif(uname, reportId, 'mention', RP.user.username);
+  });
+  // Notify report author
+  if (r.author !== RP.user.username) rpAddNotif(r.author, reportId, 'comment', RP.user.username);
 }
 
 function rpDeleteComment(reportId, commentId) {
-  var r = rpFindReport(reportId);
-  if (!r) return;
-  r.comments = r.comments.filter(function(c){ return c.id !== commentId; });
-  rpSave();
+  var r = rpFindReport(reportId); if (!r) return;
+  var comments = (r.comments||[]).filter(function(c){ return c.id !== commentId; });
+  rpUpdateReport(reportId, { comments: comments });
 }
 
-// ---- Ban ----
+// ---- Bulk ----
+function rpBulkSetStatus(status, reason) {
+  RP.selected.forEach(function(id) {
+    var r = rpFindReport(id); if (!r) return;
+    var data = { status: status };
+    if (status === 'denied')   { data.denyReason = reason||'Bulk denied.'; data.acceptNote = null; }
+    if (status === 'accepted') { data.acceptNote = reason||null; data.denyReason = null; }
+    if (status === 'open')     { data.denyReason = null; data.acceptNote = null; }
+    rpUpdateReport(id, data);
+    rpAddNotif(r.author, id, status, reason||null);
+  });
+  RP.selected.clear();
+}
+
+function rpBulkDelete() {
+  RP.selected.forEach(function(id){ rpDeleteReport(id); });
+  RP.selected.clear();
+}
+
+// ---- Ban (synced to Firestore) ----
 function rpBanUser(username) {
-  var members = rpGetMembers();
-  if (members[username]) {
-    members[username].banned = true;
-    rpSaveMembers(members);
-    rpToast('🚫 ' + username + ' has been banned.', 'error');
-  }
+  rpSyncMemberToFirestore(username, { banned: true });
+  var local = rpGetMembers();
+  if (local[username]) { local[username].banned = true; rpSaveMembers(local); }
+  rpToast('🚫 ' + username + ' has been banned.', 'error');
 }
 function rpUnbanUser(username) {
-  var members = rpGetMembers();
-  if (members[username]) {
-    members[username].banned = false;
-    rpSaveMembers(members);
-    rpToast('✅ ' + username + ' has been unbanned.', 'success');
-  }
-}
-function rpIsUserBanned(username) {
-  var members = rpGetMembers();
-  return members[username] && members[username].banned;
+  rpSyncMemberToFirestore(username, { banned: false });
+  var local = rpGetMembers();
+  if (local[username]) { local[username].banned = false; rpSaveMembers(local); }
+  rpToast('✅ ' + username + ' has been unbanned.', 'success');
 }
 
-// ---- Filter ----
+// =====================================================
+//  Filtering & Sorting
+// =====================================================
 function rpGetFiltered() {
-  return RP.reports.filter(function(r) {
-    if (RP.filterStatus !== 'all' && r.status !== RP.filterStatus) return false;
-    if (RP.filterCat !== 'all' && r.category !== RP.filterCat) return false;
-    if (RP.search) {
-      var q = RP.search.toLowerCase();
-      if (r.title.toLowerCase().indexOf(q) === -1 &&
-          r.body.toLowerCase().indexOf(q) === -1 &&
-          r.author.toLowerCase().indexOf(q) === -1) return false;
-    }
-    return true;
+  var list = RP.reports.slice();
+  if (RP.filterStatus !== 'all') list = list.filter(function(r){ return r.status === RP.filterStatus; });
+  if (RP.filterCat    !== 'all') list = list.filter(function(r){ return r.category === RP.filterCat; });
+  if (RP.filterPri    !== 'all') list = list.filter(function(r){ return (r.priority||'low') === RP.filterPri; });
+  if (RP.search) {
+    var q = RP.search.toLowerCase();
+    list = list.filter(function(r){
+      return r.title.toLowerCase().indexOf(q) !== -1 ||
+             r.body.toLowerCase().indexOf(q) !== -1 ||
+             r.author.toLowerCase().indexOf(q) !== -1 ||
+             (r.target && r.target.toLowerCase().indexOf(q) !== -1);
+    });
+  }
+  list.sort(function(a, b) {
+    if (RP.sortBy === 'newest')   return rpTs(b,'createdAt') - rpTs(a,'createdAt');
+    if (RP.sortBy === 'oldest')   return rpTs(a,'createdAt') - rpTs(b,'createdAt');
+    if (RP.sortBy === 'votes')    return (b.upvotes||[]).length - (a.upvotes||[]).length;
+    if (RP.sortBy === 'comments') return (b.comments||[]).length - (a.comments||[]).length;
+    if (RP.sortBy === 'priority') { var po={high:0,medium:1,low:2}; return (po[a.priority]||2)-(po[b.priority]||2); }
+    return 0;
   });
+  return list;
 }
 
 // =====================================================
@@ -3392,73 +3596,73 @@ function rpRender() {
   var app = document.getElementById('rpApp');
   if (!app) return;
 
-  if (!RP.user) {
-    app.innerHTML = rpRenderLanding();
-    return;
+  if (!RP.user) { app.innerHTML = rpRenderLanding(); return; }
+
+  // Refresh ban from Firestore on render (async, update on next render)
+  if (RP.user.role !== 'admin') {
+    rpGetMemberFromFirestore(RP.user.username, function(member) {
+      if (member && member.banned !== RP.user.banned) {
+        RP.user.banned = member.banned;
+        localStorage.setItem(AUTH_KEY, JSON.stringify(RP.user));
+        rpRender();
+      }
+    });
   }
 
-  // Refresh ban status from members store
-  if (RP.user.role !== 'admin') {
-    var members = rpGetMembers();
-    if (members[RP.user.username]) {
-      RP.user.banned = members[RP.user.username].banned;
-      localStorage.setItem(AUTH_KEY, JSON.stringify(RP.user));
-    }
-  }
+  var filtered  = rpGetFiltered();
+  var totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  if (RP.page > totalPages) RP.page = totalPages;
+  var pageItems = filtered.slice((RP.page-1)*PAGE_SIZE, RP.page*PAGE_SIZE);
 
   var html = '';
 
-  // Page heading
-  html += '<h2 class="rp-page-title">📢 Community Reports</h2>';
-  html += '<p class="rp-page-sub">Report wrong info, bugs, or suggest improvements. Everyone can comment.</p>';
-
-  // Top bar
-  html += '<div class="rp-topbar">';
+  // Header
+  html += '<div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:0.5rem;">';
+  html += '<div><h2 class="rp-page-title">📢 Community Reports</h2><p class="rp-page-sub">Report wrong info, bugs, or suggest improvements. Changes are live for everyone.</p></div>';
+  html += '<div style="display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap;">';
+  html += '<button class="rp-icon-btn" id="rpBellBtn" onclick="rpOpenNotifs()" title="Notifications">🔔</button>';
   html += rpRenderUserPill();
-  if (!rpIsBanned()) {
-    html += '<button class="rp-new-btn" onclick="rpOpenCreateModal()">+ New Report</button>';
-  }
-  html += '</div>';
+  if (!rpIsBanned()) html += '<button class="rp-new-btn" onclick="rpOpenCreateModal()">+ New Report</button>';
+  html += '</div></div>';
 
-  // Banned notice
-  if (rpIsBanned()) {
-    html += '<div class="rp-banned-notice">🚫 You have been banned and cannot create reports or comments. You can still read existing reports.</div>';
-  }
+  // Update bell badge async
+  rpCountUnreadNotifs(function(n) {
+    var btn = document.getElementById('rpBellBtn');
+    if (btn) btn.innerHTML = '🔔' + (n > 0 ? '<span class="rp-notif-badge">' + n + '</span>' : '');
+  });
 
-  // Filters
-  html += rpRenderFilters();
+  if (rpIsBanned()) html += '<div class="rp-banned-notice">🚫 You have been banned and cannot create reports or comments.</div>';
+  if (rpIsAdmin())  html += rpRenderAdminDashboard();
 
-  // List
-  var filtered = rpGetFiltered();
-  html += '<div class="rp-list">';
-  if (filtered.length === 0) {
+  html += '<div class="rp-controls-row">' + rpRenderFilters() + rpRenderSortBar() + '</div>';
+  if (rpIsAdmin()) html += rpRenderBulkToolbar();
+
+  html += '<div class="rp-list" id="rpList">';
+  if (pageItems.length === 0) {
     html += '<div class="rp-empty"><div class="rp-empty-icon">📭</div><p class="rp-empty-text">No reports match your filters.</p></div>';
   } else {
-    filtered.forEach(function(r) { html += rpRenderCard(r); });
+    pageItems.forEach(function(r){ html += rpRenderCard(r); });
   }
   html += '</div>';
+
+  if (totalPages > 1) html += rpRenderPagination(totalPages, filtered.length);
 
   app.innerHTML = html;
 }
 
+// ---- Landing ----
 function rpRenderLanding() {
-  return (
-    '<h2 class="rp-page-title">📢 Community Reports</h2>' +
-    '<p class="rp-page-sub">Log in or create an account to submit reports, suggest improvements, or comment.</p>' +
-    '<div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1.5rem;">' +
-      '<button class="rp-new-btn" onclick="rpShowLogin()">Log in</button>' +
-      '<button class="rp-btn rp-btn-ghost" onclick="rpShowRegister()" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:var(--radius-sm);font-family:var(--font-base);font-size:0.88rem;font-weight:600;padding:0.6rem 1.25rem;cursor:pointer;">Register</button>' +
-    '</div>' +
-    '<div style="margin-top:2.5rem;">' + rpRenderPublicList() + '</div>'
-  );
-}
-
-function rpRenderPublicList() {
-  var html = '<div class="rp-list">';
+  var html = '<h2 class="rp-page-title">📢 Community Reports</h2>';
+  html += '<p class="rp-page-sub">Log in or register to submit reports, suggestions, and comments. All reports are shared live with everyone.</p>';
+  html += '<div style="display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:1.25rem;margin-bottom:2.5rem;">';
+  html += '<button class="rp-new-btn" onclick="rpShowLogin()">Log in</button>';
+  html += '<button class="rp-btn rp-btn-ghost" onclick="rpShowRegister()">Register</button>';
+  html += '</div>';
+  html += '<div class="rp-list">';
   if (RP.reports.length === 0) {
-    html += '<div class="rp-empty"><div class="rp-empty-icon">📭</div><p class="rp-empty-text">No reports yet.</p></div>';
+    html += '<div class="rp-empty"><div class="rp-empty-icon">📭</div><p class="rp-empty-text">No reports yet. Be the first!</p></div>';
   } else {
-    RP.reports.slice(0,10).forEach(function(r) { html += rpRenderCardReadOnly(r); });
+    RP.reports.slice(0,8).forEach(function(r){ html += rpRenderCardReadOnly(r); });
   }
   html += '</div>';
   return html;
@@ -3466,243 +3670,261 @@ function rpRenderPublicList() {
 
 function rpRenderUserPill() {
   var isAdmin = rpIsAdmin();
-  return (
-    '<div class="rp-user-pill">' +
-      '<div class="rp-user-avatar' + (isAdmin?' admin':'') + '">' + RP.user.username.charAt(0).toUpperCase() + '</div>' +
-      '<span class="rp-user-name">' + rpEsc(RP.user.username) + '</span>' +
-      '<span class="rp-user-role ' + (isAdmin?'rp-role-admin':'rp-role-member') + '">' + (isAdmin?'Admin':'Member') + '</span>' +
-      '<button class="rp-logout-btn" onclick="rpLogout()">Logout</button>' +
-    '</div>'
-  );
+  return '<div class="rp-user-pill">' +
+    '<div class="rp-user-avatar' + (isAdmin?' admin':'') + '">' + RP.user.username.charAt(0).toUpperCase() + '</div>' +
+    '<span class="rp-user-name">' + rpEsc(RP.user.username) + '</span>' +
+    '<span class="rp-user-role ' + (isAdmin?'rp-role-admin':'rp-role-member') + '">' + (isAdmin?'Admin':'Member') + '</span>' +
+    '<button class="rp-logout-btn" onclick="rpLogout()">Logout</button>' +
+    '</div>';
+}
+
+function rpRenderAdminDashboard() {
+  var total    = RP.reports.length;
+  var open     = RP.reports.filter(function(r){ return r.status==='open'; }).length;
+  var accepted = RP.reports.filter(function(r){ return r.status==='accepted'; }).length;
+  var denied   = RP.reports.filter(function(r){ return r.status==='denied'; }).length;
+  var high     = RP.reports.filter(function(r){ return r.priority==='high'; }).length;
+  var authorCounts = {};
+  RP.reports.forEach(function(r){ authorCounts[r.author]=(authorCounts[r.author]||0)+1; });
+  var topAuthors = Object.keys(authorCounts).filter(function(a){ return a!==ADMIN_USERNAME; })
+    .sort(function(a,b){ return authorCounts[b]-authorCounts[a]; }).slice(0,3);
+
+  var html = '<div class="rp-dashboard">';
+  html += '<div class="rp-dash-title">⚡ Admin Overview</div>';
+  html += '<div class="rp-dash-stats">';
+  html += rpDashStat(total,'Total','') + rpDashStat(open,'Open','rp-dash-open') +
+          rpDashStat(accepted,'Accepted','rp-dash-accepted') + rpDashStat(denied,'Denied','rp-dash-denied') +
+          rpDashStat(high,'High Pri','rp-dash-high');
+  html += '</div>';
+  if (topAuthors.length > 0) {
+    html += '<div class="rp-dash-active">Most active: ';
+    html += topAuthors.map(function(a){ return '<button class="rp-member-link" onclick="rpOpenProfile(\'' + rpEscAttr(a) + '\')">' + rpEsc(a) + ' (' + authorCounts[a] + ')</button>'; }).join(', ');
+    html += '</div>';
+  }
+  html += '</div>';
+  return html;
+}
+
+function rpDashStat(n, label, cls) {
+  return '<div class="rp-dash-stat ' + cls + '"><span class="rp-dash-num">' + n + '</span><span class="rp-dash-label">' + label + '</span></div>';
 }
 
 function rpRenderFilters() {
-  var statuses = [
-    {id:'all',    label:'All'},
-    {id:'open',   label:'Open'},
-    {id:'accepted',label:'Accepted'},
-    {id:'denied', label:'Denied'},
-  ];
-
+  var statuses = [{id:'all',label:'All'},{id:'open',label:'Open'},{id:'accepted',label:'Accepted'},{id:'denied',label:'Denied'}];
   var html = '<div class="rp-filters">';
-
-  statuses.forEach(function(s) {
-    var active = RP.filterStatus === s.id ? ' active' : '';
-    html += '<button class="rp-filter-btn' + active + '" onclick="rpSetFilter(\'status\',\'' + s.id + '\')">' + s.label + '</button>';
+  statuses.forEach(function(s){
+    html += '<button class="rp-filter-btn' + (RP.filterStatus===s.id?' active':'') + '" onclick="rpSetFilter(\'status\',\'' + s.id + '\')">' + s.label + '</button>';
   });
-
-  html += '<span style="width:1px;height:20px;background:var(--border);display:inline-block;margin:0 0.25rem;"></span>';
-
-  CATEGORIES.forEach(function(c) {
-    var active = RP.filterCat === c.id ? ' active' : '';
-    html += '<button class="rp-filter-btn' + active + '" onclick="rpSetFilter(\'cat\',\'' + c.id + '\')">' + c.label + '</button>';
+  html += '<span class="rp-filter-sep"></span>';
+  CATEGORIES.forEach(function(c){
+    html += '<button class="rp-filter-btn' + (RP.filterCat===c.id?' active':'') + '" onclick="rpSetFilter(\'cat\',\'' + c.id + '\')">' + c.label + '</button>';
   });
-
+  html += '<span class="rp-filter-sep"></span>';
+  PRIORITIES.forEach(function(p){
+    html += '<button class="rp-filter-btn' + (RP.filterPri===p.id?' active':'') + '" onclick="rpSetFilter(\'pri\',\'' + p.id + '\')">' + p.label + '</button>';
+  });
   html += '<input class="rp-filter-search" type="text" placeholder="Search…" value="' + rpEsc(RP.search) + '" oninput="rpSetSearch(this.value)">';
   html += '</div>';
   return html;
 }
 
+function rpRenderSortBar() {
+  var sorts = [{id:'newest',label:'Newest'},{id:'oldest',label:'Oldest'},{id:'votes',label:'Most Voted'},{id:'comments',label:'Most Comments'},{id:'priority',label:'Priority'}];
+  var html = '<div class="rp-sort-bar"><span class="rp-sort-label">Sort:</span>';
+  sorts.forEach(function(s){
+    html += '<button class="rp-sort-btn' + (RP.sortBy===s.id?' active':'') + '" onclick="rpSetSort(\'' + s.id + '\')">' + s.label + '</button>';
+  });
+  html += '</div>';
+  return html;
+}
+
+function rpRenderBulkToolbar() {
+  var selCount = RP.selected.size;
+  var html = '<div class="rp-bulk-bar">';
+  html += '<label class="rp-bulk-toggle"><input type="checkbox" ' + (RP.bulkMode?'checked':'') + ' onchange="rpToggleBulkMode()"> Bulk select</label>';
+  if (RP.bulkMode) {
+    html += '<span class="rp-bulk-count">' + selCount + ' selected</span>';
+    if (selCount > 0) {
+      html += '<button class="rp-btn rp-btn-ghost rp-btn-sm" style="border-color:rgba(59,130,246,0.4);color:#93c5fd;" onclick="rpBulkAcceptDo()">✅ Accept all</button>';
+      html += '<button class="rp-btn rp-btn-ghost rp-btn-sm" style="border-color:rgba(239,68,68,0.4);color:#f87171;" onclick="rpBulkDenyDo()">⛔ Deny all</button>';
+      html += '<button class="rp-btn rp-btn-ghost rp-btn-sm" onclick="rpBulkReopenDo()">🔄 Reopen all</button>';
+      html += '<button class="rp-btn rp-btn-danger rp-btn-sm" onclick="rpBulkDeleteDo()">🗑 Delete all</button>';
+    }
+    html += '<button class="rp-btn rp-btn-ghost rp-btn-sm" onclick="rpSelectAll()">Select page</button>';
+    html += '<button class="rp-btn rp-btn-ghost rp-btn-sm" onclick="rpClearSelection()">Clear</button>';
+  }
+  html += '</div>';
+  return html;
+}
+
+function rpRenderPagination(totalPages, total) {
+  var html = '<div class="rp-pagination"><span class="rp-pag-info">' + total + ' reports · Page ' + RP.page + ' of ' + totalPages + '</span><div class="rp-pag-btns">';
+  if (RP.page > 1) html += '<button class="rp-pag-btn" onclick="rpGoPage(' + (RP.page-1) + ')">← Prev</button>';
+  for (var p = 1; p <= totalPages; p++) {
+    if (totalPages <= 7 || p===1 || p===totalPages || Math.abs(p-RP.page)<=1) {
+      html += '<button class="rp-pag-btn' + (p===RP.page?' active':'') + '" onclick="rpGoPage(' + p + ')">' + p + '</button>';
+    } else if (Math.abs(p-RP.page)===2) {
+      html += '<span class="rp-pag-dots">…</span>';
+    }
+  }
+  if (RP.page < totalPages) html += '<button class="rp-pag-btn" onclick="rpGoPage(' + (RP.page+1) + ')">Next →</button>';
+  html += '</div></div>';
+  return html;
+}
+
+// ---- Card ----
 function rpRenderCard(r) {
   var cat = rpCatObj(r.category);
-  var isOwn = RP.user && r.author === RP.user.username;
+  var pri = rpPriObj(r.priority||'low');
+  var isOwn   = RP.user && r.author === RP.user.username;
   var isAdmin = rpIsAdmin();
-  var isBanned = rpIsBanned();
+  var voted   = RP.user && (r.upvotes||[]).indexOf(RP.user.username) !== -1;
   var authorBanned = rpIsUserBanned(r.author);
 
   var html = '<div class="rp-card" id="card-' + r.id + '">';
-
-  // Header
+  if (RP.bulkMode && isAdmin) {
+    html += '<label class="rp-bulk-check"><input type="checkbox" ' + (RP.selected.has(r.id)?'checked':'') + ' onchange="rpToggleSelect(\'' + r.id + '\')" onclick="event.stopPropagation()"></label>';
+  }
   html += '<div class="rp-card-header">';
+  html += '<button class="rp-upvote-btn' + (voted?' voted':'') + '" id="upvote-' + r.id + '" onclick="rpToggleUpvote(\'' + r.id + '\')" title="Upvote">▲ ' + (r.upvotes||[]).length + '</button>';
   html += '<div class="rp-card-meta">';
   html += '<div class="rp-card-title">' + rpEsc(r.title) + (r.editedAt ? ' <span style="font-size:0.7rem;color:var(--text-dim);font-weight:400;">(edited)</span>' : '') + '</div>';
   html += '<div class="rp-card-info">';
   html += '<span class="rp-tag ' + cat.cls + '">' + cat.label + '</span>';
   html += rpStatusBadge(r.status);
-  html += '<span>by <strong style="color:var(--text)">' + rpEsc(r.author) + '</strong>';
+  html += '<span class="rp-pri-badge ' + pri.cls + '">' + pri.label + '</span>';
+  if (r.target) html += '<span class="rp-target-badge">🎯 ' + rpEsc(r.target) + '</span>';
+  html += '<span>by <button class="rp-member-link" onclick="rpOpenProfile(\'' + rpEscAttr(r.author) + '\')">' + rpEsc(r.author) + '</button>';
   if (authorBanned) html += ' <span class="rp-banned-tag">BANNED</span>';
-  html += '</span>';
-  html += '<span>' + rpRelTime(r.createdAt) + '</span>';
-  html += '</div>'; // info
-  html += '</div>'; // meta
-  html += '</div>'; // header
+  html += '</span><span>' + rpRelTime(r.createdAt) + '</span>';
+  html += '</div></div></div>';
 
-  // Body
-  html += '<div class="rp-card-body">' + rpEsc(r.body) + '</div>';
+  html += '<div class="rp-card-body">' + rpMarkdown(r.body) + '</div>';
 
-  // Status notes
-  if (r.status === 'denied' && r.denyReason) {
-    html += '<div class="rp-deny-reason"><strong>⛔ Denied:</strong> ' + rpEsc(r.denyReason) + '</div>';
-  }
-  if (r.status === 'accepted' && r.acceptNote) {
-    html += '<div class="rp-accept-note"><strong>✅ Note:</strong> ' + rpEsc(r.acceptNote) + '</div>';
-  }
+  if (r.status==='denied'   && r.denyReason) html += '<div class="rp-deny-reason"><strong>⛔ Denied:</strong> '   + rpEsc(r.denyReason) + '</div>';
+  if (r.status==='accepted' && r.acceptNote) html += '<div class="rp-accept-note"><strong>✅ Note:</strong> '      + rpEsc(r.acceptNote) + '</div>';
+  if (isAdmin && r.adminNote)                html += '<div class="rp-admin-note"><strong>🔒 Admin note:</strong> ' + rpEsc(r.adminNote)  + '</div>';
 
-  // Actions
   html += '<div class="rp-card-actions">';
-  // Comments toggle
-  html += '<button class="rp-comments-toggle" onclick="rpToggleComments(\'' + r.id + '\')">💬 ' + r.comments.length + ' comment' + (r.comments.length !== 1 ? 's' : '') + '</button>';
+  html += '<button class="rp-comments-toggle" onclick="rpToggleComments(\'' + r.id + '\')">💬 ' + (r.comments||[]).length + ' comment' + ((r.comments||[]).length!==1?'s':'') + '</button>';
+  if (isOwn && !isAdmin) html += '<button class="rp-btn rp-btn-ghost rp-btn-sm" onclick="rpConfirmDeleteReport(\'' + r.id + '\')">🗑 Delete</button>';
+  html += '</div>';
 
-  // Member: delete own
-  if (isOwn && !isAdmin) {
-    html += '<button class="rp-btn rp-btn-ghost rp-btn-sm" onclick="rpConfirmDeleteReport(\'' + r.id + '\')">🗑 Delete</button>';
-  }
-
-  html += '</div>'; // card-actions
-
-  // Admin actions
   if (isAdmin) {
     html += '<div class="rp-admin-actions">';
-    if (r.status !== 'accepted') {
-      html += '<button class="rp-btn rp-btn-ghost rp-btn-sm" style="border-color:rgba(59,130,246,0.4);color:#93c5fd;" onclick="rpOpenAcceptModal(\'' + r.id + '\')">✅ Accept</button>';
-    }
-    if (r.status !== 'denied') {
-      html += '<button class="rp-btn rp-btn-ghost rp-btn-sm" style="border-color:rgba(239,68,68,0.4);color:#f87171;" onclick="rpOpenDenyModal(\'' + r.id + '\')">⛔ Deny</button>';
-    }
-    if (r.status !== 'open') {
-      html += '<button class="rp-btn rp-btn-ghost rp-btn-sm" onclick="rpReopenDo(\'' + r.id + '\')">🔄 Reopen</button>';
-    }
+    html += '<select class="rp-pri-select" onchange="rpSetPriorityDo(\'' + r.id + '\',this.value)">';
+    PRIORITIES.forEach(function(p){ html += '<option value="' + p.id + '"' + ((r.priority||'low')===p.id?' selected':'') + '>' + p.label + ' Priority</option>'; });
+    html += '</select>';
+    if (r.status!=='accepted') html += '<button class="rp-btn rp-btn-ghost rp-btn-sm" style="border-color:rgba(59,130,246,0.4);color:#93c5fd;" onclick="rpOpenAcceptModal(\'' + r.id + '\')">✅ Accept</button>';
+    if (r.status!=='denied')   html += '<button class="rp-btn rp-btn-ghost rp-btn-sm" style="border-color:rgba(239,68,68,0.4);color:#f87171;" onclick="rpOpenDenyModal(\'' + r.id + '\')">⛔ Deny</button>';
+    if (r.status!=='open')     html += '<button class="rp-btn rp-btn-ghost rp-btn-sm" onclick="rpReopenDo(\'' + r.id + '\')">🔄 Reopen</button>';
     html += '<button class="rp-btn rp-btn-ghost rp-btn-sm" onclick="rpOpenEditModal(\'' + r.id + '\')">✏️ Edit</button>';
+    html += '<button class="rp-btn rp-btn-ghost rp-btn-sm" onclick="rpOpenAdminNoteModal(\'' + r.id + '\')">🔒 Note</button>';
     html += '<button class="rp-btn rp-btn-danger rp-btn-sm" onclick="rpConfirmDeleteReport(\'' + r.id + '\')">🗑 Remove</button>';
     if (r.author !== ADMIN_USERNAME) {
-      if (!authorBanned) {
-        html += '<button class="rp-btn rp-btn-danger rp-btn-sm" onclick="rpBanDo(\'' + rpEscAttr(r.author) + '\')">🚫 Ban</button>';
-      } else {
-        html += '<button class="rp-btn rp-btn-ghost rp-btn-sm" onclick="rpUnbanDo(\'' + rpEscAttr(r.author) + '\')">✅ Unban</button>';
-      }
+      if (!authorBanned) html += '<button class="rp-btn rp-btn-danger rp-btn-sm" onclick="rpBanDo(\'' + rpEscAttr(r.author) + '\')">🚫 Ban</button>';
+      else               html += '<button class="rp-btn rp-btn-ghost rp-btn-sm" onclick="rpUnbanDo(\'' + rpEscAttr(r.author) + '\')">✅ Unban</button>';
     }
     html += '</div>';
   }
 
-  // Comments section
-  html += '<div class="rp-comments" id="comments-' + r.id + '">';
-  html += rpRenderComments(r);
+  html += '<div class="rp-comments" id="comments-' + r.id + '">' + rpRenderComments(r) + '</div>';
   html += '</div>';
-
-  html += '</div>'; // card
   return html;
 }
 
 function rpRenderCardReadOnly(r) {
   var cat = rpCatObj(r.category);
-  var html = '<div class="rp-card">';
-  html += '<div class="rp-card-header"><div class="rp-card-meta">';
-  html += '<div class="rp-card-title">' + rpEsc(r.title) + '</div>';
-  html += '<div class="rp-card-info">';
-  html += '<span class="rp-tag ' + cat.cls + '">' + cat.label + '</span>';
-  html += rpStatusBadge(r.status);
+  var html = '<div class="rp-card"><div class="rp-card-header">';
+  html += '<div class="rp-upvote-btn disabled">▲ ' + (r.upvotes||[]).length + '</div>';
+  html += '<div class="rp-card-meta"><div class="rp-card-title">' + rpEsc(r.title) + '</div>';
+  html += '<div class="rp-card-info"><span class="rp-tag ' + cat.cls + '">' + cat.label + '</span>' + rpStatusBadge(r.status);
+  if (r.target) html += '<span class="rp-target-badge">🎯 ' + rpEsc(r.target) + '</span>';
   html += '<span>by <strong style="color:var(--text)">' + rpEsc(r.author) + '</strong></span>';
-  html += '<span>' + rpRelTime(r.createdAt) + '</span>';
-  html += '</div></div></div>';
-  html += '<div class="rp-card-body">' + rpEsc(r.body) + '</div>';
-  html += '<p style="font-size:0.8rem;color:var(--text-dim);margin-top:0.25rem;">💬 ' + r.comments.length + ' comment' + (r.comments.length!==1?'s':'') + ' — <button onclick="rpShowLogin()" style="background:none;border:none;color:var(--accent);cursor:pointer;font-size:0.8rem;padding:0;">Log in to comment</button></p>';
+  html += '<span>' + rpRelTime(r.createdAt) + '</span></div></div></div>';
+  html += '<div class="rp-card-body">' + rpMarkdown(r.body) + '</div>';
+  html += '<p style="font-size:0.8rem;color:var(--text-dim);margin-top:0.25rem;">💬 ' + (r.comments||[]).length + ' comment' + ((r.comments||[]).length!==1?'s':'') + ' · <button onclick="rpShowLogin()" style="background:none;border:none;color:var(--accent);cursor:pointer;font-size:0.8rem;padding:0;">Log in to interact</button></p>';
   html += '</div>';
   return html;
 }
 
+function rpStatusBadge(status) {
+  return { open:'<span class="rp-status rp-status-open">● Open</span>', accepted:'<span class="rp-status rp-status-accepted">✓ Accepted</span>', denied:'<span class="rp-status rp-status-denied">✕ Denied</span>' }[status] || '<span class="rp-status rp-status-open">● Open</span>';
+}
+
 function rpRenderComments(r) {
   var html = '';
-  if (r.comments.length === 0) {
+  var comments = r.comments || [];
+  if (comments.length === 0) {
     html += '<p style="font-size:0.8rem;color:var(--text-dim);margin-bottom:0.75rem;">No comments yet.</p>';
   } else {
-    r.comments.forEach(function(c) {
-      var isAdminComment = c.author === ADMIN_USERNAME;
-      var canDel = rpIsAdmin() || (RP.user && c.author === RP.user.username);
+    comments.forEach(function(c) {
+      var isAdminC = c.author === ADMIN_USERNAME;
+      var canDel   = rpIsAdmin() || (RP.user && c.author === RP.user.username);
       html += '<div class="rp-comment">';
-      html += '<div class="rp-comment-avatar' + (isAdminComment?' admin-av':'') + '">' + c.author.charAt(0).toUpperCase() + '</div>';
-      html += '<div class="rp-comment-body">';
-      html += '<div class="rp-comment-meta">';
-      html += '<span class="rp-comment-author' + (isAdminComment?' admin-name':'') + '">' + rpEsc(c.author) + '</span>';
-      if (isAdminComment) html += ' <span class="rp-user-role rp-role-admin" style="font-size:0.62rem;">Admin</span>';
+      html += '<div class="rp-comment-avatar' + (isAdminC?' admin-av':'') + '">' + c.author.charAt(0).toUpperCase() + '</div>';
+      html += '<div class="rp-comment-body"><div class="rp-comment-meta">';
+      html += '<button class="rp-member-link rp-comment-author' + (isAdminC?' admin-name':'') + '" onclick="rpOpenProfile(\'' + rpEscAttr(c.author) + '\')">' + rpEsc(c.author) + '</button>';
+      if (isAdminC) html += ' <span class="rp-user-role rp-role-admin" style="font-size:0.62rem;">Admin</span>';
       html += '<span class="rp-comment-time">' + rpRelTime(c.createdAt) + '</span>';
-      if (canDel) {
-        html += '<button class="rp-comment-del" onclick="rpDeleteCommentDo(\'' + r.id + '\',\'' + c.id + '\')" title="Delete comment">✕</button>';
-      }
-      html += '</div>';
-      html += '<div class="rp-comment-text">' + rpEsc(c.text) + '</div>';
-      html += '</div></div>';
+      if (canDel) html += '<button class="rp-comment-del" onclick="rpDeleteCommentDo(\'' + r.id + '\',\'' + c.id + '\')" title="Delete">✕</button>';
+      html += '</div><div class="rp-comment-text">' + rpMarkdown(c.text) + '</div></div></div>';
     });
   }
-
-  // Comment form (if not banned)
   if (!rpIsBanned()) {
     html += '<div class="rp-comment-form">';
-    html += '<input class="rp-comment-input" type="text" id="cinput-' + r.id + '" placeholder="Write a comment…" maxlength="500" onkeydown="rpCommentKey(event,\'' + r.id + '\')">';
+    html += '<input class="rp-comment-input" type="text" id="cinput-' + r.id + '" placeholder="Write a comment… (@mention supported)" maxlength="500" onkeydown="rpCommentKey(event,\'' + r.id + '\')">';
     html += '<button class="rp-comment-send" onclick="rpSendComment(\'' + r.id + '\')">Send</button>';
     html += '</div>';
   }
-
   return html;
 }
 
-function rpStatusBadge(status) {
-  var map = {
-    open: '<span class="rp-status rp-status-open">● Open</span>',
-    accepted: '<span class="rp-status rp-status-accepted">✓ Accepted</span>',
-    denied: '<span class="rp-status rp-status-denied">✕ Denied</span>',
-  };
-  return map[status] || map.open;
-}
-
 // =====================================================
-//  Auth modals
+//  Auth Modals
 // =====================================================
-function rpShowLogin() {
-  var overlay = document.getElementById('rpAuthOverlay');
-  overlay.style.display = 'flex';
-  document.getElementById('rpAuthContent').innerHTML = rpLoginForm();
-}
-function rpShowRegister() {
-  var overlay = document.getElementById('rpAuthOverlay');
-  overlay.style.display = 'flex';
-  document.getElementById('rpAuthContent').innerHTML = rpRegisterForm();
-}
-function rpHideAuth() {
-  document.getElementById('rpAuthOverlay').style.display = 'none';
-}
+function rpShowLogin()    { document.getElementById('rpAuthOverlay').style.display='flex'; document.getElementById('rpAuthContent').innerHTML=rpLoginForm(); }
+function rpShowRegister() { document.getElementById('rpAuthOverlay').style.display='flex'; document.getElementById('rpAuthContent').innerHTML=rpRegisterForm(); }
+function rpHideAuth()     { document.getElementById('rpAuthOverlay').style.display='none'; }
 
 function rpLoginForm() {
-  return (
-    '<p class="rp-modal-title">Welcome back</p>' +
-    '<p class="rp-modal-sub">Log in to submit reports and comments.</p>' +
+  return '<p class="rp-modal-title">Welcome back</p><p class="rp-modal-sub">Log in to submit reports and comments.</p>' +
     '<div class="rp-field"><label class="rp-label">Username</label><input class="rp-input" id="authUser" type="text" autocomplete="username" placeholder="Your username"></div>' +
     '<div class="rp-field"><label class="rp-label">Password</label><input class="rp-input" id="authPass" type="password" autocomplete="current-password" placeholder="••••••••" onkeydown="if(event.key===\'Enter\')rpDoLogin()"></div>' +
     '<p class="rp-error" id="authErr"></p>' +
     '<button class="rp-btn rp-btn-primary" style="margin-top:0.5rem;" onclick="rpDoLogin()">Log in</button>' +
     '<div class="rp-switch-auth">No account? <button onclick="rpShowRegister()">Register</button></div>' +
-    '<div style="text-align:center;margin-top:0.75rem;"><button onclick="rpHideAuth()" style="background:none;border:none;color:var(--text-muted);font-size:0.8rem;cursor:pointer;">Cancel</button></div>'
-  );
+    '<div style="text-align:center;margin-top:0.75rem;"><button onclick="rpHideAuth()" style="background:none;border:none;color:var(--text-muted);font-size:0.8rem;cursor:pointer;">Cancel</button></div>';
 }
 function rpRegisterForm() {
-  return (
-    '<p class="rp-modal-title">Create account</p>' +
-    '<p class="rp-modal-sub">Join to submit reports and engage with the community.</p>' +
-    '<div class="rp-field"><label class="rp-label">Username</label><input class="rp-input" id="authUser" type="text" autocomplete="username" placeholder="Pick a username"></div>' +
+  return '<p class="rp-modal-title">Create account</p><p class="rp-modal-sub">Join the community to submit reports and comments.</p>' +
+    '<div class="rp-field"><label class="rp-label">Username</label><input class="rp-input" id="authUser" type="text" autocomplete="username" placeholder="Pick a username (min 3 chars)"></div>' +
     '<div class="rp-field"><label class="rp-label">Password</label><input class="rp-input" id="authPass" type="password" autocomplete="new-password" placeholder="At least 6 characters" onkeydown="if(event.key===\'Enter\')rpDoRegister()"></div>' +
     '<p class="rp-error" id="authErr"></p>' +
     '<button class="rp-btn rp-btn-primary" style="margin-top:0.5rem;" onclick="rpDoRegister()">Register</button>' +
     '<div class="rp-switch-auth">Already have an account? <button onclick="rpShowLogin()">Log in</button></div>' +
-    '<div style="text-align:center;margin-top:0.75rem;"><button onclick="rpHideAuth()" style="background:none;border:none;color:var(--text-muted);font-size:0.8rem;cursor:pointer;">Cancel</button></div>'
-  );
+    '<div style="text-align:center;margin-top:0.75rem;"><button onclick="rpHideAuth()" style="background:none;border:none;color:var(--text-muted);font-size:0.8rem;cursor:pointer;">Cancel</button></div>';
 }
 
 function rpDoLogin() {
   var u = document.getElementById('authUser').value;
   var p = document.getElementById('authPass').value;
-  var err = rpLogin(u, p, false);
-  if (err) { rpShowErr('authErr', err); return; }
-  rpHideAuth();
-  rpRender();
-  rpToast('👋 Welcome back, ' + RP.user.username + '!', 'success');
+  document.getElementById('authErr').style.display = 'none';
+  rpLogin(u, p, false, function(err) {
+    if (err) { rpShowErr('authErr', err); return; }
+    rpHideAuth(); rpRender();
+    rpToast('👋 Welcome back, ' + RP.user.username + '!', 'success');
+  });
 }
 function rpDoRegister() {
   var u = document.getElementById('authUser').value;
   var p = document.getElementById('authPass').value;
-  var err = rpLogin(u, p, true);
-  if (err) { rpShowErr('authErr', err); return; }
-  rpHideAuth();
-  rpRender();
-  rpToast('✅ Account created! Welcome, ' + RP.user.username + '!', 'success');
+  document.getElementById('authErr').style.display = 'none';
+  rpLogin(u, p, true, function(err) {
+    if (err) { rpShowErr('authErr', err); return; }
+    rpHideAuth(); rpRender();
+    rpToast('✅ Account created! Welcome, ' + RP.user.username + '!', 'success');
+  });
 }
 
 function rpShowErr(id, msg) {
@@ -3714,248 +3936,283 @@ function rpShowErr(id, msg) {
 //  Generic Modal
 // =====================================================
 function rpCloseModal(e) {
-  document.getElementById('rpModalOverlay').style.display = 'none';
+  if (!e || e.target === document.getElementById('rpModalOverlay'))
+    document.getElementById('rpModalOverlay').style.display = 'none';
 }
 function rpOpenModal(html) {
   document.getElementById('rpModalContent').innerHTML = html;
   document.getElementById('rpModalOverlay').style.display = 'flex';
+  setTimeout(function(){ var f=document.querySelector('#rpModalContent input,#rpModalContent textarea'); if(f) f.focus(); }, 60);
 }
 
 // ---- Create ----
 function rpOpenCreateModal() {
+  var catOpts = CATEGORIES.map(function(c){ return '<option value="'+c.id+'">'+c.label+'</option>'; }).join('');
+  var priOpts = PRIORITIES.map(function(p){ return '<option value="'+p.id+'">'+p.label+' Priority</option>'; }).join('');
   rpOpenModal(
     '<p class="rp-modal-title">New Report</p>' +
-    '<p class="rp-modal-sub">Describe the issue or suggestion clearly.</p>' +
-    '<div class="rp-field"><label class="rp-label">Title</label><input class="rp-input" id="mTitle" maxlength="120" placeholder="Short, clear title…"></div>' +
-    '<div class="rp-field"><label class="rp-label">Category</label><select class="rp-input rp-select" id="mCat">' +
-      CATEGORIES.map(function(c){ return '<option value="'+c.id+'">'+c.label+'</option>'; }).join('') +
-    '</select></div>' +
+    '<p class="rp-modal-sub">Supports **bold**, *italic*, `code`, - lists, @mentions.</p>' +
+    '<div class="rp-field"><label class="rp-label">Title</label><input class="rp-input" id="mTitle" maxlength="120" placeholder="Short, clear title…" oninput="rpCheckDuplicate()"></div>' +
+    '<div id="mDupWarn" class="rp-dup-warn" style="display:none"></div>' +
+    '<div style="display:flex;gap:0.75rem;flex-wrap:wrap;">' +
+      '<div class="rp-field" style="flex:2;min-width:140px;"><label class="rp-label">Category</label><select class="rp-input rp-select" id="mCat" onchange="rpToggleTargetField()">' + catOpts + '</select></div>' +
+      '<div class="rp-field" style="flex:1;min-width:100px;"><label class="rp-label">Priority</label><select class="rp-input rp-select" id="mPri">' + priOpts + '</select></div>' +
+    '</div>' +
+    '<div class="rp-field" id="mTargetField" style="display:none;"><label class="rp-label">Pokémon / Move <span style="color:var(--accent)">*</span></label><input class="rp-input" id="mTarget" maxlength="80" placeholder="e.g. Charizard or Flamethrower"></div>' +
     '<div class="rp-field"><label class="rp-label">Description</label><textarea class="rp-input rp-textarea" id="mBody" maxlength="1500" placeholder="Describe the issue in detail…"></textarea></div>' +
     '<p class="rp-error" id="mErr"></p>' +
-    '<div class="rp-modal-actions">' +
-      '<button class="rp-btn rp-btn-ghost" onclick="rpCloseModal()">Cancel</button>' +
-      '<button class="rp-btn rp-btn-primary" onclick="rpDoCreate()">Submit Report</button>' +
-    '</div>'
+    '<div class="rp-modal-actions"><button class="rp-btn rp-btn-ghost" onclick="rpCloseModal()">Cancel</button><button class="rp-btn rp-btn-primary" id="mSubmitBtn" onclick="rpDoCreate()">Submit Report</button></div>'
   );
-  setTimeout(function(){ var t=document.getElementById('mTitle'); if(t) t.focus(); },50);
+  rpToggleTargetField();
+}
+
+function rpToggleTargetField() {
+  var cat = document.getElementById('mCat'); var field = document.getElementById('mTargetField');
+  if (!cat||!field) return;
+  field.style.display = rpCatObj(cat.value).needsTarget ? 'block' : 'none';
+}
+
+function rpCheckDuplicate() {
+  var title = (document.getElementById('mTitle')||{}).value||'';
+  var warn  = document.getElementById('mDupWarn'); if (!warn) return;
+  if (!title.trim()) { warn.style.display='none'; return; }
+  var dup = RP.reports.find(function(r){ return r.status==='open' && r.title.toLowerCase()===title.trim().toLowerCase(); });
+  if (dup) { warn.innerHTML='⚠️ A similar open report already exists: <strong>'+rpEsc(dup.title)+'</strong>'; warn.style.display='block'; }
+  else       warn.style.display='none';
 }
 
 function rpDoCreate() {
-  var title = document.getElementById('mTitle').value;
-  var cat   = document.getElementById('mCat').value;
-  var body  = document.getElementById('mBody').value;
-  var err = rpCreateReport(title, cat, body);
-  if (err) { rpShowErr('mErr', err); return; }
-  rpCloseModal();
-  rpRender();
-  rpToast('📢 Report submitted!', 'success');
-}
-
-// ---- Edit (admin only) ----
-function rpOpenEditModal(id) {
-  var r = rpFindReport(id);
-  if (!r) return;
-  rpOpenModal(
-    '<p class="rp-modal-title">Edit Report</p>' +
-    '<div class="rp-field"><label class="rp-label">Title</label><input class="rp-input" id="mTitle" maxlength="120" value="' + rpEscAttr(r.title) + '"></div>' +
-    '<div class="rp-field"><label class="rp-label">Category</label><select class="rp-input rp-select" id="mCat">' +
-      CATEGORIES.map(function(c){ return '<option value="'+c.id+'"'+(c.id===r.category?' selected':'')+'>'+c.label+'</option>'; }).join('') +
-    '</select></div>' +
-    '<div class="rp-field"><label class="rp-label">Description</label><textarea class="rp-input rp-textarea" id="mBody" maxlength="1500">' + rpEsc(r.body) + '</textarea></div>' +
-    '<p class="rp-error" id="mErr"></p>' +
-    '<div class="rp-modal-actions">' +
-      '<button class="rp-btn rp-btn-ghost" onclick="rpCloseModal()">Cancel</button>' +
-      '<button class="rp-btn rp-btn-primary" onclick="rpDoEdit(\'' + id + '\')">Save Changes</button>' +
-    '</div>'
-  );
-}
-function rpDoEdit(id) {
-  var title = document.getElementById('mTitle').value;
-  var cat   = document.getElementById('mCat').value;
-  var body  = document.getElementById('mBody').value;
-  if (!title.trim() || !body.trim()) { rpShowErr('mErr','Title and description required.'); return; }
-  rpEditReport(id, title, cat, body);
-  rpCloseModal();
-  rpRender();
-  rpToast('✏️ Report updated.', 'success');
-}
-
-// ---- Accept ----
-function rpOpenAcceptModal(id) {
-  rpOpenModal(
-    '<p class="rp-modal-title">Accept Report</p>' +
-    '<p class="rp-modal-sub">Optionally leave a note for the reporter.</p>' +
-    '<div class="rp-field"><label class="rp-label">Note (optional)</label><textarea class="rp-input rp-textarea" id="mNote" maxlength="300" placeholder="e.g. Fixed in next update…" style="min-height:70px;"></textarea></div>' +
-    '<div class="rp-modal-actions">' +
-      '<button class="rp-btn rp-btn-ghost" onclick="rpCloseModal()">Cancel</button>' +
-      '<button class="rp-btn rp-btn-primary" style="background:#3b82f6;color:#fff;" onclick="rpAcceptDo(\'' + id + '\')">✅ Accept</button>' +
-    '</div>'
-  );
-}
-function rpAcceptDo(id) {
-  var note = document.getElementById('mNote').value;
-  rpAcceptReport(id, note);
-  rpCloseModal();
-  rpRender();
-  rpToast('✅ Report accepted.', 'success');
-}
-
-// ---- Deny ----
-function rpOpenDenyModal(id) {
-  rpOpenModal(
-    '<p class="rp-modal-title">Deny Report</p>' +
-    '<p class="rp-modal-sub">Provide a reason so the author understands why.</p>' +
-    '<div class="rp-field"><label class="rp-label">Reason</label><textarea class="rp-input rp-textarea" id="mReason" maxlength="300" placeholder="e.g. This is intentional behaviour…" style="min-height:80px;"></textarea></div>' +
-    '<p class="rp-error" id="mErr"></p>' +
-    '<div class="rp-modal-actions">' +
-      '<button class="rp-btn rp-btn-ghost" onclick="rpCloseModal()">Cancel</button>' +
-      '<button class="rp-btn rp-btn-danger" onclick="rpDenyDo(\'' + id + '\')">⛔ Deny</button>' +
-    '</div>'
-  );
-}
-function rpDenyDo(id) {
-  var reason = document.getElementById('mReason').value.trim();
-  if (!reason) { rpShowErr('mErr','Please provide a reason.'); return; }
-  rpDenyReport(id, reason);
-  rpCloseModal();
-  rpRender();
-  rpToast('⛔ Report denied.', '');
-}
-
-// ---- Reopen ----
-function rpReopenDo(id) {
-  rpReopenReport(id);
-  rpRender();
-  rpToast('🔄 Report reopened.', 'success');
-}
-
-// ---- Delete ----
-function rpConfirmDeleteReport(id) {
-  var r = rpFindReport(id);
-  if (!r) return;
-  rpOpenModal(
-    '<p class="rp-modal-title">Delete Report</p>' +
-    '<p class="rp-modal-sub" style="color:var(--text);">Are you sure you want to delete <strong>"' + rpEsc(r.title) + '"</strong>? This cannot be undone.</p>' +
-    '<div class="rp-modal-actions">' +
-      '<button class="rp-btn rp-btn-ghost" onclick="rpCloseModal()">Cancel</button>' +
-      '<button class="rp-btn rp-btn-danger" onclick="rpDoDeleteReport(\'' + id + '\')">🗑 Delete</button>' +
-    '</div>'
-  );
-}
-function rpDoDeleteReport(id) {
-  rpDeleteReport(id);
-  rpCloseModal();
-  rpRender();
-  rpToast('🗑 Report deleted.', '');
-}
-
-// ---- Ban ----
-function rpBanDo(username) {
-  rpOpenModal(
-    '<p class="rp-modal-title">Ban User</p>' +
-    '<p class="rp-modal-sub" style="color:var(--text);">Ban <strong>' + rpEsc(username) + '</strong>? They will be unable to create reports or comments.</p>' +
-    '<div class="rp-modal-actions">' +
-      '<button class="rp-btn rp-btn-ghost" onclick="rpCloseModal()">Cancel</button>' +
-      '<button class="rp-btn rp-btn-danger" onclick="rpDoBan(\'' + rpEscAttr(username) + '\')">🚫 Ban</button>' +
-    '</div>'
-  );
-}
-function rpDoBan(username) {
-  rpBanUser(username);
-  rpCloseModal();
-  rpRender();
-}
-function rpUnbanDo(username) {
-  rpUnbanUser(username);
-  rpRender();
-}
-
-// =====================================================
-//  Comments interactions
-// =====================================================
-function rpToggleComments(reportId) {
-  var el = document.getElementById('comments-' + reportId);
-  if (!el) return;
-  el.classList.toggle('open');
-}
-
-function rpCommentKey(e, reportId) {
-  if (e.key === 'Enter') rpSendComment(reportId);
-}
-
-function rpSendComment(reportId) {
-  var input = document.getElementById('cinput-' + reportId);
-  if (!input) return;
-  var text = input.value.trim();
-  if (!text) return;
-  rpAddComment(reportId, text);
-  input.value = '';
-  // Re-render just the comments section
-  var commentsEl = document.getElementById('comments-' + reportId);
-  if (commentsEl) {
-    var r = rpFindReport(reportId);
-    if (r) {
-      var wasOpen = commentsEl.classList.contains('open');
-      commentsEl.innerHTML = rpRenderComments(r);
-      if (wasOpen) commentsEl.classList.add('open');
+  var title  = document.getElementById('mTitle').value;
+  var cat    = document.getElementById('mCat').value;
+  var body   = document.getElementById('mBody').value;
+  var target = (document.getElementById('mTarget')||{}).value||'';
+  var pri    = document.getElementById('mPri').value;
+  var btn    = document.getElementById('mSubmitBtn');
+  if (btn) { btn.disabled=true; btn.textContent='Submitting…'; }
+  rpCreateReport(title, cat, body, target, pri, function(err) {
+    if (err) {
+      if (btn) { btn.disabled=false; btn.textContent='Submit Report'; }
+      if (err.startsWith('DUPLICATE:')) { rpShowErr('mErr','A report with this exact title already exists.'); return; }
+      rpShowErr('mErr', err); return;
     }
-  }
-  // Update comment count in toggle
-  var toggles = document.querySelectorAll('.rp-comments-toggle');
-  toggles.forEach(function(btn) {
-    if (btn.getAttribute('onclick') && btn.getAttribute('onclick').indexOf(reportId) !== -1) {
-      var r2 = rpFindReport(reportId);
-      if (r2) btn.textContent = '💬 ' + r2.comments.length + ' comment' + (r2.comments.length!==1?'s':'');
-    }
+    rpCloseModal(); rpToast('📢 Report submitted!', 'success');
   });
 }
 
-function rpDeleteCommentDo(reportId, commentId) {
-  rpDeleteComment(reportId, commentId);
-  var commentsEl = document.getElementById('comments-' + reportId);
-  if (commentsEl) {
-    var r = rpFindReport(reportId);
-    if (r) {
-      var wasOpen = commentsEl.classList.contains('open');
-      commentsEl.innerHTML = rpRenderComments(r);
-      if (wasOpen) commentsEl.classList.add('open');
+// ---- Edit ----
+function rpOpenEditModal(id) {
+  var r = rpFindReport(id); if (!r) return;
+  var catOpts = CATEGORIES.map(function(c){ return '<option value="'+c.id+'"'+(c.id===r.category?' selected':'')+'>'+c.label+'</option>'; }).join('');
+  var priOpts = PRIORITIES.map(function(p){ return '<option value="'+p.id+'"'+((r.priority||'low')===p.id?' selected':'')+'>'+p.label+' Priority</option>'; }).join('');
+  rpOpenModal(
+    '<p class="rp-modal-title">Edit Report</p>' +
+    '<div class="rp-field"><label class="rp-label">Title</label><input class="rp-input" id="mTitle" maxlength="120" value="'+rpEsc(r.title)+'"></div>' +
+    '<div style="display:flex;gap:0.75rem;flex-wrap:wrap;">' +
+      '<div class="rp-field" style="flex:2;min-width:140px;"><label class="rp-label">Category</label><select class="rp-input rp-select" id="mCat" onchange="rpToggleTargetField()">'+catOpts+'</select></div>' +
+      '<div class="rp-field" style="flex:1;min-width:100px;"><label class="rp-label">Priority</label><select class="rp-input rp-select" id="mPri">'+priOpts+'</select></div>' +
+    '</div>' +
+    '<div class="rp-field" id="mTargetField"><label class="rp-label">Pokémon / Move</label><input class="rp-input" id="mTarget" maxlength="80" value="'+rpEsc(r.target||'')+'"></div>' +
+    '<div class="rp-field"><label class="rp-label">Description</label><textarea class="rp-input rp-textarea" id="mBody" maxlength="1500">'+rpEsc(r.body)+'</textarea></div>' +
+    '<p class="rp-error" id="mErr"></p>' +
+    '<div class="rp-modal-actions"><button class="rp-btn rp-btn-ghost" onclick="rpCloseModal()">Cancel</button><button class="rp-btn rp-btn-primary" onclick="rpDoEdit(\''+id+'\')">Save Changes</button></div>'
+  );
+}
+function rpDoEdit(id) {
+  var title=document.getElementById('mTitle').value, cat=document.getElementById('mCat').value,
+      body=document.getElementById('mBody').value, target=(document.getElementById('mTarget')||{}).value||'',
+      pri=document.getElementById('mPri').value;
+  if (!title.trim()||!body.trim()) { rpShowErr('mErr','Title and description required.'); return; }
+  rpEditReport(id,title,cat,body,target,pri);
+  rpCloseModal(); rpToast('✏️ Report updated.','success');
+}
+
+// ---- Accept / Deny / Reopen ----
+function rpOpenAcceptModal(id) {
+  rpOpenModal('<p class="rp-modal-title">Accept Report</p><p class="rp-modal-sub">Optionally leave a note for the reporter.</p>' +
+    '<div class="rp-field"><label class="rp-label">Note (optional)</label><textarea class="rp-input rp-textarea" id="mNote" maxlength="300" style="min-height:70px;"></textarea></div>' +
+    '<div class="rp-modal-actions"><button class="rp-btn rp-btn-ghost" onclick="rpCloseModal()">Cancel</button><button class="rp-btn rp-btn-primary" style="background:#3b82f6;" onclick="rpAcceptDo(\''+id+'\')">✅ Accept</button></div>');
+}
+function rpAcceptDo(id) { rpAcceptReport(id, document.getElementById('mNote').value); rpCloseModal(); rpToast('✅ Report accepted.','success'); }
+
+function rpOpenDenyModal(id) {
+  rpOpenModal('<p class="rp-modal-title">Deny Report</p><p class="rp-modal-sub">Provide a reason so the author understands why.</p>' +
+    '<div class="rp-field"><label class="rp-label">Reason <span style="color:var(--accent)">*</span></label><textarea class="rp-input rp-textarea" id="mReason" maxlength="300" style="min-height:80px;"></textarea></div>' +
+    '<p class="rp-error" id="mErr"></p>' +
+    '<div class="rp-modal-actions"><button class="rp-btn rp-btn-ghost" onclick="rpCloseModal()">Cancel</button><button class="rp-btn rp-btn-danger" onclick="rpDenyDo(\''+id+'\')">⛔ Deny</button></div>');
+}
+function rpDenyDo(id) {
+  var r=document.getElementById('mReason').value.trim();
+  if (!r) { rpShowErr('mErr','Please provide a reason.'); return; }
+  rpDenyReport(id,r); rpCloseModal(); rpToast('⛔ Report denied.','');
+}
+
+function rpReopenDo(id) { rpReopenReport(id); rpToast('🔄 Report reopened.','success'); }
+
+// ---- Admin note ----
+function rpOpenAdminNoteModal(id) {
+  var r=rpFindReport(id); if (!r) return;
+  rpOpenModal('<p class="rp-modal-title">🔒 Private Admin Note</p><p class="rp-modal-sub">Only visible to you.</p>' +
+    '<div class="rp-field"><textarea class="rp-input rp-textarea" id="mAdminNote" maxlength="500">'+rpEsc(r.adminNote||'')+'</textarea></div>' +
+    '<div class="rp-modal-actions"><button class="rp-btn rp-btn-ghost" onclick="rpCloseModal()">Cancel</button><button class="rp-btn rp-btn-primary" onclick="rpSaveAdminNote(\''+id+'\')">Save Note</button></div>');
+}
+function rpSaveAdminNote(id) { rpSetAdminNote(id,document.getElementById('mAdminNote').value); rpCloseModal(); rpToast('🔒 Note saved.','success'); }
+
+// ---- Delete ----
+function rpConfirmDeleteReport(id) {
+  var r=rpFindReport(id); if (!r) return;
+  rpOpenModal('<p class="rp-modal-title">Delete Report</p><p class="rp-modal-sub" style="color:var(--text);">Delete <strong>"'+rpEsc(r.title)+'"</strong>? Cannot be undone.</p>' +
+    '<div class="rp-modal-actions"><button class="rp-btn rp-btn-ghost" onclick="rpCloseModal()">Cancel</button><button class="rp-btn rp-btn-danger" onclick="rpDoDeleteReport(\''+id+'\')">🗑 Delete</button></div>');
+}
+function rpDoDeleteReport(id) { rpDeleteReport(id); rpCloseModal(); rpToast('🗑 Report deleted.',''); }
+
+// ---- Ban ----
+function rpBanDo(username) {
+  rpOpenModal('<p class="rp-modal-title">Ban User</p><p class="rp-modal-sub" style="color:var(--text);">Ban <strong>'+rpEsc(username)+'</strong>? They cannot post or comment.</p>' +
+    '<div class="rp-modal-actions"><button class="rp-btn rp-btn-ghost" onclick="rpCloseModal()">Cancel</button><button class="rp-btn rp-btn-danger" onclick="rpDoBan(\''+rpEscAttr(username)+'\')">🚫 Ban</button></div>');
+}
+function rpDoBan(u)   { rpBanUser(u);   rpCloseModal(); rpRender(); }
+function rpUnbanDo(u) { rpUnbanUser(u); rpRender(); }
+
+// ---- Bulk ----
+function rpToggleBulkMode() { RP.bulkMode=!RP.bulkMode; if (!RP.bulkMode) RP.selected.clear(); rpRender(); }
+function rpToggleSelect(id) { if (RP.selected.has(id)) RP.selected.delete(id); else RP.selected.add(id); var c=document.querySelector('.rp-bulk-count'); if(c) c.textContent=RP.selected.size+' selected'; }
+function rpSelectAll() { var p=rpGetFiltered().slice((RP.page-1)*PAGE_SIZE,RP.page*PAGE_SIZE); p.forEach(function(r){ RP.selected.add(r.id); }); rpRender(); }
+function rpClearSelection() { RP.selected.clear(); rpRender(); }
+function rpBulkAcceptDo() {
+  rpOpenModal('<p class="rp-modal-title">Accept '+RP.selected.size+' Reports</p><div class="rp-field"><label class="rp-label">Note (optional)</label><textarea class="rp-input rp-textarea" id="mNote" style="min-height:60px;"></textarea></div>' +
+    '<div class="rp-modal-actions"><button class="rp-btn rp-btn-ghost" onclick="rpCloseModal()">Cancel</button><button class="rp-btn rp-btn-primary" style="background:#3b82f6;" onclick="rpBulkAcceptConfirm()">✅ Accept All</button></div>');
+}
+function rpBulkAcceptConfirm() { rpBulkSetStatus('accepted',document.getElementById('mNote').value); rpCloseModal(); rpToast('✅ Reports accepted.','success'); }
+function rpBulkDenyDo() {
+  rpOpenModal('<p class="rp-modal-title">Deny '+RP.selected.size+' Reports</p><div class="rp-field"><label class="rp-label">Reason <span style="color:var(--accent)">*</span></label><textarea class="rp-input rp-textarea" id="mReason" style="min-height:70px;"></textarea></div>' +
+    '<p class="rp-error" id="mErr"></p><div class="rp-modal-actions"><button class="rp-btn rp-btn-ghost" onclick="rpCloseModal()">Cancel</button><button class="rp-btn rp-btn-danger" onclick="rpBulkDenyConfirm()">⛔ Deny All</button></div>');
+}
+function rpBulkDenyConfirm() { var r=document.getElementById('mReason').value.trim(); if (!r) { rpShowErr('mErr','Please provide a reason.'); return; } rpBulkSetStatus('denied',r); rpCloseModal(); rpToast('⛔ Reports denied.',''); }
+function rpBulkReopenDo() { rpBulkSetStatus('open',''); rpToast('🔄 Reports reopened.','success'); }
+function rpBulkDeleteDo() {
+  rpOpenModal('<p class="rp-modal-title">Delete '+RP.selected.size+' Reports</p><p class="rp-modal-sub" style="color:var(--text);">Permanently delete all '+RP.selected.size+' selected reports?</p>' +
+    '<div class="rp-modal-actions"><button class="rp-btn rp-btn-ghost" onclick="rpCloseModal()">Cancel</button><button class="rp-btn rp-btn-danger" onclick="rpBulkDeleteConfirm()">🗑 Delete All</button></div>');
+}
+function rpBulkDeleteConfirm() { rpBulkDelete(); rpCloseModal(); rpToast('🗑 Reports deleted.',''); }
+function rpSetPriorityDo(id,pri) { rpSetPriority(id,pri); rpToast('Priority updated.','success'); }
+
+// =====================================================
+//  Notifications Panel
+// =====================================================
+function rpOpenNotifs() {
+  rpMarkNotifsRead();
+  var typeMap = { accepted:{icon:'✅',text:'Your report was accepted'}, denied:{icon:'⛔',text:'Your report was denied'}, reopened:{icon:'🔄',text:'Your report was reopened'}, comment:{icon:'💬',text:'commented on your report'}, mention:{icon:'@',text:'mentioned you in a comment'} };
+  rpGetMyNotifs(function(notifs) {
+    var html = '<p class="rp-modal-title">🔔 Notifications</p>';
+    if (notifs.length===0) {
+      html += '<p style="color:var(--text-muted);font-size:0.88rem;padding:1rem 0;">No notifications yet.</p>';
+    } else {
+      html += '<div style="display:flex;flex-direction:column;gap:0.6rem;max-height:380px;overflow-y:auto;padding-right:0.25rem;">';
+      notifs.forEach(function(n) {
+        var t=typeMap[n.type]||{icon:'ℹ️',text:n.type};
+        var r=rpFindReport(n.reportId);
+        html += '<div class="rp-notif-item'+(n.read?'':' unread')+'">';
+        html += '<span class="rp-notif-icon">'+t.icon+'</span><div class="rp-notif-body"><p class="rp-notif-text">';
+        if (n.type==='comment'||n.type==='mention') html += '<strong>'+rpEsc(n.detail)+'</strong> '+t.text;
+        else html += t.text;
+        if (r) html += ' — <em>'+rpEsc(r.title)+'</em>';
+        if (n.detail && n.type!=='comment' && n.type!=='mention') html += '<br><span style="font-size:0.75rem;color:var(--text-dim);">'+rpEsc(n.detail)+'</span>';
+        html += '</p><span class="rp-notif-time">'+rpRelTime(n.ts)+'</span></div></div>';
+      });
+      html += '</div><button class="rp-btn rp-btn-ghost" style="margin-top:1rem;width:100%;justify-content:center;" onclick="rpClearNotifs()">Clear all</button>';
     }
-  }
-  rpToast('Comment deleted.', '');
+    html += '<div style="text-align:center;margin-top:1rem;"><button onclick="rpCloseModal()" style="background:none;border:none;color:var(--text-muted);font-size:0.8rem;cursor:pointer;">Close</button></div>';
+    rpOpenModal(html);
+    // Reset bell badge
+    var btn=document.getElementById('rpBellBtn'); if(btn) btn.innerHTML='🔔';
+  });
+}
+
+function rpClearNotifs() {
+  if (!RP.db||!RP.user) return;
+  RP.db.collection('notifications').where('username','==',RP.user.username).get().then(function(snap){
+    var batch=RP.db.batch(); snap.forEach(function(doc){ batch.delete(doc.ref); }); return batch.commit();
+  }).then(function(){ rpCloseModal(); rpToast('Notifications cleared.',''); });
 }
 
 // =====================================================
-//  Filter interactions
+//  Member Profile
 // =====================================================
-function rpSetFilter(type, val) {
-  if (type === 'status') RP.filterStatus = val;
-  if (type === 'cat')    RP.filterCat    = val;
-  rpRender();
+function rpOpenProfile(username) {
+  var userReports = RP.reports.filter(function(r){ return r.author===username; });
+  var accepted    = userReports.filter(function(r){ return r.status==='accepted'; }).length;
+  var open        = userReports.filter(function(r){ return r.status==='open'; }).length;
+  var totalVotes  = userReports.reduce(function(s,r){ return s+(r.upvotes||[]).length; },0);
+  var isAdmin     = rpIsAdmin();
+
+  rpGetMemberFromFirestore(username, function(member) {
+    var banned = member && member.banned;
+    var html = '<p class="rp-modal-title">👤 '+rpEsc(username)+'</p>';
+    if (username===ADMIN_USERNAME) html += '<span class="rp-user-role rp-role-admin" style="margin-bottom:1rem;display:inline-block;">Admin</span>';
+    html += '<div class="rp-profile-stats">';
+    html += '<div class="rp-profile-stat"><span>'+userReports.length+'</span>Reports</div>';
+    html += '<div class="rp-profile-stat"><span>'+accepted+'</span>Accepted</div>';
+    html += '<div class="rp-profile-stat"><span>'+open+'</span>Open</div>';
+    html += '<div class="rp-profile-stat"><span>'+totalVotes+'</span>Votes</div>';
+    html += '</div>';
+    if (member && member.joinedAt) html += '<p style="font-size:0.8rem;color:var(--text-dim);margin-bottom:1rem;">Joined '+rpRelTime(member.joinedAt)+'</p>';
+    if (banned) html += '<p style="color:#f87171;font-size:0.82rem;margin-bottom:0.75rem;">🚫 This user is banned.</p>';
+    if (userReports.length>0) {
+      html += '<p class="rp-label" style="margin-bottom:0.5rem;">Recent Reports</p>';
+      html += '<div style="display:flex;flex-direction:column;gap:0.4rem;max-height:160px;overflow-y:auto;">';
+      userReports.slice(0,5).forEach(function(r){
+        html += '<div style="font-size:0.82rem;background:var(--surface2);border-radius:var(--radius-sm);padding:0.4rem 0.6rem;display:flex;justify-content:space-between;gap:0.5rem;">';
+        html += '<span style="color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+rpEsc(r.title)+'</span>'+rpStatusBadge(r.status)+'</div>';
+      });
+      html += '</div>';
+    }
+    if (isAdmin && username!==ADMIN_USERNAME) {
+      html += '<div style="display:flex;gap:0.5rem;margin-top:1.25rem;flex-wrap:wrap;">';
+      if (!banned) html += '<button class="rp-btn rp-btn-danger rp-btn-sm" onclick="rpDoBan(\''+rpEscAttr(username)+'\');rpCloseModal();">🚫 Ban User</button>';
+      else         html += '<button class="rp-btn rp-btn-ghost rp-btn-sm" onclick="rpUnbanUser(\''+rpEscAttr(username)+'\');rpCloseModal();rpRender();">✅ Unban User</button>';
+      html += '</div>';
+    }
+    html += '<div style="text-align:center;margin-top:1rem;"><button onclick="rpCloseModal()" style="background:none;border:none;color:var(--text-muted);font-size:0.8rem;cursor:pointer;">Close</button></div>';
+    rpOpenModal(html);
+  });
 }
+
+// =====================================================
+//  Comments
+// =====================================================
+function rpToggleComments(id) { var el=document.getElementById('comments-'+id); if(el) el.classList.toggle('open'); }
+function rpCommentKey(e,id)   { if(e.key==='Enter') rpSendComment(id); }
+function rpSendComment(id) {
+  var input=document.getElementById('cinput-'+id); if (!input||!input.value.trim()) return;
+  rpAddComment(id,input.value); input.value='';
+  // Optimistic UI update — Firestore snapshot will confirm
+  var el=document.getElementById('comments-'+id);
+  if (el) { var wasOpen=el.classList.contains('open'); var r=rpFindReport(id); if(r){ el.innerHTML=rpRenderComments(r); if(wasOpen) el.classList.add('open'); } }
+}
+function rpDeleteCommentDo(reportId,commentId) {
+  rpDeleteComment(reportId,commentId);
+  var el=document.getElementById('comments-'+reportId);
+  if (el) { var wasOpen=el.classList.contains('open'); var r=rpFindReport(reportId); if(r){ el.innerHTML=rpRenderComments(r); if(wasOpen) el.classList.add('open'); } }
+  rpToast('Comment deleted.','');
+}
+
+// =====================================================
+//  Filters / Sort / Pagination
+// =====================================================
+function rpSetFilter(type,val) {
+  if (type==='status') RP.filterStatus=val;
+  if (type==='cat')    RP.filterCat=val;
+  if (type==='pri')    RP.filterPri=val;
+  RP.page=1; rpRender();
+}
+function rpSetSort(val) { RP.sortBy=val; RP.page=1; rpRender(); }
 function rpSetSearch(val) {
-  RP.search = val;
-  // Partial re-render: update just the list
-  var filtered = rpGetFiltered();
-  var list = document.querySelector('.rp-list');
-  if (!list) return;
-  if (filtered.length === 0) {
-    list.innerHTML = '<div class="rp-empty"><div class="rp-empty-icon">📭</div><p class="rp-empty-text">No reports match your filters.</p></div>';
-  } else {
-    list.innerHTML = filtered.map(rpRenderCard).join('');
-  }
+  RP.search=val; RP.page=1;
+  var filtered=rpGetFiltered(); var list=document.getElementById('rpList'); if (!list) return;
+  list.innerHTML = filtered.slice(0,PAGE_SIZE).map(rpRenderCard).join('') ||
+    '<div class="rp-empty"><div class="rp-empty-icon">📭</div><p class="rp-empty-text">No reports match your filters.</p></div>';
 }
-
-// =====================================================
-//  Escape helpers
-// =====================================================
-function rpEsc(s) {
-  return String(s||'')
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;')
-    .replace(/'/g,'&#39;');
-}
-function rpEscAttr(s) {
-  return String(s||'').replace(/'/g,'\\\'');
+function rpGoPage(p) {
+  RP.page=p; rpRender();
+  window.scrollTo({ top: (document.getElementById('rpApp')||{}).offsetTop-80||0, behavior:'smooth' });
 }
