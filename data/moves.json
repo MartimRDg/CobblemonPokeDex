@@ -2455,6 +2455,126 @@
       "accuracy": 85,
       "pp": 20,
       "description": "The user attacks the target by smashing into it with incredible force. This may also confuse the target."
+    },
+    "Powder Snow": {
+      "type": "Ice",
+      "category": "Special",
+      "power": 40,
+      "accuracy": 100,
+      "pp": 25,
+      "description": "The user attacks with a chilling gust of powdery snow. This may also leave opposing Pokémon frozen."
+    },
+    "Bide": {
+      "type": "Normal",
+      "category": "Physical",
+      "power": 0,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user endures attacks for two turns, then strikes back to cause double the damage taken."
+    },
+    "Fury Swipes": {
+      "type": "Normal",
+      "category": "Physical",
+      "power": 18,
+      "accuracy": 80,
+      "pp": 15,
+      "description": "The user attacks by raking the target with claws, scythes, or the like. This move hits two to five times in a row."
+    },
+    "Brine": {
+      "type": "Water",
+      "category": "Special",
+      "power": 65,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "This move's power is doubled if the target's HP is at half or less."
+    },
+    "Frost Breath": {
+      "type": "Ice",
+      "category": "Special",
+      "power": 60,
+      "accuracy": 90,
+      "pp": 10,
+      "description": "The user attacks by blowing its cold breath on the target. This move always lands a critical hit."
+    },
+    "Flail": {
+      "type": "Normal",
+      "category": "Physical",
+      "power": 0,
+      "accuracy": 100,
+      "pp": 15,
+      "description": "The user flails about aimlessly to attack. The less HP the user has, the greater the move's power."
+    },
+    "Snowscape": {
+      "type": "Ice",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user summons a snowstorm lasting five turns. This boosts the Defense stats of Ice types."
+    },
+    "Sheer Cold": {
+      "type": "Ice",
+      "category": "Special",
+      "power": 0,
+      "accuracy": 30,
+      "pp": 5,
+      "description": "The target faints instantly. This move is less likely to hit the target if used by Pokémon other than Ice types."
+    },
+    "Play Nice": {
+      "type": "Normal",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user and the target become friends, and the target loses its will to fight. This lowers the target's Attack stat."
+    },
+    "Encore": {
+      "type": "Normal",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 5,
+      "description": "The user compels the target to keep using the move it encored for three turns."
+    },
+    "Icicle Spear": {
+      "type": "Ice",
+      "category": "Physical",
+      "power": 25,
+      "accuracy": 100,
+      "pp": 30,
+      "description": "The user attacks by launching sharp icicles at the target. This move hits two to five times in a row."
+    },
+    "X-Scissor": {
+      "type": "Bug",
+      "category": "Physical",
+      "power": 80,
+      "accuracy": 100,
+      "pp": 15,
+      "description": "The user slashes at the target by crossing its scythes, claws, or the like as if they were a pair of scissors."
+    },
+    "Aqua Jet": {
+      "type": "Water",
+      "category": "Physical",
+      "power": 40,
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user lunges at the target to inflict damage, moving at blinding speed. This move always goes first."
+    },
+    "Icicle Crash": {
+      "type": "Ice",
+      "category": "Physical",
+      "power": 85,
+      "accuracy": 90,
+      "pp": 10,
+      "description": "The user attacks by crashing large icicles onto the target. This may also make the target flinch."
+    },
+    "Bulk Up": {
+      "type": "Fighting",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user tenses its muscles to bulk up its body, boosting its Attack and Defense stats."
     }
   }
 }

@@ -465,7 +465,8 @@ var BIOME_GROUPS = {
   'snowy forest': ['biomesoplenty:auroral_garden', 'biomesoplenty:muskeg', 'biomesoplenty:snowy_maple_woods', 'blooming_biosphere:snowy_cherry_grove', 'terralith:alpha_islands_winter', 'terralith:ice_marsh', 'terralith:siberian_grove', 'terralith:snowy_cherry_grove', 'terralith:snowy_cherry_grove', 'terralith:snowy_maple_forest', 'wythers:huangshan_highlands', 'wythers:jade_highlands', 'wythers:snowy_fen'],
   'snowy taiga': ['minecraft:grove', 'minecraft:snowy_taiga', 'biomesoplenty:snowy_coniferous_forest', 'biomesoplenty:snowy_coniferous_forest', 'biomesoplenty:snowy_maple_woods', 'clifftree:snowy_old_growth_taiga', 'terralith:alpine_grove', 'terralith:cold_shrubland', 'terralith:siberian_grove', 'terralith:snowy_maple_forest', 'terralith:snowy_shield', 'terralith:wintry_forest', 'terralith:wintry_lowlands', 'wythers:cold_island', 'wythers:snowy_thermal_taiga', 'wythers:deep_snowy_taiga'],
   'tundra': ['minecraft:ice_spikes', 'minecraft:snowy_plains', '#c:snowy_plains', 'biomesoplenty:cold_desert', 'biomesoplenty:cold_desert', 'biomesoplenty:muskeg', 'biomesoplenty:snowy_fir_clearing', 'biomesoplenty:tundra', 'biomeswevegone:crimson_tundra', 'clifftree:bog', 'clifftree:tundra', 'terralith:cold_shrubland', 'terralith:gravel_desert', 'terralith:rocky_shrubland', 'terralith:snowy_badlands', 'terralith:yellowstone', 'wythers:crimson_tundra', 'wythers:frigid_island', 'wythers:ice_cap', 'wythers:icy_crags', 'wythers:snowy_tundra', 'wythers:tundra'],
-  'nether/quartz': ['cinderscapes:quartz_cavern', 'incendium:quartz_flats']
+  'nether/quartz': ['cinderscapes:quartz_cavern', 'incendium:quartz_flats'],
+  "frozen ocean": ['minecraft:deep_frozen_ocean', 'minecraft:frozen_ocean', 'terralith:frozen_cliffs', 'wythers:deep_icy_ocean', 'wythers:icy_ocean']
 };
 
 function getBiomeGroupTooltip(biomeName) {
