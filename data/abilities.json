@@ -92,6 +92,19 @@
     },
     "Rattled": {
       "description": "The Pokémon gets scared when hit by a Dark-, Ghost-, or Bug-type attack or if intimidated, which boosts its Speed stat."
+    },
+    "Overcoat": {
+      "description": "The Pokémon takes no damage from sandstorms. It is also protected from the effects of powders and spores."
+    },
+     "Swarm": {
+      "description": "Powers up Bug-type moves when the Pokémon's HP is low."
+    },
+     "Tinted Lens": {
+      "description": "The Pokémon can use 'not very effective' moves to deal regular damage."
+    },
+     "Anticipation": {
+      "description": "The Pokémon can sense an opposing Pokémon's dangerous moves."
     }
+
   }
 }

@@ -2095,6 +2095,631 @@
     {
       "_comment": "Base Stats",
 
+      "id": 412,
+      "name": "Burmy",
+      "number": "0412",
+      "types": ["Bug"],
+      "generation": 4,
+      "rarity": "Common",
+      "rideable": false,
+      "flying": false,
+      "legendary": false,
+      "mythical": false,
+      "catchRate": 120,
+
+      "abilities": ["Shred Skin", "Overcoat (Hidden)"],
+
+      "baseStats": {
+        "hp": 40,
+        "attack": 29,
+        "defense": 45,
+        "spAttack": 29,
+        "spDefense": 45,
+        "speed": 36
+       },
+
+       "evYield": {
+        "spDefense": 1
+       },
+
+       "drops": [
+        { "item": "String", "chance": 100, "quantity": "0-1", "image": "assets/images/items/string.png"},
+        { "item": "Occa Berry", "chance": 2.5, "quantity": "1", "image": "assets/images/items/occa_berry.png"}
+       ],
+
+      "weaknesses": ["Fire", "Rock"],
+      "resistances": ["Grass", "Fighting", "Ground"],
+      "immunities": ["None"],
+
+      "video": "assets/videos/burmy.gif",
+      "shinyVideo":"assets/videos/burmy-shiny.gif",
+
+      "_comment2": "Evolutions",
+      
+      "evolutions": [
+       { "id": 412, "name": "Burmy", "level": null },
+       {
+         "branches": [
+          { "id": 414, "name": "Mothim", "level": 20, "method": "Male" },
+          { "id": 413, "name": "Wormadam", "level": 20, "method": "Female" }
+         ]
+        }
+      ],
+
+      "_comment3": "Movesets",
+
+      "moves": {
+        "level": [
+         { "level": 1, "name": "Tackle" },
+         { "level": 15, "name": "Bug Bite" },
+         { "level": 20, "name": "String Shot" }
+        ],
+        "tm": [
+           { "name": "Bug Bite" },
+           { "name": "Electroweb" },
+           { "name": "String Shot" },
+           { "name": "Tera Blast" }
+        ],
+        "egg": [
+        ],
+        "tutor": [
+          { "name": "Bug Bite"},
+          { "name": "Electroweb" },
+          { "name": "String Shot" }
+       ]
+     }
+    },
+    {
+      "_comment": "Base Stats",
+
+      "id": 413,
+      "name": "Wormadam Plant",
+      "number": "0413",
+      "types": ["Bug", "Grass"],
+      "generation": 4,
+      "rarity": "Common",
+      "rideable": false,
+      "flying": false,
+      "legendary": false,
+      "mythical": false,
+      "catchRate": 45,
+
+      "abilities": ["Anticipation", "Overcoat (Hidden)"],
+
+      "baseStats": {
+        "hp": 60,
+        "attack": 59,
+        "defense": 85,
+        "spAttack": 79,
+        "spDefense": 105,
+        "speed": 36
+       },
+
+       "evYield": {
+        "spDefense": 1
+       },
+
+       "drops": [
+        { "item": "String", "chance": 100, "quantity": "0-2", "image": "assets/images/items/string.png"},
+        { "item": "Occa Berry", "chance": 5, "quantity": "1", "image": "assets/images/items/occa_berry.png"}
+       ],
+
+      "weaknesses": ["Fire", "Rock", "Ice", "Poison", "Flying", "Bug"],
+      "resistances": ["Grass", "Fighting", "Ground", "Water", "Electric"],
+      "immunities": ["None"],
+
+      "video": "assets/videos/wormadam-plant.gif",
+      "shinyVideo":"assets/videos/wormadam-plant-shiny.gif",
+
+      "_comment2": "Evolutions",
+      
+      "evolutions": [
+       { "id": 412, "name": "Burmy", "level": null },
+       {
+         "branches": [
+          { "id": 414, "name": "Mothim", "level": 20, "method": "Male" },
+          { "id": 413, "name": "Wormadam", "level": 20, "method": "Female" }
+         ]
+        }
+      ],
+
+      "variants": [
+       {
+         "name": "Wormadam Sandy",
+         "video": "assets/videos/wormadam-sandy.gif",
+         "shinyVideo":"assets/videos/wormadam-sandy-shiny.gif",
+         "abilities": ["Anticipation", "Overcoat (Hidden)"],
+         "types": ["Bug", "Ground"],
+
+         "weaknesses": ["Fire", "Flying", "Water", "Ice"],
+         "resistances": ["Fighting", "Ground", "Poison"],
+         "immunities": ["Electric"],
+
+         "baseStats": {
+           "hp": 60,
+           "attack": 79,
+           "defense": 105,
+           "spAttack": 59,
+           "spDefense": 85,
+           "speed": 36
+          },
+
+          "evYield": {
+           "defense": 2
+          },
+
+          "moves": {
+           "level": [
+            { "level": 1, "name": "Tackle" },
+            { "level": 1, "name": "Protect" },
+            { "level": 1, "name": "Bug Bite" },
+            { "level": 1, "name": "Sucker Punch" },
+            { "level": 1, "name": "Quiver Dance" },
+            { "level": 20, "name": "String Shot" },
+            { "level": 23, "name": "Confusion" },
+            { "level": 26, "name": "Rock Blast" },
+            { "level": 29, "name": "Harden" },
+            { "level": 32, "name": "Psybeam" },
+            { "level": 35, "name": "Captivate" },
+            { "level": 38, "name": "Flail" },
+            { "level": 41, "name": "Attract" },
+            { "level": 44, "name": "Psychic" },
+            { "level": 47, "name": "Fissure" },
+            { "level": 50, "name": "Bug Buzz" }
+           ],
+           "tm": [
+            { "name": "Attract" },
+            { "name": "Bug Bite" },
+            { "name": "Bug Buzz" },
+            { "name": "Bulldoze" },
+            { "name": "Captivate" },
+            { "name": "Dig" },
+            { "name": "Dream Eater" },
+            { "name": "Dual Wingbeat" },
+            { "name": "Earth Power" },
+            { "name": "Earthquake" },
+            { "name": "Electroweb" },
+            { "name": "Endeavor" },
+            { "name": "Endure" },
+            { "name": "Facade" },
+            { "name": "Flash" },
+            { "name": "Giga Drain" },
+            { "name": "Giga Impact" },
+            { "name": "Hyper Beam" },
+            { "name": "Infestation" },
+            { "name": "Mud-Slap" },
+            { "name": "Protect" },
+            { "name": "Psybeam" },
+            { "name": "Psychic" },
+            { "name": "Psych Up" },
+            { "name": "Rain Dance" },
+            { "name": "Rest" },
+            { "name": "Rock Blast" },
+            { "name": "Rock Tomb" },
+            { "name": "Rollout" },
+            { "name": "Safeguard" },
+            { "name": "Sandstorm" },
+            { "name": "Shadow Ball" },
+            { "name": "Signal Beam" },
+            { "name": "Silver Wind" },
+            { "name": "Skill Swap" },
+            { "name": "Sleep Talk" },
+            { "name": "Solar Beam" },
+            { "name": "Stealth Rock" },
+            { "name": "String Shot" },
+            { "name": "Struggle Bug" },
+            { "name": "Substitute" },
+            { "name": "Sucker Punch" },
+            { "name": "Sunny Day" },
+            { "name": "Telekinesis" },
+            { "name": "Tera Blast" },
+            { "name": "Thief" },
+            { "name": "Uproar" },
+            { "name": "Venoshock" }
+           ],
+           "egg": [
+           ],
+           "tutor": [
+            { "name": "Bug Bite" },
+            { "name": "Bulldoze" },
+            { "name": "Dual Wingbeat" },
+            { "name": "Earth Power" },
+            { "name": "Electroweb" },
+            { "name": "Endeavor" },
+            { "name": "Giga Drain" },
+            { "name": "Giga Impact" },
+            { "name": "Hyper Beam" },
+            { "name": "Mud-Slap" },
+            { "name": "Psychic" },
+            { "name": "Rest" },
+            { "name": "Rollout" },
+            { "name": "Shadow Ball" },
+            { "name": "Signal Beam" },
+            { "name": "Skill Swap" },
+            { "name": "Sleep Talk" },
+            { "name": "Stealth Rock" },
+            { "name": "String Shot" },
+            { "name": "Sucker Punch" },
+            { "name": "Telekinesis" },
+            { "name": "Uproar" }
+           ]
+          }
+        },
+        {
+         "name": "Wormadam Trash",
+         "video": "assets/videos/wormadam-trash.gif",
+         "shinyVideo":"assets/videos/wormadam-trash-shiny.gif",
+         "abilities": ["Anticipation", "Overcoat (Hidden)"],
+         "types": ["Bug", "Steel"],
+
+         "weaknesses": ["Fire"],
+         "resistances": ["Grass", "Normal", "Ice", "Psychic", "Bug", "Rock", "Ghost", "Dragon", "Dark", "Steel", "Fairy"],
+         "immunities": ["Poison"],
+
+         "baseStats": {
+           "hp": 60,
+           "attack": 69,
+           "defense": 95,
+           "spAttack": 69,
+           "spDefense": 95,
+           "speed": 36
+          },
+
+          "evYield": {
+           "spDefense": 1,
+           "defense": 1
+          },
+
+          "moves": {
+           "level": [
+            { "level": 1, "name": "Tackle" },
+            { "level": 1, "name": "Protect" },
+            { "level": 1, "name": "Bug Bite" },
+            { "level": 1, "name": "Mirror Shot" },
+            { "level": 1, "name": "Sucker Punch" },
+            { "level": 1, "name": "Quiver Dance" },
+            { "level": 1, "name": "Metal Burst" },
+            { "level": 20, "name": "String Shot" },
+            { "level": 23, "name": "Confusion" },
+            { "level": 29, "name": "Metal Sound" },
+            { "level": 32, "name": "Psybeam" },
+            { "level": 35, "name": "Captivate" },
+            { "level": 38, "name": "Flail" },
+            { "level": 41, "name": "Attract" },
+            { "level": 44, "name": "Psychic" },
+            { "level": 47, "name": "Iron Head" },
+            { "level": 50, "name": "Bug Buzz" }
+           ],
+           "tm": [
+            { "name": "Attract" },
+            { "name": "Bug Bite" },
+            { "name": "Bug Buzz" },
+            { "name": "Captivate" },
+            { "name": "Dig" },
+            { "name": "Dream Eater" },
+            { "name": "Dual Wingbeat" },
+            { "name": "Electroweb" },
+            { "name": "Endeavor" },
+            { "name": "Endure" },
+            { "name": "Facade" },
+            { "name": "Flash" },
+            { "name": "Flash Cannon" },
+            { "name": "Giga Drain" },
+            { "name": "Giga Impact" },
+            { "name": "Gunk Shot" },
+            { "name": "Gyro Ball" },
+            { "name": "Hyper Beam" },
+            { "name": "Infestation" },
+            { "name": "Iron Defense" },
+            { "name": "Iron Head" },
+            { "name": "Magnet Rise" },
+            { "name": "Metal Sound" },
+            { "name": "Protect" },
+            { "name": "Psybeam" },
+            { "name": "Psychic" },
+            { "name": "Psych Up" },
+            { "name": "Rain Dance" },
+            { "name": "Rest" },
+            { "name": "Safeguard" },
+            { "name": "Shadow Ball" },
+            { "name": "Signal Beam" },
+            { "name": "Silver Wind" },
+            { "name": "Skill Swap" },
+            { "name": "Sleep Talk" },
+            { "name": "Solar Beam" },
+            { "name": "Stealth Rock" },
+            { "name": "String Shot" },
+            { "name": "Struggle Bug" },
+            { "name": "Substitute" },
+            { "name": "Sucker Punch" },
+            { "name": "Sunny Day" },
+            { "name": "Telekinesis" },
+            { "name": "Tera Blast" },
+            { "name": "Thief" },
+            { "name": "Uproar" },
+            { "name": "Venoshock" }
+           ],
+           "egg": [
+           ],
+           "tutor": [
+            { "name": "Bug Bite" },
+            { "name": "Dual Wingbeat" },
+            { "name": "Electroweb" },
+            { "name": "Endeavor" },
+            { "name": "Flash Cannon" },
+            { "name": "Giga Drain" },
+            { "name": "Giga Impact" },
+            { "name": "Gunk Shot" },
+            { "name": "Hyper Beam" },
+            { "name": "Iron Defense" },
+            { "name": "Iron Head" },
+            { "name": "Magnet Rise" },
+            { "name": "Psychic" },
+            { "name": "Rest" },
+            { "name": "Shadow Ball" },
+            { "name": "Signal Beam" },
+            { "name": "Skill Swap" },
+            { "name": "Sleep Talk" },
+            { "name": "Stealth Rock" },
+            { "name": "String Shot" },
+            { "name": "Sucker Punch" },
+            { "name": "Telekinesis" },
+            { "name": "Uproar" }
+           ]
+          }
+        }
+      ],
+
+      "_comment3": "Movesets",
+
+      "moves": {
+        "level": [
+         { "level": 1, "name": "Tackle" },
+         { "level": 1, "name": "Protect" },
+         { "level": 1, "name": "Bug Bite" },
+         { "level": 1, "name": "Sucker Punch" },
+         { "level": 1, "name": "Quiver Dance" },
+         { "level": 20, "name": "String Shot" },
+         { "level": 21, "name": "Confusion" },
+         { "level": 26, "name": "Razor Leaf" },
+         { "level": 29, "name": "Growth" },
+         { "level": 32, "name": "Psybeam" },
+         { "level": 35, "name": "Captivate" },
+         { "level": 38, "name": "Flail" },
+         { "level": 41, "name": "Attract" },
+         { "level": 44, "name": "Psychic" },
+         { "level": 47, "name": "Leaf Storm" },
+         { "level": 50, "name": "Bug Buzz" }
+        ],
+        "tm": [
+           { "name": "Attract" },
+           { "name": "Bug Bite" },
+           { "name": "Bug Buzz" },
+           { "name": "Bullet Seed" },
+           { "name": "Captivate" },
+           { "name": "Dig" },
+           { "name": "Dream Eater" },
+           { "name": "Dual Wingbeat" },
+           { "name": "Electroweb" },
+           { "name": "Endeavor" },
+           { "name": "Endure" },
+           { "name": "Energy Ball" },
+           { "name": "Facade" },
+           { "name": "Flash" },
+           { "name": "Giga Drain" },
+           { "name": "Giga Impact" },
+           { "name": "Grass Knot" },
+           { "name": "Grassy Glide" },
+           { "name": "Hyper Beam" },
+           { "name": "Infestation" },
+           { "name": "Leaf Storm" },
+           { "name": "Protect" },
+           { "name": "Psybeam" },
+           { "name": "Psychic" },
+           { "name": "Psych Up" },
+           { "name": "Rain Dance" },
+           { "name": "Rest" },
+           { "name": "Safeguard" },
+           { "name": "Seed Bomb" },
+           { "name": "Shadow Ball" },
+           { "name": "Signal Beam" },
+           { "name": "Silver Wind" },
+           { "name": "Skill Swap" },
+           { "name": "Sleep Talk" },
+           { "name": "Solar Beam" },
+           { "name": "String Shot" },
+           { "name": "Struggle Bug" },
+           { "name": "Substitute" },
+           { "name": "Sucker Punch" },
+           { "name": "Sunny Day" },
+           { "name": "Synthesis" },
+           { "name": "Telekinesis" },
+           { "name": "Tera Blast" },
+           { "name": "Thief" },
+           { "name": "Uproar" },
+           { "name": "Venoshock" },
+           { "name": "Worry Seed" }
+        ],
+        "egg": [
+        ],
+        "tutor": [
+          { "name": "Bug Bite"},
+          { "name": "Dual Wingbeat" },
+          { "name": "Electroweb" },
+          { "name": "Endeavor" },
+          { "name": "Energy Ball" },
+          { "name": "Giga Drain" },
+          { "name": "Giga Impact" },
+          { "name": "Grassy Glide" },
+          { "name": "Hyper Beam" },
+          { "name": "Psychic" },
+          { "name": "Rest" },
+          { "name": "Seed Bomb" },
+          { "name": "Shadow Ball" },
+          { "name": "Signal Beam" },
+          { "name": "Skill Swap" },
+          { "name": "Sleep Talk" },
+          { "name": "String Shot" },
+          { "name": "Sucker Punch" },
+          { "name": "Synthesis" },
+          { "name": "Telekinesis" },
+          { "name": "Uproar" },
+          { "name": "Worry Seed" }
+       ]
+     }
+    },
+    {
+      "_comment": "Base Stats",
+
+      "id": 414,
+      "name": "Mothim",
+      "number": "0414",
+      "types": ["Bug", "Flying"],
+      "generation": 4,
+      "rarity": "Common",
+      "rideable": false,
+      "flying": false,
+      "legendary": false,
+      "mythical": false,
+      "catchRate": 45,
+
+      "abilities": ["Swarm", "Tinted Lens (Hidden)"],
+
+      "baseStats": {
+        "hp": 70,
+        "attack": 94,
+        "defense": 50,
+        "spAttack": 94,
+        "spDefense": 50,
+        "speed": 66
+       },
+
+       "evYield": {
+        "attack": 1,
+        "spDefense": 1
+       },
+
+       "drops": [
+        { "item": "Silver Powder", "chance": 5, "quantity": "1", "image": "assets/images/items/silver_powder.png"},
+        { "item": "Occa Berry", "chance": 5, "quantity": "1", "image": "assets/images/items/occa_berry.png"}
+       ],
+
+      "weaknesses": ["Fire", "Rock", "Electric", "Ice"],
+      "resistances": ["Grass", "Fighting", "Bug"],
+      "immunities": ["Ground"],
+
+      "video": "assets/videos/mothim.gif",
+      "shinyVideo":"assets/videos/mothim-shiny.gif",
+
+      "_comment2": "Evolutions",
+      
+      "evolutions": [
+       { "id": 412, "name": "Burmy", "level": null },
+       {
+         "branches": [
+          { "id": 414, "name": "Mothim", "level": 20, "method": "Male" },
+          { "id": 413, "name": "Wormadam", "level": 20, "method": "Female" }
+         ]
+        }
+      ],
+
+      "_comment3": "Movesets",
+
+      "moves": {
+        "level": [
+         { "level": 1, "name": "Tackle" },
+         { "level": 1, "name": "Protect" },
+         { "level": 1, "name": "Bug Bite" },
+         { "level": 1, "name": "Quiver Dance" },
+         { "level": 20, "name": "String Shot" },
+         { "level": 21, "name": "Confusion" },
+         { "level": 26, "name": "Gust" },
+         { "level": 29, "name": "Poison Powder" },
+         { "level": 32, "name": "Psybeam" },
+         { "level": 35, "name": "Camouflage" },
+         { "level": 38, "name": "Struggle Bug" },
+         { "level": 41, "name": "Air Slash" },
+         { "level": 44, "name": "Psychic" },
+         { "level": 47, "name": "Lunge" },
+         { "level": 50, "name": "Bug Buzz" }
+        ],
+        "tm": [
+          { "name": "Acrobatics" },
+          { "name": "Aerial Ace" },
+          { "name": "Air Cutter" },
+          { "name": "Air Slash" },
+          { "name": "Bug Bite" },
+          { "name": "Bug Buzz" },
+          { "name": "Defog" },
+          { "name": "Dream Eater" },
+          { "name": "Dual Wingbeat" },
+          { "name": "Electroweb" },
+          { "name": "Endure" },
+          { "name": "Energy Ball" },
+          { "name": "Facade" },
+          { "name": "Flash" },
+          { "name": "Giga Drain" },
+          { "name": "Giga Impact" },
+          { "name": "Hyper Beam" },
+          { "name": "Infestation" },
+          { "name": "Lunge" },
+          { "name": "Mud-Slap" },
+          { "name": "Ominous Wind" },
+          { "name": "Protect" },
+          { "name": "Psybeam" },
+          { "name": "Psych Up" },
+          { "name": "Rain Dance" },
+          { "name": "Rest" },
+          { "name": "Roost" },
+          { "name": "Safeguard" },
+          { "name": "Shadow Ball" },
+          { "name": "Signal Beam" },
+          { "name": "Silver Wind" },
+          { "name": "Skill Swap" },
+          { "name": "Sleep Talk" },
+          { "name": "Solar Beam" },
+          { "name": "String Shot" },
+          { "name": "Struggle Bug" },
+          { "name": "Substitute" },
+          { "name": "Sunny Day" },
+          { "name": "Tailwind" },
+          { "name": "Tera Blast" },
+          { "name": "Thief" },
+          { "name": "Twister" },
+          { "name": "U-turn" },
+          { "name": "Venoshock" }
+        ],
+        "egg": [
+        ],
+        "tutor": [
+          { "name": "Aerial Ace" },
+          { "name": "Air Cutter" },
+          { "name": "Bug Bite"},
+          { "name": "Defog" },
+          { "name": "Dual Wingbeat" },
+          { "name": "Electroweb" },
+          { "name": "Energy Ball" },
+          { "name": "Giga Drain" },
+          { "name": "Giga Impact" },
+          { "name": "Hyper Beam" },
+          { "name": "Mud-Slap" },
+          { "name": "Ominous Wind" },
+          { "name": "Psychic" },
+          { "name": "Rest" },
+          { "name": "Roost" },
+          { "name": "Shadow Ball" },
+          { "name": "Signal Beam" },
+          { "name": "Skill Swap" },
+          { "name": "Sleep Talk" },
+          { "name": "String Shot" },
+          { "name": "Tailwind" },
+          { "name": "Twister" }
+       ]
+     }
+    },
+    {
+      "_comment": "Base Stats",
+
       "id": 506,
       "name": "Lillipup",
       "number": "0506",

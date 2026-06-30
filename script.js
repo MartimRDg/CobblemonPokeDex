@@ -293,26 +293,103 @@ function renderTop5() {
   var grid = document.getElementById('top5Grid');
   if (!grid) return;
 
-  var ranked = State.allPokemon.slice().sort(function (a, b) {
-    var sumA = a.baseStats ? Object.values(a.baseStats).reduce(function (t, v) { return t + v; }, 0) : 0;
-    var sumB = b.baseStats ? Object.values(b.baseStats).reduce(function (t, v) { return t + v; }, 0) : 0;
-    return sumB - sumA;
-  }).slice(0, 6);
+  function bstOf(stats) {
+    return stats ? Object.values(stats).reduce(function (t, v) { return t + v; }, 0) : 0;
+  }
 
-  grid.innerHTML = ranked.map(function (poke, i) {
-    var total = poke.baseStats ? Object.values(poke.baseStats).reduce(function (t, v) { return t + v; }, 0) : 0;
+  function formKind(name) {
+    if (name.indexOf('Gigantamax ') === 0) return 'gigantamax';
+    if (name.indexOf('Mega ') === 0) return 'mega';
+    return 'variant';
+  }
+
+  // Build, for each Pokémon, a list of ALL its qualifying forms (base + mega + gmax + variants),
+  // sorted strongest-first. This lets us fall back to a weaker form of the SAME Pokémon
+  // if its strongest form gets blocked by the one-mega/one-gigantamax slot rule.
+  var perPokemonForms = State.allPokemon.map(function (poke) {
+    var forms = [{
+      poke: poke,
+      formName: null,
+      form: null,
+      kind: 'base',
+      total: bstOf(poke.baseStats),
+    }];
+
+    (poke.megaEvolutions || []).forEach(function (f) {
+      if (!f.baseStats) return;
+      forms.push({ poke: poke, formName: f.name, form: f, kind: formKind(f.name), total: bstOf(f.baseStats) });
+    });
+
+    (poke.variants || []).forEach(function (f) {
+      if (!f.baseStats) return;
+      forms.push({ poke: poke, formName: f.name, form: f, kind: 'variant', total: bstOf(f.baseStats) });
+    });
+
+    // Sort strongest first; on a tie, prefer an alt form (mega/gmax/variant) over the plain base form
+    forms.sort(function (a, b) {
+      if (b.total !== a.total) return b.total - a.total;
+      if (a.kind === 'base' && b.kind !== 'base') return 1;
+      if (b.kind === 'base' && a.kind !== 'base') return -1;
+      return 0;
+    });
+    return forms;
+  });
+
+  // Rank Pokémon by their best possible form, so we evaluate strongest Pokémon first
+  perPokemonForms.sort(function (a, b) { return b[0].total - a[0].total; });
+
+  var megaUsed = false;
+  var gigaUsed = false;
+  var picked = [];
+
+  for (var i = 0; i < perPokemonForms.length && picked.length < 6; i++) {
+    var forms = perPokemonForms[i];
+
+    // Try this Pokémon's forms from strongest to weakest until one fits the slot rules
+    for (var j = 0; j < forms.length; j++) {
+      var c = forms[j];
+
+      if (c.kind === 'mega') {
+        if (megaUsed) continue;
+      } else if (c.kind === 'gigantamax') {
+        if (gigaUsed) continue;
+      }
+      // 'variant' and 'base' kinds have no global cap
+
+      // This form fits — claim slots and pick it
+      if (c.kind === 'mega') megaUsed = true;
+      if (c.kind === 'gigantamax') gigaUsed = true;
+      picked.push(c);
+      break;
+    }
+  }
+
+  // Re-sort picked entries by their actual chosen total (descending) for display order
+  picked.sort(function (a, b) { return b.total - a.total; });
+
+  var medals = ['🥇', '🥈', '🥉', '🏅', '🎖️', '🏵️'];
+
+  grid.innerHTML = picked.map(function (entry, i) {
+    var poke = entry.poke;
     var num = poke.number || String(poke.id).padStart(4, '0');
-    var medals = ['🥇', '🥈', '🥉', '🏅', '🎖️', '🏵️'];
+
+    var displaySprite = poke.video || poke.sprite;
+    var displayName = poke.name;
+    if (entry.form) {
+      displaySprite = entry.form.video || entry.form.sprite || displaySprite;
+      displayName = entry.form.name;
+    }
+
     return (
       '<div class="top5-card">' +
       '<div class="top5-rank">' + medals[i] + '</div>' +
       '<div class="top5-sprite-wrap">' +
-      buildSpriteEl(poke.video || poke.sprite, poke.name, 'top5-sprite', 'assets/images/placeholder.png') +
+      buildSpriteEl(displaySprite, displayName, 'top5-sprite', 'assets/images/placeholder.png') +
       '</div>' +
       '<div class="top5-info">' +
       '<p class="top5-number">#' + num + '</p>' +
-      '<h3 class="top5-name">' + poke.name + '</h3>' +
-      '<p class="top5-total">' + total + ' BST</p>' +
+      '<h3 class="top5-name">' + displayName + '</h3>' +
+      '<p class="top5-total">' + entry.total + ' BST' + (entry.formName ? ' <span class="top5-form-tag">' + entry.formName + '</span>' : '') + '</p>' +
       '</div>' +
       '<a href="pokemon.html?id=' + poke.id + '" class="top5-btn">View</a>' +
       '</div>'
@@ -723,37 +800,77 @@ window.goSpawnSlide = goSpawnSlide;
 function buildEvolutionSection(poke) {
   if (!poke.evolutions || !poke.evolutions.length) return '';
 
-  var stages = poke.evolutions.map(function (evo, i) {
-    var evoPoke = getPokemonById(evo.id);
-    var sprite = evoPoke ? (evoPoke.video || evoPoke.sprite) : null;
-    var isCurrent = evo.id === poke.id;
+  // Build a label string from an evolution entry's condition fields
+  function evoLabel(evo) {
+    var parts = [];
+    if (evo.level)        parts.push('Lv. ' + evo.level);
+    if (evo.method)       parts.push(evo.method);
+    if (evo.requiresMove) parts.push('\u{1F4D6} ' + evo.requiresMove);
+    return parts.length ? parts.join(' \u00B7 ') : '?';
+  }
 
-    var arrow = i > 0
-      ? '<div class="evo-arrow">' +
-      '<div class="evo-arrow-line"></div>' +
-      '<span class="evo-arrow-label">' + (evo.level ? 'Lv. ' + evo.level : evo.requiresMove ? '📖 Must know ' + evo.requiresMove : evo.method || '?') + '</span>' +
-      '<div class="evo-arrow-tip">▶</div>' +
-      '</div>'
-      : '';
-
-    var spriteEl = sprite
+  // Render a single pokemon card in the chain
+  function evoCard(evo) {
+    var evoPoke    = getPokemonById(evo.id);
+    var sprite     = evoPoke ? (evoPoke.video || evoPoke.sprite) : null;
+    var isCurrent  = evo.id === poke.id;
+    var spriteEl   = sprite
       ? buildSpriteEl(sprite, evo.name, 'evo-sprite', 'assets/images/placeholder.png')
       : '<div class="evo-sprite-placeholder">?</div>';
-
     return (
-      arrow +
       '<a href="pokemon.html?id=' + evo.id + '" class="evo-card' + (isCurrent ? ' evo-current' : '') + '">' +
       '<div class="evo-sprite-wrap">' + spriteEl + '</div>' +
       '<p class="evo-name">' + evo.name + '</p>' +
       '<p class="evo-number">#' + String(evo.id).padStart(4, '0') + '</p>' +
       '</a>'
     );
-  }).join('');
+  }
+
+  // Render an arrow with a label
+  function evoArrow(label) {
+    return (
+      '<div class="evo-arrow">' +
+      '<div class="evo-arrow-line"></div>' +
+      '<span class="evo-arrow-label">' + label + '</span>' +
+      '<div class="evo-arrow-tip">▶</div>' +
+      '</div>'
+    );
+  }
+
+  // Walk the evolutions array.
+  // Each entry is either:
+  //   { id, name, level?, method?, requiresMove? }  — a normal single stage
+  //   { branches: [ {id,name,...}, {id,name,...}, ... ] }  — a fork
+  var html = '';
+  var isFirst = true;
+
+  poke.evolutions.forEach(function(entry) {
+    if (entry.branches) {
+      // BRANCH NODE — render all alternatives in a vertical stack
+      var branchHtml = '<div class="evo-branch-group">';
+      entry.branches.forEach(function(branch, bi) {
+        branchHtml +=
+          '<div class="evo-branch-path">' +
+          evoArrow(evoLabel(branch)) +
+          evoCard(branch) +
+          '</div>';
+      });
+      branchHtml += '</div>';
+      html += branchHtml;
+    } else {
+      // NORMAL STAGE
+      if (!isFirst) {
+        html += evoArrow(evoLabel(entry));
+      }
+      html += evoCard(entry);
+      isFirst = false;
+    }
+  });
 
   return (
     '<section class="detail-section">' +
     '<h2 class="section-title">Evolution Chart</h2>' +
-    '<div class="evo-chain">' + stages + '</div>' +
+    '<div class="evo-chain evo-chain-branching">' + html + '</div>' +
     '</section>'
   );
 }
@@ -1126,7 +1243,7 @@ function buildEVYield(poke) {
     );
   }).join('');
   return (
-    '<div class="meta-card pokedex-data-card">' +
+    '<div class="meta-card pokedex-data-card" id="evYieldCard">' +
     '<h3 class="meta-title">EV Yield</h3>' +
     '<div class="ev-list">' + rows + '</div>' +
     '</div>'
@@ -1341,7 +1458,7 @@ function loadPokemonDetail() {
 
     '</div>';
 
-  window._shinyData = { poke: poke, isShiny: false, formIndex: 0 };
+  window._shinyData = { poke: poke, isShiny: false, formIndex: 0, activeMoves: poke.moves };
 
   // Track recently viewed
   try {
@@ -1418,6 +1535,26 @@ window.switchForm = function (index) {
   var label = document.getElementById('shinyLabel');
   if (btn) { btn.classList.remove('active'); btn.style.display = hasShiny ? '' : 'none'; }
   if (label) label.textContent = 'Shiny';
+
+  // Moves — use this form's own moves if defined, otherwise fall back to base Pokémon's moves
+  d.activeMoves = (form.moves && Object.keys(form.moves).length) ? form.moves : d.poke.moves;
+  renderMoves({ moves: d.activeMoves });
+
+  // EV Yield — use this form's own evYield if defined, otherwise fall back to base Pokémon's
+  var activeEvYield = (form.evYield && Object.keys(form.evYield).length) ? form.evYield : d.poke.evYield;
+  var evCard = document.getElementById('evYieldCard');
+  var evCardHTML = buildEVYield({ evYield: activeEvYield });
+  if (evCard) {
+    if (evCardHTML) {
+      evCard.outerHTML = evCardHTML;
+    } else {
+      evCard.remove();
+    }
+  } else if (evCardHTML) {
+    // No card existed (base form had no EVs) but this form does — insert it into the grid
+    var dataGrid = document.querySelector('.pokedex-data-grid');
+    if (dataGrid) dataGrid.insertAdjacentHTML('beforeend', evCardHTML);
+  }
 
   // Abilities
   var abilitiesEl = document.getElementById('pokemonAbilities');
@@ -1554,8 +1691,11 @@ window.filterMoves = function () {
   var category = (document.getElementById('moveCategoryFilter') ? document.getElementById('moveCategoryFilter').value : '');
   var power = (document.getElementById('movePowerFilter') ? document.getElementById('movePowerFilter').value : '');
 
+  // Use the active form's moves if a form is selected (mega/variant may have different moves)
+  var activeMoves = (window._shinyData && window._shinyData.activeMoves) ? window._shinyData.activeMoves : poke.moves;
+
   var keys = ['level', 'tm', 'egg', 'tutor'];
-  var moves = ((poke.moves || {})[keys[State.currentMoveTab]] || []).map(enrichMove);
+  var moves = ((activeMoves || {})[keys[State.currentMoveTab]] || []).map(enrichMove);
 
   var filtered = moves.filter(function (m) {
     var matchName = !search || m.name.toLowerCase().includes(search);
@@ -1592,7 +1732,8 @@ window.switchMoveTab = function (index) {
   if (p) p.value = '';
   var id = parseInt(new URLSearchParams(window.location.search).get('id'));
   var poke = getPokemonById(id);
-  if (poke) renderMoves(poke);
+  var activeMoves = (window._shinyData && window._shinyData.activeMoves) ? window._shinyData.activeMoves : (poke ? poke.moves : null);
+  if (poke) renderMoves({ moves: activeMoves });
 };
 
 window.toggleShiny = function () {
@@ -3132,6 +3273,7 @@ function loadRandomizerPage() {
   buildRandomizerFilterUI();
 }
 
+// ====================== Reports Page ======================
 // ====================== Reports Page ======================
 // =====================================================
 //  Cobblemon Reports — Firebase Firestore Backend
