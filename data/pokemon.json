@@ -2611,6 +2611,18 @@
       "video": "assets/videos/mothim.gif",
       "shinyVideo":"assets/videos/mothim-shiny.gif",
 
+      "_comment1": "Decks",
+
+      "decks": [
+        {
+         "name": "Tinted Tempest",
+         "game": "Cobbleverse",
+         "version": "Shiny Mothim",
+         "logo": "assets/games/cobbleverse.png",
+         "moves": ["Bug Buzz", "Air Slash", "Energy Ball", "Psychic"]
+        }
+      ],
+
       "_comment2": "Evolutions",
       
       "evolutions": [
