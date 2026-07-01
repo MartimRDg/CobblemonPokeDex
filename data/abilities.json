@@ -104,7 +104,12 @@
     },
      "Anticipation": {
       "description": "The Pokémon can sense an opposing Pokémon's dangerous moves."
+    },
+    "Air Lock": {
+      "description": "Eliminates the effects of weather."
+    },
+    "Delta Stream": {
+      "description": "The Pokémon changes the weather so that no moves are super effective against the Flying type."
     }
-
   }
 }

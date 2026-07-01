@@ -2095,6 +2095,265 @@
     {
       "_comment": "Base Stats",
 
+      "id": 384,
+      "name": "Rayquaza",
+      "number": "0384",
+      "types": ["Dragon", "Flying"],
+      "generation": 3,
+      "rarity": "Ultra-rare",
+      "rideable": true,
+      "flying": true,
+      "legendary": true,
+      "mythical": false,
+      "catchRate": 3,
+
+      "abilities": ["Air Lock", "Air Lock (Hidden)"],
+
+      "baseStats": {
+        "hp": 105,
+        "attack": 150,
+        "defense": 90,
+        "spAttack": 150,
+        "spDefense": 90,
+        "speed": 95
+       },
+
+       "evYield": {
+        "attack": 2,
+        "spAttack": 1
+       },
+
+       "drops": [
+        { "item": "Dragon's Breath", "chance": 100, "quantity": "3-5", "image": "assets/images/items/dragon_breath.png"}
+       ],
+
+      "weaknesses": ["Ice", "Dragon", "Steel", "Rock"],
+      "resistances": ["Fire", "Water", "Grass", "Fighting", "Bug"],
+      "immunities": ["Ground"],
+
+      "video": "assets/videos/rayquaza.gif",
+      "shinyVideo":"assets/videos/rayquaza-shiny.gif",
+
+       "riding": {
+       "ground": {
+         "acceleration": { "min": 41, "max": 60 },
+         "jump":         { "min": 41, "max": 60 },
+         "skill":        { "min": 21, "max": 40 },
+         "speed":        { "min": 21, "max": 40 },
+         "stamina":      { "min": 61, "max": 80 }
+        },
+       "air": {
+         "acceleration": { "min": 61, "max": 68 },
+         "jump":         { "min": 41, "max": 60 },
+         "skill":        { "min": 150, "max": 180 },
+         "speed":        { "min": 41, "max": 75 },
+         "stamina":      { "min": 162, "max": 220 }
+        },
+        "Swimming": {
+         "acceleration": { "min": 0, "max": 20 },
+         "jump":         { "min": 41, "max": 60 },
+         "skill":        { "min": 21, "max": 40 },
+         "speed":        { "min": 41, "max": 60 },
+         "stamina":      { "min": 0, "max": 20 }
+        }
+      },
+
+      "_comment1": "Decks",
+
+      "decks": [
+        {
+         "name": "",
+         "game": "Cobbleverse",
+         "version": "Shiny Rayquaza",
+         "logo": "assets/games/cobbleverse.png",
+         "moves": ["Transform"]
+        }
+      ],
+
+      "_comment2": "Evolutions",
+      
+      "evolutions": [
+       { "id": 384, "name": "Rayquaza", "level": null }
+      ],
+
+      "megaEvolutions": [
+       {
+        "name": "Mega Rayquaza",
+        "sprite": "assets/images/rayquaza-mega.png",
+        "shinySprite": "assets/images/rayquaza-mega-shiny.png",
+        "abilities": [" Delta Stream"],
+        "types": ["Dragon", "Flying"],
+
+        "weaknesses": ["Ice", "Dragon", "Steel", "Rock"],
+        "resistances": ["Fire", "Water", "Grass", "Fighting", "Bug"],
+        "immunities": ["Ground"],
+
+        "baseStats": {
+        "hp": 105,
+        "attack": 180,
+        "defense": 100,
+        "spAttack": 180,
+        "spDefense": 100,
+        "speed": 115
+       }
+      }
+    ],
+
+      "_comment3": "Movesets",
+
+      "moves": {
+        "level": [
+         { "level": 1, "name": "Twister" },
+         { "level": 1, "name": "Scary Face" },
+         { "level": 1, "name": "Air Slash" },
+         { "level": 1, "name": "Ancient Power" },
+         { "level": 1, "name": "Dragon Ascent" },
+         { "level": 9, "name": "Crunch" },
+         { "level": 18, "name": "Dragon Dance" },
+         { "level": 27, "name": "Extreme Speed" },
+         { "level": 36, "name": "Dragon Pulse" },
+         { "level": 45, "name": "Hyper Voice" },
+         { "level": 54, "name": "Rest" },
+         { "level": 63, "name": "Fly" },
+         { "level": 72, "name": "Hurricane" },
+         { "level": 81, "name": "Outrage" },
+         { "level": 90, "name": "Hyper Beam" }
+        ],
+        "tm": [
+          { "name": "Aerial Ace" },
+          { "name": "Air Slash" },
+          { "name": "Ancient Power" },
+          { "name": "Aqua Tail" },
+          { "name": "Avalanche" },
+          { "name": "Bind" },
+          { "name": "Blizzard" },
+          { "name": "Body Slam" },
+          { "name": "Breaking Swipe" },
+          { "name": "Brick Break" },
+          { "name": "Brutal Swing" },
+          { "name": "Bulk Up" },
+          { "name": "Bulldoze" },
+          { "name": "Cosmic Power" },
+          { "name": "Crunch" },
+          { "name": "Dive" },
+          { "name": "Double-Edge" },
+          { "name": "Draco Meteor" },
+          { "name": "Dragon Cheer" },
+          { "name": "Dragon Claw" },
+          { "name": "Dragon Dance" },
+          { "name": "Dragon Pulse" },
+          { "name": "Dragon Tail" },
+          { "name": "Earth Power" },
+          { "name": "Earthquake" },
+          { "name": "Echoed Voice" },
+          { "name": "Endure" },
+          { "name": "Energy Ball" },
+          { "name": "Facade" },
+          { "name": "Fire Blast" },
+          { "name": "Flamethrower" },
+          { "name": "Fling" },
+          { "name": "Fly" },
+          { "name": "Focus Blast" },
+          { "name": "Fury Cutter" },
+          { "name": "Giga Impact" },
+          { "name": "Gyro Ball" },
+          { "name": "Headbutt" },
+          { "name": "Helping Hand" },
+          { "name": "Hone Claws" },
+          { "name": "Hurricane" },
+          { "name": "Hydro Pump" },
+          { "name": "Hyper Beam" },
+          { "name": "Hyper Voice" },
+          { "name": "Ice Beam" },
+          { "name": "Icy Wind" },
+          { "name": "Incinerate" },
+          { "name": "Iron Head" },
+          { "name": "Iron Tail" },
+          { "name": "Meteor Beam" },
+          { "name": "Outrage" },
+          { "name": "Overheat" },
+          { "name": "Protect" },
+          { "name": "Rain Dance" },
+          { "name": "Rest" },
+          { "name": "Roar" },
+          { "name": "Rock Slide" },
+          { "name": "Rock Smash" },
+          { "name": "Rock Tomb" },
+          { "name": "Sandstorm" },
+          { "name": "Scale Shot" },
+          { "name": "Scary Face" },
+          { "name": "Shadow Claw" },
+          { "name": "Shock Wave" },
+          { "name": "Sky Drop" },
+          { "name": "Sleep Talk" },
+          { "name": "Solar Beam" },
+          { "name": "Stealth Rock" },
+          { "name": "Stone Edge" },
+          { "name": "Strength" },
+          { "name": "Substitute" },
+          { "name": "Sunny Day" },
+          { "name": "Surf" },
+          { "name": "Swift" },
+          { "name": "Swords Dance" },
+          { "name": "Tailwind" },
+          { "name": "Take Down" },
+          { "name": "Tera Blast" },
+          { "name": "Thunder" },
+          { "name": "Thunderbolt" },
+          { "name": "Thunder Wave" },
+          { "name": "Twister" },
+          { "name": "U-turn" },
+          { "name": "Waterfall" },
+          { "name": "Whirlpool" },
+          { "name": "Wild Charge" }
+        ],
+        "egg": [
+        ],
+        "tutor": [
+          { "name": "Aerial Ace" },
+          { "name": "Ancient Power" },
+          { "name": "Aqua Tail" },
+          { "name": "Bind" },
+          { "name": "Bulk Up" },
+          { "name": "Bulldoze" },
+          { "name": "Dive" },
+          { "name": "Draco Meteor" },
+          { "name": "Dragon Ascent" },
+          { "name": "Dragon Pulse" },
+          { "name": "Earth Power" },
+          { "name": "Energy Ball" },
+          { "name": "Flamethrower" },
+          { "name": "Fury Cutter" },
+          { "name": "Giga Impact" },
+          { "name": "Helping Hand" },
+          { "name": "Hyper Beam" },
+          { "name": "Hyper Voice" },
+          { "name": "Ice Beam" },
+          { "name": "Icy Wind" },
+          { "name": "Iron Head" },
+          { "name": "Iron Tail" },
+          { "name": "Meteor Beam" },
+          { "name": "Outrage" },
+          { "name": "Rest" },
+          { "name": "Rock Slide" },
+          { "name": "Rock Smash" },
+          { "name": "Scale Shot" },
+          { "name": "Shadow Claw" },
+          { "name": "Shock Wave" },
+          { "name": "Sleep Talk" },
+          { "name": "Stealth Rock" },
+          { "name": "Stone Edge" },
+          { "name": "Swift" },
+          { "name": "Tailwind" },
+          { "name": "Thunderbolt" },
+          { "name": "Twister" },
+          { "name": "Wild Charge" }
+       ]
+     }
+    },
+    {
+      "_comment": "Base Stats",
+
       "id": 412,
       "name": "Burmy",
       "number": "0412",

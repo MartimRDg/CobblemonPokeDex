@@ -2799,6 +2799,54 @@
       "accuracy": 100,
       "pp": 10,
       "description": "The user levitates using electrically generated magnetism for five turns."
+    },
+    "Dragon Ascent": {
+      "type": "Flying",
+      "category": "Physical",
+      "power": 120,
+      "accuracy": 100,
+      "pp": 5,
+      "description": "The user attacks the target by dropping out of the sky at high speed. This also lowers the user's Defense and Sp. Def stats."
+    },
+    "Extreme Speed": {
+      "type": "Normal",
+      "category": "Physical",
+      "power": 80,
+      "accuracy": 100,
+      "pp": 5,
+      "description": "The user charges the target at blinding speed. This move always goes first."
+    },
+    "Bind": {
+      "type": "Normal",
+      "category": "Physical",
+      "power": 15,
+      "accuracy": 85,
+      "pp": 20,
+      "description": "A long body, tentacles, or the like are used to bind and squeeze the target for four to five turns."
+    },
+    "Cosmic Power": {
+      "type": "Psychic",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user absorbs a mystical power from space to boost its Defense and Sp. Def stats."
+    },
+    "Draco Meteor": {
+      "type": "Dragon",
+      "category": "Special",
+      "power": 130,
+      "accuracy": 90,
+      "pp": 5,
+      "description": "Comets are summoned down from the sky onto the target. The recoil from this move harshly lowers the user's Sp. Atk stat."
+    },
+    "Scale Shot": {
+      "type": "Dragon",
+      "category": "Physical",
+      "power": 25,
+      "accuracy": 90,
+      "pp": 20,
+      "description": "The user attacks by shooting scales two to five times in a row. This move boosts the user's Speed stat but lowers its Defense stat."
     }
   }
 }
