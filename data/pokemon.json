@@ -2162,11 +2162,11 @@
 
       "decks": [
         {
-         "name": "",
+         "name": "Heavenly Judgment",
          "game": "Cobbleverse",
-         "version": "Shiny Rayquaza",
+         "version": "Shiny Mega Rayquaza",
          "logo": "assets/games/cobbleverse.png",
-         "moves": ["Transform"]
+         "moves": ["Dragon Dance", "Dragon Ascent", "Outrage", "Extreme Speed"]
         }
       ],
 
