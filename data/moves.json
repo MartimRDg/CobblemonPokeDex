@@ -2847,6 +2847,190 @@
       "accuracy": 90,
       "pp": 20,
       "description": "The user attacks by shooting scales two to five times in a row. This move boosts the user's Speed stat but lowers its Defense stat."
+    },
+    "Amnesia": {
+      "type": "Psychic",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user temporarily empties its mind to forget its concerns. This sharply boosts the user's Sp. Def stat."
+    },
+    "Slack Off": {
+      "type": "Normal",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 5,
+      "description": "The user slacks off, restoring its own HP by up to half its max HP."
+    },
+    "Magic Coat": {
+      "type": "Psychic",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 15,
+      "description": "Moves like Leech Seed and moves that inflict status conditions are blocked by a barrier and reflected back to the user of those moves."
+    },
+    "Pay Day": {
+      "type": "Normal",
+      "category": "Physical",
+      "power": 40,
+      "accuracy": 100,
+      "pp": 20,
+      "description": "Coins are hurled at the target to inflict damage. Money is earned after the battle."
+    },
+    "Psychic Terrain": {
+      "type": "Psychic",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 10,
+      "description": "This protects Pokémon on the ground from priority moves and powers up Psychic-type moves for five turns."
+    },
+    "Recycle": {
+      "type": "Normal",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user recycles a held item that has been used in battle so it can be used again."
+    },
+    "Snore": {
+      "type": "Normal",
+      "category": "Special",
+      "power": 50,
+      "accuracy": 100,
+      "pp": 15,
+      "description": "This attack can be used only if the user is asleep. The harsh noise may also make the target flinch."
+    },
+    "Tri Attack": {
+      "type": "Normal",
+      "category": "Special",
+      "power": 80,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user strikes with a simultaneous three-beam attack. This may also burn, freeze, or paralyze the target."
+    },
+    "Belch": {
+      "type": "Poison",
+      "category": "Special",
+      "power": 120,
+      "accuracy": 90,
+      "pp": 10,
+      "description": "The user lets out a damaging belch at the target. The user must eat a held Berry to use this move."
+    },
+    "Acid": {
+      "type": "Poison",
+      "category": "Special",
+      "power": 40,
+      "accuracy": 100,
+      "pp": 30,
+      "description": "Opposing Pokémon are attacked with a spray of harsh acid. This may also lower their Sp. Def stats."
+    },
+    "Withdraw": {
+      "type": "Water",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 40,
+      "description": "The user withdraws its body into its hard shell, boosting its Defense stat."
+    },
+    "Drain Punch": {
+      "type": "Fighting",
+      "category": "Physical",
+      "power": 75,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user attacks with an energy-draining punch. The user's HP is restored by up to half the damage taken by the target."
+    },
+    "Metronome": {
+      "type": "Normal",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user waggles a finger and stimulates its brain into randomly using nearly any move."
+    },
+    "Nasty Plot": {
+      "type": "Dark",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user stimulates its brain by thinking bad thoughts. This sharply boosts the user's Sp. Atk stat."
+    },
+    "Scald": {
+      "type": "Water",
+      "category": "Special",
+      "power": 80,
+      "accuracy": 100,
+      "pp": 15,
+      "description": "The user attacks by shooting boiling hot water at the target. This may also leave the target with a burn."
+    },
+    "Shell Side Arm": {
+      "type": "Poison",
+      "category": "Special",
+      "power": 90,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "This move is either physical or special—whichever will inflict more damage. This may also poison the target."
+    },
+    "Haze": {
+      "type": "Ice",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 30,
+      "description": "The user creates a haze that eliminates every stat change among all the Pokémon engaged in battle."
+    },
+    "Trump Card": {
+      "type": "Normal",
+      "category": "Special",
+      "power": 0,
+      "accuracy": 100,
+      "pp": 5,
+      "description": "The fewer PP this move has, the greater its power."
+    },
+    "Chilly Reception": {
+      "type": "Ice",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user tells a chillingly bad joke before switching places with a party Pokémon in waiting. This summons a snowstorm lasting five turns."
+    },
+    "Eerie Spell": {
+      "type": "Psychic",
+      "category": "Special",
+      "power": 80,
+      "accuracy": 100,
+      "pp": 5,
+      "description": "The user attacks with its tremendous psychic power. This also drains 3 PP from the move last used by the target."
+    },
+    "Hex": {
+      "type": "Ghost",
+      "category": "Special",
+      "power": 65,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "This relentless attack does massive damage to a target affected by status conditions."
+    },
+    "Low Sweep": {
+      "type": "Fighting",
+      "category": "Physical",
+      "power": 65,
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user makes a swift attack on the target's legs, which lowers the target's Speed stat."
+    },
+    "Venom Drench": {
+      "type": "Poison",
+      "category": "Status",
+      "power": 0,
+      "accuracy": 100,
+      "pp": 20,
+      "description": "Opposing Pokémon are drenched in an odd poisonous liquid. This lowers the Attack, Sp. Atk, and Speed stats of a poisoned target."
     }
   }
 }

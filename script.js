@@ -335,33 +335,45 @@ function renderTop5() {
     return forms;
   });
 
-  // Rank Pokémon by their best possible form, so we evaluate strongest Pokémon first
+  // Rank Pokémon by their best possible form, purely for a stable starting order
   perPokemonForms.sort(function (a, b) { return b[0].total - a[0].total; });
 
   var megaUsed = false;
   var gigaUsed = false;
   var picked = [];
+  var remaining = perPokemonForms.slice();
 
-  for (var i = 0; i < perPokemonForms.length && picked.length < 6; i++) {
-    var forms = perPokemonForms[i];
+  // Pick one Pokémon at a time. Before each pick, recompute every remaining Pokémon's
+  // best STILL-ELIGIBLE form (given the mega/gmax slots already claimed) and take the
+  // strongest one overall. This ensures a Pokémon whose best form gets blocked (e.g. its
+  // Mega is unavailable because another Pokémon already claimed the one Mega slot) falls
+  // back to competing at its real, lower total — instead of grabbing a slot immediately
+  // just because it was originally the next Pokémon in line.
+  while (picked.length < 6 && remaining.length) {
+    var bestCandidate = null;
+    var bestIndex = -1;
 
-    // Try this Pokémon's forms from strongest to weakest until one fits the slot rules
-    for (var j = 0; j < forms.length; j++) {
-      var c = forms[j];
-
-      if (c.kind === 'mega') {
-        if (megaUsed) continue;
-      } else if (c.kind === 'gigantamax') {
-        if (gigaUsed) continue;
+    for (var r = 0; r < remaining.length; r++) {
+      var forms = remaining[r];
+      for (var j = 0; j < forms.length; j++) {
+        var c = forms[j];
+        if (c.kind === 'mega' && megaUsed) continue;
+        if (c.kind === 'gigantamax' && gigaUsed) continue;
+        // First eligible form (list is sorted strongest-first) is this Pokémon's best offer right now
+        if (!bestCandidate || c.total > bestCandidate.total) {
+          bestCandidate = c;
+          bestIndex = r;
+        }
+        break;
       }
-      // 'variant' and 'base' kinds have no global cap
-
-      // This form fits — claim slots and pick it
-      if (c.kind === 'mega') megaUsed = true;
-      if (c.kind === 'gigantamax') gigaUsed = true;
-      picked.push(c);
-      break;
     }
+
+    if (!bestCandidate) break; // nothing left can qualify (shouldn't normally happen)
+
+    if (bestCandidate.kind === 'mega') megaUsed = true;
+    if (bestCandidate.kind === 'gigantamax') gigaUsed = true;
+    picked.push(bestCandidate);
+    remaining.splice(bestIndex, 1);
   }
 
   // Re-sort picked entries by their actual chosen total (descending) for display order
@@ -437,6 +449,23 @@ function buildStatBar(label, value, max) {
     '</div>' +
     '</div>'
   );
+}
+
+function buildStatTotal(total) {
+  return (
+    '<div class="stat-row stat-row-total">' +
+    '<span class="stat-label">Total</span>' +
+    '<span class="stat-value">' + total + '</span>' +
+    '<div class="stat-total-line"></div>' +
+    '</div>'
+  );
+}
+
+function buildStatsHTML(stats) {
+  if (!stats) return '<p class="text-yellow-400 text-sm">No stats available</p>';
+  var bars = Object.entries(stats).map(function (e) { return buildStatBar(e[0], e[1]); }).join('');
+  var total = Object.values(stats).reduce(function (t, v) { return t + v; }, 0);
+  return bars + buildStatTotal(total);
 }
 
 function animateStatBars(container) {
@@ -543,7 +572,9 @@ var BIOME_GROUPS = {
   'snowy taiga': ['minecraft:grove', 'minecraft:snowy_taiga', 'biomesoplenty:snowy_coniferous_forest', 'biomesoplenty:snowy_coniferous_forest', 'biomesoplenty:snowy_maple_woods', 'clifftree:snowy_old_growth_taiga', 'terralith:alpine_grove', 'terralith:cold_shrubland', 'terralith:siberian_grove', 'terralith:snowy_maple_forest', 'terralith:snowy_shield', 'terralith:wintry_forest', 'terralith:wintry_lowlands', 'wythers:cold_island', 'wythers:snowy_thermal_taiga', 'wythers:deep_snowy_taiga'],
   'tundra': ['minecraft:ice_spikes', 'minecraft:snowy_plains', '#c:snowy_plains', 'biomesoplenty:cold_desert', 'biomesoplenty:cold_desert', 'biomesoplenty:muskeg', 'biomesoplenty:snowy_fir_clearing', 'biomesoplenty:tundra', 'biomeswevegone:crimson_tundra', 'clifftree:bog', 'clifftree:tundra', 'terralith:cold_shrubland', 'terralith:gravel_desert', 'terralith:rocky_shrubland', 'terralith:snowy_badlands', 'terralith:yellowstone', 'wythers:crimson_tundra', 'wythers:frigid_island', 'wythers:ice_cap', 'wythers:icy_crags', 'wythers:snowy_tundra', 'wythers:tundra'],
   'nether/quartz': ['cinderscapes:quartz_cavern', 'incendium:quartz_flats'],
-  "frozen ocean": ['minecraft:deep_frozen_ocean', 'minecraft:frozen_ocean', 'terralith:frozen_cliffs', 'wythers:deep_icy_ocean', 'wythers:icy_ocean']
+  "frozen ocean": ['minecraft:deep_frozen_ocean', 'minecraft:frozen_ocean', 'terralith:frozen_cliffs', 'wythers:deep_icy_ocean', 'wythers:icy_ocean'],
+  "beach": ['#minecraft:beach', 'biomesoplenty:dune_beach', 'wythers:guelta', 'wythers:sand_dunes'],
+  "tropical island": ['biomesoplenty:tropics', 'wythers:tropical_beach', 'wythers:tropical_island', 'wythers:tropical_volcano']
 };
 
 function getBiomeGroupTooltip(biomeName) {
@@ -641,6 +672,7 @@ function buildSpawnSection(poke) {
       isSlimeChunk: poke.isSlimeChunk,
       isDay: poke.isDay,
       seeSky: poke.seeSky,
+      isWater: poke.isWater,
       village_Structure: poke.village_Structure,
       requirements: poke.spawnRequirements || null,
       label: null
@@ -688,6 +720,8 @@ function buildSpawnSection(poke) {
     var reqLines = [];
     if (opt.isRaining === true) reqLines.push({ label: 'Raining', value: 'Required' });
     if (opt.isRaining === false) reqLines.push({ label: 'Raining', value: 'Must not be raining' });
+    if (opt.isWater === true) reqLines.push({ label: 'Requirement', value: 'Needs to be in water' });
+    if (opt.isWater === false) reqLines.push({ label: 'Requirement', value: 'Cant be in water' });
     if (opt.village_Structure === true) reqLines.push({ label: 'Structure', value: 'Must be in a Village' });
     if (opt.village_Structure === false) reqLines.push({ label: 'Structure', value: 'Cant be in a Village' });
     if (opt.isSlimeChunk === true) reqLines.push({ label: 'Slime Chunk', value: 'Required' });
@@ -798,9 +832,20 @@ window.prevSpawnSlide = function () { goSpawnSlide(window._spawnIndex - 1); };
 window.goSpawnSlide = goSpawnSlide;
 
 function buildEvolutionSection(poke) {
-  if (!poke.evolutions || !poke.evolutions.length) return '';
+  // Support two formats:
+  //   legacy:  poke.evolutions = [ ...flat/branch array... ]  (single chain)
+  //   new:     poke.evolutionChains = [ { label, chain: [...] }, ... ]  (multiple chains)
+  var chains = [];
 
-  // Build a label string from an evolution entry's condition fields
+  if (poke.evolutionChains && poke.evolutionChains.length) {
+    chains = poke.evolutionChains;
+  } else if (poke.evolutions && poke.evolutions.length) {
+    chains = [{ label: null, chain: poke.evolutions }];
+  }
+
+  if (!chains.length) return '';
+
+  // ---- helpers ----
   function evoLabel(evo) {
     var parts = [];
     if (evo.level)        parts.push('Lv. ' + evo.level);
@@ -809,16 +854,18 @@ function buildEvolutionSection(poke) {
     return parts.length ? parts.join(' \u00B7 ') : '?';
   }
 
-  // Render a single pokemon card in the chain
   function evoCard(evo) {
-    var evoPoke    = getPokemonById(evo.id);
-    var sprite     = evoPoke ? (evoPoke.video || evoPoke.sprite) : null;
-    var isCurrent  = evo.id === poke.id;
-    var spriteEl   = sprite
+    // evo.sprite overrides the lookup so variant forms can show their own sprite
+    var evoPoke   = getPokemonById(evo.id);
+    var sprite    = evo.sprite || (evoPoke ? (evoPoke.video || evoPoke.sprite) : null);
+    var isCurrent = evo.id === poke.id && !evo.variantForm;
+    var isCurrentVariant = evo.variantForm && poke.variants &&
+      poke.variants.some(function(v) { return v.name === evo.variantForm; });
+    var spriteEl  = sprite
       ? buildSpriteEl(sprite, evo.name, 'evo-sprite', 'assets/images/placeholder.png')
       : '<div class="evo-sprite-placeholder">?</div>';
     return (
-      '<a href="pokemon.html?id=' + evo.id + '" class="evo-card' + (isCurrent ? ' evo-current' : '') + '">' +
+      '<a href="pokemon.html?id=' + evo.id + '" class="evo-card' + ((isCurrent || isCurrentVariant) ? ' evo-current' : '') + '">' +
       '<div class="evo-sprite-wrap">' + spriteEl + '</div>' +
       '<p class="evo-name">' + evo.name + '</p>' +
       '<p class="evo-number">#' + String(evo.id).padStart(4, '0') + '</p>' +
@@ -826,7 +873,6 @@ function buildEvolutionSection(poke) {
     );
   }
 
-  // Render an arrow with a label
   function evoArrow(label) {
     return (
       '<div class="evo-arrow">' +
@@ -837,40 +883,44 @@ function buildEvolutionSection(poke) {
     );
   }
 
-  // Walk the evolutions array.
-  // Each entry is either:
-  //   { id, name, level?, method?, requiresMove? }  — a normal single stage
-  //   { branches: [ {id,name,...}, {id,name,...}, ... ] }  — a fork
-  var html = '';
-  var isFirst = true;
-
-  poke.evolutions.forEach(function(entry) {
-    if (entry.branches) {
-      // BRANCH NODE — render all alternatives in a vertical stack
-      var branchHtml = '<div class="evo-branch-group">';
-      entry.branches.forEach(function(branch, bi) {
-        branchHtml +=
-          '<div class="evo-branch-path">' +
-          evoArrow(evoLabel(branch)) +
-          evoCard(branch) +
-          '</div>';
-      });
-      branchHtml += '</div>';
-      html += branchHtml;
-    } else {
-      // NORMAL STAGE
-      if (!isFirst) {
-        html += evoArrow(evoLabel(entry));
+  function renderChain(chainArr) {
+    var html = '';
+    var isFirst = true;
+    chainArr.forEach(function(entry) {
+      if (entry.branches) {
+        var branchHtml = '<div class="evo-branch-group">';
+        entry.branches.forEach(function(branch) {
+          branchHtml +=
+            '<div class="evo-branch-path">' +
+            evoArrow(evoLabel(branch)) +
+            evoCard(branch) +
+            '</div>';
+        });
+        branchHtml += '</div>';
+        html += branchHtml;
+      } else {
+        if (!isFirst) html += evoArrow(evoLabel(entry));
+        html += evoCard(entry);
+        isFirst = false;
       }
-      html += evoCard(entry);
-      isFirst = false;
-    }
-  });
+    });
+    return html;
+  }
+
+  // ---- render all chains ----
+  var chainsHtml = chains.map(function(c) {
+    return (
+      '<div class="evo-chain-row">' +
+      (c.label ? '<div class="evo-chain-label">' + c.label + '</div>' : '') +
+      '<div class="evo-chain evo-chain-branching">' + renderChain(c.chain) + '</div>' +
+      '</div>'
+    );
+  }).join('');
 
   return (
     '<section class="detail-section">' +
     '<h2 class="section-title">Evolution Chart</h2>' +
-    '<div class="evo-chain evo-chain-branching">' + html + '</div>' +
+    '<div class="evo-chains-wrap">' + chainsHtml + '</div>' +
     '</section>'
   );
 }
@@ -1295,9 +1345,7 @@ function loadPokemonDetail() {
 
   document.title = poke.name + ' (#' + (poke.number || poke.id) + ') \u2014 Cobblemon Pokédex';
 
-  var statsHTML = poke.baseStats
-    ? Object.entries(poke.baseStats).map(function (e) { return buildStatBar(e[0], e[1]); }).join('')
-    : '<p class="text-yellow-400 text-sm">No stats available</p>';
+  var statsHTML = buildStatsHTML(poke.baseStats);
 
   var typeBadgesLg = buildTypeBadges(poke.types, 'type-lg');
 
@@ -1390,9 +1438,9 @@ function loadPokemonDetail() {
     '<h3 class="meta-title">Rarity</h3>' +
     '<div class="meta-tag">' + (poke.rarity || '\u2014') + '</div>' +
     '<h3 class="meta-title mt-3">Generation</h3>' +
-    '<div class="meta-tag">Gen ' + (poke.generation || '?') + '</div>' +
+    '<div class="meta-tag" id="pokemonGeneration">Gen ' + (poke.generation || '?') + '</div>' +
     '</div>' +
-    '<div class="meta-card">' +
+    '<div class="meta-card" id="dropsCard">' +
     '<h3 class="meta-title">Dropped Items</h3>' +
     buildDrops(poke.drops) +
     '</div>' +
@@ -1518,8 +1566,7 @@ window.switchForm = function (index) {
   var statsGrid = document.querySelector('.stats-grid');
   var statsSource = (form.baseStats && Object.keys(form.baseStats).length) ? form.baseStats : d.poke.baseStats;
   if (statsGrid && statsSource) {
-    var newStats = Object.entries(statsSource).map(function (e) { return buildStatBar(e[0], e[1]); }).join('');
-    statsGrid.innerHTML = newStats;
+    statsGrid.innerHTML = buildStatsHTML(statsSource);
     animateStatBars(statsGrid.closest('.detail-section') || statsGrid);
   }
 
@@ -1554,6 +1601,20 @@ window.switchForm = function (index) {
     // No card existed (base form had no EVs) but this form does — insert it into the grid
     var dataGrid = document.querySelector('.pokedex-data-grid');
     if (dataGrid) dataGrid.insertAdjacentHTML('beforeend', evCardHTML);
+  }
+
+  // Generation — use this form's own generation if defined, otherwise fall back to base Pokémon's
+  var genEl = document.getElementById('pokemonGeneration');
+  if (genEl) {
+    var activeGen = (form.generation !== undefined && form.generation !== null) ? form.generation : d.poke.generation;
+    genEl.textContent = 'Gen ' + (activeGen || '?');
+  }
+
+  // Dropped Items — use this form's own drops if defined, otherwise fall back to base Pokémon's
+  var activeDrops = (form.drops && form.drops.length) ? form.drops : d.poke.drops;
+  var dropsCard = document.getElementById('dropsCard');
+  if (dropsCard) {
+    dropsCard.innerHTML = '<h3 class="meta-title">Dropped Items</h3>' + buildDrops(activeDrops);
   }
 
   // Abilities

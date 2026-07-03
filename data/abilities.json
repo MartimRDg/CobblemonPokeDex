@@ -110,6 +110,21 @@
     },
     "Delta Stream": {
       "description": "The Pokémon changes the weather so that no moves are super effective against the Flying type."
+    },
+    "Oblivious": {
+      "description": "The Pokémon is oblivious, keeping it from being infatuated, falling for taunts, or being affected by Intimidate."
+    },
+    "Own Tempo": {
+      "description": "The Pokémon sticks to its own tempo, preventing it from becoming confused or being affected by Intimidate."
+    },
+    "Regenerator": {
+      "description": "The Pokémon has a little of its HP restored when withdrawn from battle."
+    },
+    "Gluttony": {
+      "description": "If the Pokémon is holding a Berry to be eaten when its HP is low, it will instead eat the Berry when its HP drops to half or less."
+    },
+    "Curious Medicine": {
+      "description": "When the Pokémon enters a battle, it scatters medicine from its shell, which removes all stat changes from allies."
     }
   }
 }
