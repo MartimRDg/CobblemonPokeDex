@@ -1239,6 +1239,18 @@
       "video": "assets/videos/slowbro.gif",
       "shinyVideo":"assets/videos/slowbro-shiny.gif",
 
+      "_comment1": "Decks",
+
+      "decks": [
+        {
+         "name": "Iron Fortress",
+         "game": "Cobbleverse",
+         "version": "Mega Shiny Slowbro",
+         "logo": "assets/games/cobbleverse.png",
+         "moves": ["Calm Mind", "Surf", "Psychic", "Slack Off"]
+        }
+      ],
+
       "_comment2": "Evolutions",
       
       "evolutionChains": [
