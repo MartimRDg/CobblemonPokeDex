@@ -125,6 +125,12 @@
     },
     "Curious Medicine": {
       "description": "When the Pokémon enters a battle, it scatters medicine from its shell, which removes all stat changes from allies."
+    },
+    "Poison Point": {
+      "description": "Contact with the Pokémon may poison the attacker."
+    },
+    "Speed Boost": {
+      "description": "The Pokémon's Speed stat is boosted every turn."
     }
   }
 }

@@ -5008,6 +5008,641 @@
     {
       "_comment": "Base Stats",
 
+      "id": 543,
+      "name": "Venipede",
+      "number": "0543",
+      "types": ["Bug", "Poison"],
+      "generation": 5,
+      "rarity": "Common",
+      "rideable": false,
+      "flying": false,
+      "legendary": false,
+      "mythical": false,
+      "catchRate": 255,
+
+      "abilities": ["Poison Point", "Swarm", "Speed Boost (Hidden)"],
+
+      "baseStats": {
+        "hp": 30,
+        "attack": 45,
+        "defense": 59,
+        "spAttack": 30,
+        "spDefense": 39,
+        "speed": 57
+       },
+
+       "evYield": {
+        "defense": 1
+       },
+
+       "drops": [
+        { "item": "Poison Barb", "chance": 2.5, "quantity": "1", "image": "assets/images/items/poison_barb.png"},
+        { "item": "Pecha Berry", "chance": 2.5, "quantity": "1", "image": "assets/images/items/pecha_berry.png"}
+       ],
+
+      "weaknesses": ["Fire", "Flying", "Rock", "Psychic"],
+      "resistances": ["Grass", "Fighting", "Poison", "Bug", "Fairy"],
+      "immunities": ["None"],
+      
+      "spawnOptions": [
+        {
+         "label": "Any",
+         "bucket": "Common",
+         "level": "1-26",
+         "context": "Grounded",
+         "preset": "Natural, Wild",
+         "biomes": ["Forest"],
+         "isDay": false,
+         "requirements": "N/A"
+        },
+        {
+         "label": "Any",
+         "bucket": "Common",
+         "level": "1-26",
+         "context": "Grounded",
+         "preset": "Natural, Wild",
+         "biomes": ["Jungle"],
+         "isDay": false,
+         "requirements": "N/A"
+        },
+        {
+         "label": "Any",
+         "bucket": "Common",
+         "level": "1-26",
+         "context": "Grounded",
+         "preset": "Natural",
+         "biomes": ["Lush"],
+         "requirements": "N/A",
+         "shipwreck_coves_structure": false
+        },
+        {
+         "label": "Any",
+         "bucket": "Common",
+         "level": "1-26",
+         "context": "Grounded",
+         "preset": "Natural, Wild",
+         "biomes": ["Nether/Forest", "Nether/Fungus"],
+         "requirements": "N/A"
+        },
+        {
+         "label": "Any",
+         "bucket": "Common",
+         "level": "1-26",
+         "context": "Grounded",
+         "preset": "Natural",
+         "biomes": ["Overworld"],
+         "notbiomes": ["Lush"],
+         "minY": -41,
+         "maxY": 9,
+         "requirements": "N/A",
+         "shipwreck_coves_structure": true
+        }
+      ],
+
+      "video": "assets/videos/venipede.gif",
+      "shinyVideo":"assets/videos/venipede-shiny.gif",
+
+      "_comment2": "Evolutions",
+      
+      "evolutions": [
+       { "id": 543, "name": "Venipede", "level": null },
+       { "id": 544, "name": "Whirlipede", "level": 22 },
+       { "id": 545, "name": "Scolipede", "level": 30 }
+      ],
+
+      "_comment3": "Movesets",
+
+      "moves": {
+        "level": [
+         { "level": 1, "name": "Defense Curl" },
+         { "level": 1, "name": "Poison Sting" },
+         { "level": 1, "name": "Pursuit" },
+         { "level": 4, "name": "Rollout" },
+         { "level": 8, "name": "Protect" },
+         { "level": 12, "name": "Poison Tail" },
+         { "level": 16, "name": "Screech" },
+         { "level": 20, "name": "Bug Bite" },
+         { "level": 24, "name": "Venoshock" },
+         { "level": 28, "name": "Take Down" },
+         { "level": 32, "name": "Agility" },
+         { "level": 36, "name": "Toxic" },
+         { "level": 40, "name": "Venom Drench" },
+         { "level": 44, "name": "Double-Edge" }
+        ],
+        "tm": [
+          { "name": "Agility" },
+          { "name": "Bug Bite" },
+          { "name": "Double-Edge" },
+          { "name": "Endeavor" },
+          { "name": "Endure" },
+          { "name": "Facade" },
+          { "name": "Fury Cutter" },
+          { "name": "Gyro Ball" },
+          { "name": "Hex" },
+          { "name": "Infestation" },
+          { "name": "Iron Defense" },
+          { "name": "Payback" },
+          { "name": "Pin Missile" },
+          { "name": "Poison Jab" },
+          { "name": "Poison Tail" },
+          { "name": "Protect" },
+          { "name": "Rest" },
+          { "name": "Rock Climb" },
+          { "name": "Rock Smash" },
+          { "name": "Rollout" },
+          { "name": "Screech" },
+          { "name": "Signal Beam" },
+          { "name": "Skitter Smack" },
+          { "name": "Sleep Talk" },
+          { "name": "Sludge Bomb" },
+          { "name": "Solar Beam" },
+          { "name": "Spikes" },
+          { "name": "Steel Roller" },
+          { "name": "Struggle Bug" },
+          { "name": "Substitute" },
+          { "name": "Sunny Day" },
+          { "name": "Take Down" },
+          { "name": "Tera Blast" },
+          { "name": "Toxic" },
+          { "name": "Toxic Spikes" },
+          { "name": "Venom Drench" },
+          { "name": "Venoshock" }
+        ],
+        "egg": [
+          { "name": "Bite" },
+          { "name": "Fury Cutter" },
+          { "name": "Steamroller" },
+          { "name": "Twineedle" }
+        ],
+        "tutor": [
+          { "name": "Bug Bite" },
+          { "name": "Endeavor" },
+          { "name": "Fury Cutter" },
+          { "name": "Iron Defense" },
+          { "name": "Poison Jab" },
+          { "name": "Rest" },
+          { "name": "Rock Smash" },
+          { "name": "Rollout" },
+          { "name": "Signal Beam" },
+          { "name": "Skitter Smack" },
+          { "name": "Sleep Talk" },
+          { "name": "Sludge Bomb" },
+          { "name": "Spikes" },
+          { "name": "Steel Roller" }
+       ]
+     }
+    },
+    {
+      "_comment": "Base Stats",
+
+      "id": 544,
+      "name": "Whirlipede",
+      "number": "0544",
+      "types": ["Bug", "Poison"],
+      "generation": 5,
+      "rarity": "Common",
+      "rideable": false,
+      "flying": false,
+      "legendary": false,
+      "mythical": false,
+      "catchRate": 120,
+
+      "abilities": ["Poison Point", "Swarm", "Speed Boost (Hidden)"],
+
+      "baseStats": {
+        "hp": 40,
+        "attack": 55,
+        "defense": 99,
+        "spAttack": 40,
+        "spDefense": 79,
+        "speed": 47
+       },
+
+       "evYield": {
+        "defense": 2
+       },
+
+       "drops": [
+        { "item": "Poison Barb", "chance": 5, "quantity": "1", "image": "assets/images/items/poison_barb.png"},
+        { "item": "Pecha Berry", "chance": 5, "quantity": "1", "image": "assets/images/items/pecha_berry.png"}
+       ],
+
+      "weaknesses": ["Fire", "Flying", "Rock", "Psychic"],
+      "resistances": ["Grass", "Fighting", "Poison", "Bug", "Fairy"],
+      "immunities": ["None"],
+      
+      "spawnOptions": [
+        {
+         "label": "Any",
+         "bucket": "Common",
+         "level": "22-36",
+         "context": "Grounded",
+         "preset": "Natural, Wild",
+         "biomes": ["Forest"],
+         "isDay": false,
+         "requirements": "N/A"
+        },
+        {
+         "label": "Any",
+         "bucket": "Common",
+         "level": "22-36",
+         "context": "Grounded",
+         "preset": "Natural, Wild",
+         "biomes": ["Jungle"],
+         "isDay": false,
+         "requirements": "N/A"
+        },
+        {
+         "label": "Any",
+         "bucket": "Common",
+         "level": "22-36",
+         "context": "Grounded",
+         "preset": "Natural",
+         "biomes": ["Lush"],
+         "requirements": "N/A",
+         "shipwreck_coves_structure": false
+        },
+        {
+         "label": "Any",
+         "bucket": "Common",
+         "level": "22-36",
+         "context": "Grounded",
+         "preset": "Natural, Wild",
+         "biomes": ["Nether/Forest", "Nether/Fungus"],
+         "requirements": "N/A"
+        },
+        {
+         "label": "Any",
+         "bucket": "Common",
+         "level": "22-36",
+         "context": "Grounded",
+         "preset": "Natural",
+         "biomes": ["Overworld"],
+         "notbiomes": ["Lush"],
+         "minY": -41,
+         "maxY": 9,
+         "requirements": "N/A",
+         "shipwreck_coves_structure": true
+        }
+      ],
+
+      "video": "assets/videos/whirlipede.gif",
+      "shinyVideo":"assets/videos/whirlipede-shiny.gif",
+
+      "_comment2": "Evolutions",
+      
+      "evolutions": [
+       { "id": 543, "name": "Venipede", "level": null },
+       { "id": 544, "name": "Whirlipede", "level": 22 },
+       { "id": 545, "name": "Scolipede", "level": 30 }
+      ],
+
+      "_comment3": "Movesets",
+
+      "moves": {
+        "level": [
+         { "level": 1, "name": "Defense Curl" },
+         { "level": 1, "name": "Rollout" },
+         { "level": 1, "name": "Poison Sting" },
+         { "level": 1, "name": "Pursuit" },
+         { "level": 1, "name": "Protect" },
+         { "level": 1, "name": "Iron Defense" },
+         { "level": 1, "name": "Steamroller" },
+         { "level": 12, "name": "Poison Tail" },
+         { "level": 16, "name": "Screech" },
+         { "level": 20, "name": "Bug Bite" },
+         { "level": 26, "name": "Venoshock" },
+         { "level": 32, "name": "Take Down" },
+         { "level": 38, "name": "Agility" },
+         { "level": 44, "name": "Toxic" },
+         { "level": 50, "name": "Venom Drench" },
+         { "level": 56, "name": "Double-Edge" }
+        ],
+        "tm": [
+          { "name": "Agility" },
+          { "name": "Bug Bite" },
+          { "name": "Double-Edge" },
+          { "name": "Endeavor" },
+          { "name": "Endure" },
+          { "name": "Facade" },
+          { "name": "Fury Cutter" },
+          { "name": "Gyro Ball" },
+          { "name": "Hex" },
+          { "name": "Infestation" },
+          { "name": "Iron Defense" },
+          { "name": "Payback" },
+          { "name": "Pin Missile" },
+          { "name": "Poison Jab" },
+          { "name": "Poison Tail" },
+          { "name": "Protect" },
+          { "name": "Rest" },
+          { "name": "Rock Climb" },
+          { "name": "Rock Smash" },
+          { "name": "Rollout" },
+          { "name": "Screech" },
+          { "name": "Signal Beam" },
+          { "name": "Skitter Smack" },
+          { "name": "Sleep Talk" },
+          { "name": "Sludge Bomb" },
+          { "name": "Solar Beam" },
+          { "name": "Spikes" },
+          { "name": "Steel Roller" },
+          { "name": "Struggle Bug" },
+          { "name": "Substitute" },
+          { "name": "Sunny Day" },
+          { "name": "Take Down" },
+          { "name": "Tera Blast" },
+          { "name": "Toxic" },
+          { "name": "Toxic Spikes" },
+          { "name": "Venom Drench" },
+          { "name": "Venoshock" }
+        ],
+        "egg": [
+          { "name": "Bite" },
+          { "name": "Fury Cutter" },
+          { "name": "Steamroller" },
+          { "name": "Twineedle" }
+        ],
+        "tutor": [
+          { "name": "Bug Bite" },
+          { "name": "Endeavor" },
+          { "name": "Fury Cutter" },
+          { "name": "Iron Defense" },
+          { "name": "Poison Jab" },
+          { "name": "Rest" },
+          { "name": "Rock Smash" },
+          { "name": "Rollout" },
+          { "name": "Signal Beam" },
+          { "name": "Skitter Smack" },
+          { "name": "Sleep Talk" },
+          { "name": "Sludge Bomb" },
+          { "name": "Spikes" },
+          { "name": "Steel Roller" }
+       ]
+     }
+    },
+    {
+      "_comment": "Base Stats",
+
+      "id": 545,
+      "name": "Scolipede",
+      "number": "0545",
+      "types": ["Bug", "Poison"],
+      "generation": 5,
+      "rarity": "Common",
+      "rideable": true,
+      "flying": false,
+      "legendary": false,
+      "mythical": false,
+      "catchRate": 45,
+
+      "abilities": ["Poison Point", "Swarm", "Speed Boost (Hidden)"],
+
+      "baseStats": {
+        "hp": 60,
+        "attack": 100,
+        "defense": 89,
+        "spAttack": 55,
+        "spDefense": 69,
+        "speed": 112
+       },
+
+       "evYield": {
+        "speed": 3
+       },
+
+       "drops": [
+        { "item": "Poison Barb", "chance": 10, "quantity": "1", "image": "assets/images/items/poison_barb.png"},
+        { "item": "Pecha Berry", "chance": 10, "quantity": "1", "image": "assets/images/items/pecha_berry.png"}
+       ],
+
+      "weaknesses": ["Fire", "Flying", "Rock", "Psychic"],
+      "resistances": ["Grass", "Fighting", "Poison", "Bug", "Fairy"],
+      "immunities": ["None"],
+      
+      "spawnOptions": [
+        {
+         "label": "Any",
+         "bucket": "Common",
+         "level": "30-49",
+         "context": "Grounded",
+         "preset": "Natural, Wild",
+         "biomes": ["Forest"],
+         "isDay": false,
+         "requirements": "N/A"
+        },
+        {
+         "label": "Any",
+         "bucket": "Common",
+         "level": "30-49",
+         "context": "Grounded",
+         "preset": "Natural, Wild",
+         "biomes": ["Jungle"],
+         "isDay": false,
+         "requirements": "N/A"
+        },
+        {
+         "label": "Any",
+         "bucket": "Common",
+         "level": "30-49",
+         "context": "Grounded",
+         "preset": "Natural",
+         "biomes": ["Lush"],
+         "requirements": "N/A",
+         "shipwreck_coves_structure": false
+        },
+        {
+         "label": "Any",
+         "bucket": "Common",
+         "level": "30-49",
+         "context": "Grounded",
+         "preset": "Natural, Wild",
+         "biomes": ["Nether/Forest", "Nether/Fungus"],
+         "requirements": "N/A"
+        },
+        {
+         "label": "Any",
+         "bucket": "Common",
+         "level": "30-49",
+         "context": "Grounded",
+         "preset": "Natural",
+         "biomes": ["Overworld"],
+         "notbiomes": ["Lush"],
+         "minY": -41,
+         "maxY": 9,
+         "requirements": "N/A",
+         "shipwreck_coves_structure": true
+        }
+      ],
+
+      "video": "assets/videos/scolipede.gif",
+      "shinyVideo":"assets/videos/scolipede-shiny.gif",
+
+      "riding": {
+       "ground": {
+         "acceleration": { "min": 20, "max": 25 },
+         "jump":         { "min": 25, "max": 35 },
+         "skill":        { "min": 25, "max": 35 },
+         "speed":        { "min": 45, "max": 75 },
+         "stamina":      { "min": 50, "max": 70 }
+        }
+      },
+
+      "_comment2": "Evolutions",
+      
+      "evolutions": [
+       { "id": 543, "name": "Venipede", "level": null },
+       { "id": 544, "name": "Whirlipede", "level": 22 },
+       { "id": 545, "name": "Scolipede", "level": 30 }
+      ],
+
+      "megaEvolutions": [
+       {
+        "name": "Mega Scolipede",
+        "sprite": "assets/images/scolipede-mega.png",
+        "shinySprite": "assets/images/scolipede-mega-shiny.png",
+        "abilities": ["Tinted Lens"],
+        "types": ["Bug", "Poison"],
+        "generation": 9,
+
+        "weaknesses": ["Fire", "Flying", "Rock", "Psychic"],
+        "resistances": ["Grass", "Fighting", "Poison", "Bug", "Fairy"],
+        "immunities": ["None"],
+
+        "baseStats": {
+        "hp": 60,
+        "attack": 140,
+        "defense": 149,
+        "spAttack": 75,
+        "spDefense": 99,
+        "speed": 62
+       }
+      }
+    ],
+
+      "_comment3": "Movesets",
+
+      "moves": {
+        "level": [
+         { "level": 1, "name": "Defense Curl" },
+         { "level": 1, "name": "Rollout" },
+         { "level": 1, "name": "Poison Sting" },
+         { "level": 1, "name": "Pursuit" },
+         { "level": 1, "name": "Protect" },
+         { "level": 1, "name": "Baton Pass" },
+         { "level": 1, "name": "Steamroller" },
+         { "level": 1, "name": "Iron Defense" },
+         { "level": 12, "name": "Poison Tail" },
+         { "level": 16, "name": "Screech" },
+         { "level": 20, "name": "Bug Bite" },
+         { "level": 26, "name": "Venoshock" },
+         { "level": 34, "name": "Take Down" },
+         { "level": 42, "name": "Agility" },
+         { "level": 50, "name": "Toxic" },
+         { "level": 58, "name": "Venom Drench" },
+         { "level": 66, "name": "Double-Edge" },
+         { "level": 74, "name": "Megahorn" }
+        ],
+        "tm": [
+          { "name": "Agility" },
+          { "name": "Aqua Tail" },
+          { "name": "Assurance" },
+          { "name": "Baton Pass" },
+          { "name": "Bug Bite" },
+          { "name": "Bulldoze" },
+          { "name": "Cross Poison" },
+          { "name": "Cut" },
+          { "name": "Dig" },
+          { "name": "Double-Edge" },
+          { "name": "Earthquake" },
+          { "name": "Endeavor" },
+          { "name": "Endure" },
+          { "name": "Facade" },
+          { "name": "Fury Cutter" },
+          { "name": "Giga Impact" },
+          { "name": "Gyro Ball" },
+          { "name": "Hex" },
+          { "name": "Hyper Beam" },
+          { "name": "Infestation" },
+          { "name": "Iron Defense" },
+          { "name": "Iron Tail" },
+          { "name": "Megahorn" },
+          { "name": "Payback" },
+          { "name": "Pin Missile" },
+          { "name": "Poison Jab" },
+          { "name": "Poison Tail" },
+          { "name": "Protect" },
+          { "name": "Rest" },
+          { "name": "Rock Climb" },
+          { "name": "Rock Slide" },
+          { "name": "Rock Smash" },
+          { "name": "Rock Tomb" },
+          { "name": "Rollout" },
+          { "name": "Screech" },
+          { "name": "Signal Beam" },
+          { "name": "Skitter Smack" },
+          { "name": "Sleep Talk" },
+          { "name": "Sludge Bomb" },
+          { "name": "Smart Strike" },
+          { "name": "Snatch" },
+          { "name": "Solar Beam" },
+          { "name": "Spikes" },
+          { "name": "Steel Roller" },
+          { "name": "Stomping Tantrum" },
+          { "name": "Strength" },
+          { "name": "Struggle Bug" },
+          { "name": "Substitute" },
+          { "name": "Sunny Day" },
+          { "name": "Superpower" },
+          { "name": "Swords Dance" },
+          { "name": "Take Down" },
+          { "name": "Tera Blast" },
+          { "name": "Throat Chop" },
+          { "name": "Toxic" },
+          { "name": "Toxic Spikes" },
+          { "name": "Venom Drench" },
+          { "name": "Venoshock" },
+          { "name": "X-Scissor" }
+        ],
+        "egg": [
+          { "name": "Bite" },
+          { "name": "Fury Cutter" },
+          { "name": "Steamroller" },
+          { "name": "Twineedle" }
+        ],
+        "tutor": [
+          { "name": "Aqua Tail" },
+          { "name": "Bug Bite" },
+          { "name": "Bulldoze" },
+          { "name": "Endeavor" },
+          { "name": "Fury Cutter" },
+          { "name": "Giga Impact" },
+          { "name": "Hyper Beam" },
+          { "name": "Iron Defense" },
+          { "name": "Iron Tail" },
+          { "name": "Megahorn" },
+          { "name": "Poison Jab" },
+          { "name": "Rest" },
+          { "name": "Rock Slide" },
+          { "name": "Rock Smash" },
+          { "name": "Rollout" },
+          { "name": "Signal Beam" },
+          { "name": "Skitter Smack" },
+          { "name": "Sleep Talk" },
+          { "name": "Sludge Bomb" },
+          { "name": "Snatch" },
+          { "name": "Spikes" },
+          { "name": "Steel Roller" },
+          { "name": "Stomping Tantrum" },
+          { "name": "Superpower" },
+          { "name": "Throat Chop" },
+          { "name": "X-Scissor" }
+       ]
+     }
+    },
+    {
+      "_comment": "Base Stats",
+
       "id": 613,
       "name": "Cubchoo",
       "number": "0613",

@@ -3342,6 +3342,16 @@ html { background-color: #050709; }
   border-color: #f32905;
   color: #f03c05;
 }
+.biome-related-chip.ns-netherdescent {
+  background: #14344f;
+  border-color: #447585;
+  color: #e3f0eb;
+}
+.biome-related-chip.ns-gardens_of_the_dead {
+  background: #4e171d;
+  border-color: #9c3e36;
+  color: #a84539;
+}
 
 /* ---- Legend ---- */
 .biome-tooltip-legend {
@@ -3386,6 +3396,8 @@ html { background-color: #050709; }
 .biome-legend-dot.ns-clifftree             { background: #A97063; }
 .biome-legend-dot.ns-biomeswevegone        { background: #3cfc02; }
 .biome-legend-dot.ns-cobblemon             { background: #fc3c02; }
+.biome-legend-dot.ns-netherdescent         { background: #14344f; }
+.biome-legend-dot.ns-gardens_of_the_dead   { background: #9c3e36; }
 
 @media (max-width: 480px) {
   .biome-tooltip { width: 220px; }

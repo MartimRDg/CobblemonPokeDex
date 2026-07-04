@@ -567,14 +567,17 @@ var BIOME_GROUPS = {
   'overworld': ['#minecraft:overworld', '#c: overworld'],
   'ocean': ['#minecraft:ocean', 'cold_ocean', 'deep_ocean', 'frozen_ocean', 'lukewarm_ocean', 'temperate_ocean', 'warm_ocean', '#c:ocean', 'clifftree:stone_ocean'],
   'desert': ['minecraft:desert', '#c:desert', '#clifftree:desert', '#wythers:desert', 'biomesoplenty:lush_desert', 'clifftree:desert_cliff', 'darkerdepths:sandy_catacombs', 'terralith:ancient_sands', 'terralith:desert_canyon', 'terralith:cave/desert_caves', 'terralith:desert_oasis', 'terralith:desert_spires', 'terralith:lush_desert', 'terralith:red_oasis', 'terralith:sandstone_valley', 'wythers:badlands_desert', 'wythers:desert_island', 'wythers:kwongan_heath', 'wythers:outback_desert', 'wythers:red_desert', 'wythers:sandy_jungle'],
-  'forest': ['#cobblemon:is_forest', 'minecraft:flower_forest', '#cobblemon:is_magical', 'minecraft:meadow', 'minecraft:forest', '#cobblemon:is_floral'],
+  'forest': ['#minecraft:forest', 'minecraft:cherry_grove', '#c:flower_forest', '#c:forest', '#c:tree/deciduous', 'biomesoplenty:lavender_forest', 'biomesoplenty:maple_woods', 'biomesoplenty:mediterranean_forest', 'biomesoplenty:mystic_grove', 'biomesoplenty:old_growth_woodland', 'biomesoplenty:ominous_woods', 'biomesoplenty:orchard', 'biomesoplenty:origin_valley', 'biomesoplenty:prairie', 'biomesoplenty:seasonal_forest', 'biomesoplenty:seasonal_orchard', 'biomesoplenty:woodland', 'blooming_biosphere:autumnal_forest', 'blooming_biosphere:oak_woodland', 'terralith:alpha_islands', 'terralith:alpha_islands_winter','terralith:blooming_valley', 'terralith:forested_highlands', 'terralith:lavender_forest', 'terralith:lavender_valley', 'terralith:mirage_isles', 'terralith:sakura_grove', 'terralith:sakura_valley', 'terralith:temperate_highlands', 'wythers:dry_tropical_forest', 'wythers:birch_taiga', 'wythers:boreal_forest_red', 'wythers:boreal_forest_yellow', 'wythers:tangled_forest', 'wythers:tropical_forest'],
   'snowy forest': ['biomesoplenty:auroral_garden', 'biomesoplenty:muskeg', 'biomesoplenty:snowy_maple_woods', 'blooming_biosphere:snowy_cherry_grove', 'terralith:alpha_islands_winter', 'terralith:ice_marsh', 'terralith:siberian_grove', 'terralith:snowy_cherry_grove', 'terralith:snowy_cherry_grove', 'terralith:snowy_maple_forest', 'wythers:huangshan_highlands', 'wythers:jade_highlands', 'wythers:snowy_fen'],
   'snowy taiga': ['minecraft:grove', 'minecraft:snowy_taiga', 'biomesoplenty:snowy_coniferous_forest', 'biomesoplenty:snowy_coniferous_forest', 'biomesoplenty:snowy_maple_woods', 'clifftree:snowy_old_growth_taiga', 'terralith:alpine_grove', 'terralith:cold_shrubland', 'terralith:siberian_grove', 'terralith:snowy_maple_forest', 'terralith:snowy_shield', 'terralith:wintry_forest', 'terralith:wintry_lowlands', 'wythers:cold_island', 'wythers:snowy_thermal_taiga', 'wythers:deep_snowy_taiga'],
   'tundra': ['minecraft:ice_spikes', 'minecraft:snowy_plains', '#c:snowy_plains', 'biomesoplenty:cold_desert', 'biomesoplenty:cold_desert', 'biomesoplenty:muskeg', 'biomesoplenty:snowy_fir_clearing', 'biomesoplenty:tundra', 'biomeswevegone:crimson_tundra', 'clifftree:bog', 'clifftree:tundra', 'terralith:cold_shrubland', 'terralith:gravel_desert', 'terralith:rocky_shrubland', 'terralith:snowy_badlands', 'terralith:yellowstone', 'wythers:crimson_tundra', 'wythers:frigid_island', 'wythers:ice_cap', 'wythers:icy_crags', 'wythers:snowy_tundra', 'wythers:tundra'],
   'nether/quartz': ['cinderscapes:quartz_cavern', 'incendium:quartz_flats'],
   "frozen ocean": ['minecraft:deep_frozen_ocean', 'minecraft:frozen_ocean', 'terralith:frozen_cliffs', 'wythers:deep_icy_ocean', 'wythers:icy_ocean'],
   "beach": ['#minecraft:beach', 'biomesoplenty:dune_beach', 'wythers:guelta', 'wythers:sand_dunes'],
-  "tropical island": ['biomesoplenty:tropics', 'wythers:tropical_beach', 'wythers:tropical_island', 'wythers:tropical_volcano']
+  "tropical island": ['biomesoplenty:tropics', 'wythers:tropical_beach', 'wythers:tropical_island', 'wythers:tropical_volcano'],
+  "nether/forest": ['betternether:nether_jungle', 'betternether:nether_swampland', 'betternether:nether_swampland_terraces', 'betternether:old_swampland', 'betternether:upside_down_forest'],
+  "nether/fungus": ['minecraft:crimson_forest', 'minecraft:warped_forest', 'betternether:crimson_glowing_woods', 'betternether:crimson_pinewood', 'betternether:nether_mushroom_forest', 'betternether:nether_mushroom_forest_edge', 'betternether:old_fungiwoods', 'betternether:old_warped_woods', 'netherdescent:crimson_gardens', 'netherdescent:embur_bog', 'netherdescent:embur_bog', 'netherdescent:wailing_garth', 'cinderscapes:luminous_grove', 'gardens_of_the_dead:whistling_woods', 'gardens_of_the_dead:soulblight_forest', 'incendium:inverted_forest'],
+  "lush": ['minecraft:lush_caves', '#c:lush', 'biomeswevegone:lush_stacks', 'terralith:cave/fungal_caves', 'terralith:cave/underground_jungle', 'wythers:dripleaf_swamp', 'wythers:lichenous_caves', 'wythers:lichenous_dripstone_caves', 'wythers:lush_dripstone_caves', 'wythers:lush_fungous_dripstone_caves', 'wythers:lush_shroom_caves']
 };
 
 function getBiomeGroupTooltip(biomeName) {
@@ -625,6 +628,8 @@ var NAMESPACE_LABELS = {
   'blooming_biosphere': 'Blooming Biosphere',
   'clifftree': 'CliffTree',
   'biomeswevegone': 'Oh The Biomes We\'ve Gone',
+  'netherdescent': 'Nether Descent',
+  'gardens_of_the_dead': 'Gardens of the Dead',
   'cobblemon': 'Cobblemon',
   'other': 'Other'
 };
@@ -669,6 +674,7 @@ function buildSpawnSection(poke) {
       notBiomes: poke.notBiomes || poke.notbiomes || [],
       blocks: poke.blocks || null,
       isRaining: poke.isRaining,
+      shipwreck_coves_structure: poke.shipwreck_coves_structure,
       isSlimeChunk: poke.isSlimeChunk,
       isDay: poke.isDay,
       seeSky: poke.seeSky,
@@ -724,12 +730,17 @@ function buildSpawnSection(poke) {
     if (opt.isWater === false) reqLines.push({ label: 'Requirement', value: 'Cant be in water' });
     if (opt.village_Structure === true) reqLines.push({ label: 'Structure', value: 'Must be in a Village' });
     if (opt.village_Structure === false) reqLines.push({ label: 'Structure', value: 'Cant be in a Village' });
+    if (opt.shipwreck_coves_structure === true) reqLines.push({ label: 'Structure', value: 'Must be in a Shipwreck Coves' });
+    if (opt.shipwreck_coves_structure === false) reqLines.push({ label: 'Structure', value: 'Cant be in a Shipwreck Coves' });
     if (opt.isSlimeChunk === true) reqLines.push({ label: 'Slime Chunk', value: 'Required' });
     if (opt.isSlimeChunk === false) reqLines.push({ label: 'Slime Chunk', value: 'Must not be a slime chunk' });
     if (opt.isDay === true) reqLines.push({ label: 'Time range', value: 'Day' });
     if (opt.isDay === false) reqLines.push({ label: 'Time range', value: 'Not during Day' });
     if (opt.seeSky === true) reqLines.push({ label: 'See sky', value: 'Required' });
     if (opt.seeSky === false) reqLines.push({ label: 'See sky', value: 'Must not see sky' });
+    if (opt.minY != null && opt.maxY != null) reqLines.push({ label: 'Y Level', value: opt.minY + ' to ' + opt.maxY });
+    else if (opt.minY != null) reqLines.push({ label: 'Y Level', value: opt.minY + ' and above' });
+    else if (opt.maxY != null) reqLines.push({ label: 'Y Level', value: opt.maxY + ' and below' });
     if (opt.requirements && opt.requirements !== 'N/A') reqLines.push({ label: 'Other', value: opt.requirements });
     if (opt.blocks) {
       var blockChips = opt.blocks.split(',').map(function(b) {

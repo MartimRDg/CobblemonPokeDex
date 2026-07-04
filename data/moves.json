@@ -3027,10 +3027,82 @@
     "Venom Drench": {
       "type": "Poison",
       "category": "Status",
-      "power": 0,
+      "power": "-",
       "accuracy": 100,
       "pp": 20,
       "description": "Opposing Pokémon are drenched in an odd poisonous liquid. This lowers the Attack, Sp. Atk, and Speed stats of a poisoned target."
+    },
+    "Defense Curl": {
+      "type": "Normal",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 40,
+      "description": "The user curls up and boosts its Defense stat."
+    },
+    "Poison Sting": {
+      "type": "Poison",
+      "category": "Physical",
+      "power": 15,
+      "accuracy": 100,
+      "pp": 35,
+      "description": "The user stabs the target with a poisonous stinger to inflict damage. This may also poison the target."
+    },
+    "Poison Tail": {
+      "type": "Poison",
+      "category": "Physical",
+      "power": 50,
+      "accuracy": 100,
+      "pp": 25,
+      "description": "The user hits the target with its tail. This move has a heightened chance of landing a critical hit and may also poison the target."
+    },
+    "Pin Missile": {
+      "type": "Bug",
+      "category": "Physical",
+      "power": 25,
+      "accuracy": 95,
+      "pp": 20,
+      "description": "The user attacks by shooting sharp spikes at the target. This move hits two to five times in a row."
+    },
+    "Steel Roller": {
+      "type": "Steel",
+      "category": "Physical",
+      "power": 130,
+      "accuracy": 100,
+      "pp": 5,
+      "description": "The user attacks while destroying the terrain. This move fails if the ground hasn't turned into a terrain."
+    },
+    "Steamroller": {
+      "type": "Bug",
+      "category": "Physical",
+      "power": 65,
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user crushes its target by rolling over the target with its rolled-up body. This may also make the target flinch."
+    },
+    "Twineedle": {
+      "type": "Bug",
+      "category": "Physical",
+      "power": 25,
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user damages the target twice in succession by jabbing it with two spikes. This may also poison the target."
+    },
+    "Cross Poison": {
+      "type": "Poison",
+      "category": "Physical",
+      "power": 70,
+      "accuracy": 100,
+      "pp": 20,
+      "description": "A slashing attack with a poisonous blade that may also poison the target. This move has a heightened chance of landing a critical hit."
+    },
+    "Snatch": {
+      "type": "Dark",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user steals the effects of any attempts to use a healing or stat-changing move."
     }
   }
 }
