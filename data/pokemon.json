@@ -5488,6 +5488,16 @@
         }
       },
 
+      "decks": [
+        {
+         "name": "Venom Charge",
+         "game": "Cobbleverse",
+         "version": "Mega Scolipede",
+         "logo": "assets/games/cobbleverse.png",
+         "moves": ["Poison Tail", "Megahorn", "Double-Edge", "Protect"]
+        }
+      ],
+
       "_comment2": "Evolutions",
       
       "evolutions": [
