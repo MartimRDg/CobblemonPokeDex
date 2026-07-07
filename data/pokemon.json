@@ -6285,6 +6285,18 @@
       "video": "assets/videos/mandibuzz.gif",
       "shinyVideo":"assets/videos/mandibuzz-shiny.gif",
 
+      "_comment1": "Decks",
+
+      "decks": [
+        {
+         "name": "Iron Sentinel",
+         "game": "Cobbleverse",
+         "version": "Mandibuzz",
+         "logo": "assets/games/cobbleverse.png",
+         "moves": ["Knock Off", "Roost", "Defog", "Toxic"]
+        }
+      ],
+
       "_comment2": "Evolutions",
       
       "evolutions": [
