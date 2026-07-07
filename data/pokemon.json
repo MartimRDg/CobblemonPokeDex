@@ -5488,6 +5488,8 @@
         }
       },
 
+      "_comment1": "Decks",
+
       "decks": [
         {
          "name": "Venom Charge",
@@ -6044,6 +6046,375 @@
           { "name": "Water Pulse" },
           { "name": "X-Scissor" }
 
+       ]
+     }
+    },
+    {
+      "_comment": "Base Stats",
+
+      "id": 629,
+      "name": "Vullaby",
+      "number": "0629",
+      "types": ["Dark", "Flying"],
+      "generation": 5,
+      "rarity": "Uncommon",
+      "rideable": false,
+      "flying": false,
+      "legendary": false,
+      "mythical": false,
+      "catchRate": 190,
+
+      "abilities": ["Big Pecks", "Overcoat", "Weak Armor (Hidden)"],
+
+      "baseStats": {
+        "hp": 70,
+        "attack": 55,
+        "defense": 75,
+        "spAttack": 45,
+        "spDefense": 65,
+        "speed": 60
+       },
+
+       "evYield": {
+        "defense": 1
+       },
+
+       "drops": [
+        { "item": "Feather", "chance": 100, "quantity": "0-1", "image": "assets/images/items/feather.png"},
+        { "item": "Rotten Flesh", "chance": 100, "quantity": "0-1", "image": "assets/images/items/rotten_flesh.png"},
+        { "item": "Raw Chicken", "chance": 100, "quantity": "1", "image": "assets/images/items/raw_chicken.png"},
+        { "item": "Bluk Berry", "chance": 2.5, "quantity": "1", "image": "assets/images/items/bluk_berry.png"}
+       ],
+
+      "weaknesses": ["Fairy", "Electric", "Ice", "Rock"],
+      "resistances": ["Ghost", "Dark", "Grass"],
+      "immunities": ["Psychic", "Ground"],
+      
+      "spawnOptions": [
+        {
+         "label": "Any",
+         "bucket": "Uncommon",
+         "level": "5-57",
+         "context": "",
+         "preset": "",
+         "biomes": ["Arid"],
+         "seeSky": true,
+         "isDay": true,
+         "isRaining": false,
+         "requirements": "N/A"
+        }
+      ],
+
+      "video": "assets/videos/vullaby.gif",
+      "shinyVideo":"assets/videos/vullaby-shiny.gif",
+
+      "_comment2": "Evolutions",
+      
+      "evolutions": [
+       { "id": 629, "name": "Vullaby", "level": null },
+       { "id": 630, "name": "Mandibuzz", "level": 54 }
+      ],
+
+      "_comment3": "Movesets",
+
+      "moves": {
+        "level": [
+         { "level": 1, "name": "Gust" },
+         { "level": 1, "name": "Leer" },
+         { "level": 1, "name": "Fury Attack" },
+         { "level": 6, "name": "Flatter" },
+         { "level": 12, "name": "Pluck" },
+         { "level": 18, "name": "Tailwind" },
+         { "level": 24, "name": "Knock Off" },
+         { "level": 30, "name": "Iron Defense" },
+         { "level": 36, "name": "Whirlwind" },
+         { "level": 42, "name": "Air Slash" },
+         { "level": 48, "name": "Dark Pulse" },
+         { "level": 54, "name": "Nasty Plot" },
+         { "level": 60, "name": "Defog" },
+         { "level": 66, "name": "Attract" },
+         { "level": 72, "name": "Brave Bird" }
+        ],
+        "tm": [
+          { "name": "Air Cutter" },
+          { "name": "Air Slash" },
+          { "name": "Assurance" },
+          { "name": "Attract" },
+          { "name": "Block" },
+          { "name": "Brave Bird" },
+          { "name": "Cut" },
+          { "name": "Dark Pulse" },
+          { "name": "Defog" },
+          { "name": "Double-Edge" },
+          { "name": "Dual Wingbeat" },
+          { "name": "Embargo" },
+          { "name": "Endure" },
+          { "name": "Facade" },
+          { "name": "Fake Tears" },
+          { "name": "Feather Dance" },
+          { "name": "Fly" },
+          { "name": "Foul Play" },
+          { "name": "Heat Wave" },
+          { "name": "Incinerate" },
+          { "name": "Iron Defense" },
+          { "name": "Knock Off" },
+          { "name": "Lash Out" },
+          { "name": "Nasty Plot" },
+          { "name": "Payback" },
+          { "name": "Pluck" },
+          { "name": "Protect" },
+          { "name": "Psych Up" },
+          { "name": "Rain Dance" },
+          { "name": "Rest" },
+          { "name": "Retaliate" },
+          { "name": "Rock Smash" },
+          { "name": "Rock Tomb" },
+          { "name": "Roost" },
+          { "name": "Scary Face" },
+          { "name": "Shadow Ball" },
+          { "name": "Sleep Talk" },
+          { "name": "Snarl" },
+          { "name": "Snatch" },
+          { "name": "Spite" },
+          { "name": "Steel Wing" },
+          { "name": "Substitute" },
+          { "name": "Sunny Day" },
+          { "name": "Swift" },
+          { "name": "Tailwind" },
+          { "name": "Take Down" },
+          { "name": "Taunt" },
+          { "name": "Tera Blast" },
+          { "name": "Thief" },
+          { "name": "Throat Chop" },
+          { "name": "Torment" },
+          { "name": "Toxic" },
+          { "name": "Uproar" },
+          { "name": "U-turn" }
+        ],
+        "egg": [
+          { "name": "Feint Attack" },
+          { "name": "Mean Look" },
+          { "name": "Mirror Move" },
+          { "name": "Punishment" },
+          { "name": "Roost" },
+          { "name": "Toxic" }
+        ],
+        "tutor": [
+          { "name": "Air Cutter" },
+          { "name": "Block" },
+          { "name": "Dark Pulse" },
+          { "name": "Defog" },
+          { "name": "Dual Wingbeat" },
+          { "name": "Foul Play" },
+          { "name": "Heat Wave" },
+          { "name": "Iron Defense" },
+          { "name": "Knock Off" },
+          { "name": "Lash Out" },
+          { "name": "Rest" },
+          { "name": "Rock Smash" },
+          { "name": "Roost" },
+          { "name": "Shadow Ball" },
+          { "name": "Sleep Talk" },
+          { "name": "Snarl" },
+          { "name": "Snatch" },
+          { "name": "Spite" },
+          { "name": "Swift" },
+          { "name": "Tailwind" },
+          { "name": "Throat Chop" },
+          { "name": "Uproar" }
+       ]
+     }
+    },
+    {
+      "_comment": "Base Stats",
+
+      "id": 630,
+      "name": "Mandibuzz",
+      "number": "0630",
+      "types": ["Dark", "Flying"],
+      "generation": 5,
+      "rarity": "Rare",
+      "rideable": false,
+      "flying": false,
+      "legendary": false,
+      "mythical": false,
+      "catchRate": 60,
+
+      "abilities": ["Big Pecks", "Overcoat", "Weak Armor (Hidden)"],
+
+      "baseStats": {
+        "hp": 110,
+        "attack": 65,
+        "defense": 105,
+        "spAttack": 55,
+        "spDefense": 95,
+        "speed": 80
+       },
+
+       "evYield": {
+        "spAttack": 2
+       },
+
+       "drops": [
+        { "item": "Feather", "chance": 100, "quantity": "0-2", "image": "assets/images/items/feather.png"},
+        { "item": "Rotten Flesh", "chance": 100, "quantity": "0-2", "image": "assets/images/items/rotten_flesh.png"},
+        { "item": "Raw Chicken", "chance": 100, "quantity": "1", "image": "assets/images/items/raw_chicken.png"},
+        { "item": "Sharp Beak", "chance": 2.5, "quantity": "1", "image": "assets/images/items/sharp_beak.png"},
+        { "item": "Bluk Berry", "chance": 5, "quantity": "1", "image": "assets/images/items/bluk_berry.png"}
+       ],
+
+      "weaknesses": ["Fairy", "Electric", "Ice", "Rock"],
+      "resistances": ["Ghost", "Dark", "Grass"],
+      "immunities": ["Psychic", "Ground"],
+      
+      "spawnOptions": [
+        {
+         "label": "Any",
+         "bucket": "Uncommon",
+         "level": "57-65",
+         "context": "",
+         "preset": "",
+         "biomes": ["Arid"],
+         "seeSky": true,
+         "isDay": true,
+         "isRaining": false,
+         "requirements": "N/A"
+        }
+      ],
+
+      "video": "assets/videos/mandibuzz.gif",
+      "shinyVideo":"assets/videos/mandibuzz-shiny.gif",
+
+      "_comment2": "Evolutions",
+      
+      "evolutions": [
+       { "id": 629, "name": "Vullaby", "level": null },
+       { "id": 630, "name": "Mandibuzz", "level": 54 }
+      ],
+
+      "_comment3": "Movesets",
+
+      "moves": {
+        "level": [
+         { "level": 1, "name": "Gust" },
+         { "level": 1, "name": "Leer" },
+         { "level": 1, "name": "Fury Attack" },
+         { "level": 1, "name": "Pluck" },
+         { "level": 1, "name": "Flatter" },
+         { "level": 1, "name": "Feint Attack" },
+         { "level": 1, "name": "Punishment" },
+         { "level": 1, "name": "Mirror Move" },
+         { "level": 1, "name": "Bone Rush" },
+         { "level": 1, "name": "Sky Attack" },
+         { "level": 1, "name": "Toxic" },
+         { "level": 18, "name": "Tailwind" },
+         { "level": 24, "name": "Knock Off" },
+         { "level": 30, "name": "Iron Defense" },
+         { "level": 36, "name": "Whirlwind" },
+         { "level": 42, "name": "Air Slash" },
+         { "level": 48, "name": "Dark Pulse" },
+         { "level": 57, "name": "Nasty Plot" },
+         { "level": 64, "name": "Defog" },
+         { "level": 72, "name": "Attract" },
+         { "level": 80, "name": "Brave Bird" }
+        ],
+        "tm": [
+          { "name": "Acrobatics" },
+          { "name": "Aerial Ace" },
+          { "name": "Air Cutter" },
+          { "name": "Air Slash" },
+          { "name": "Assurance" },
+          { "name": "Attract" },
+          { "name": "Block" },
+          { "name": "Brave Bird" },
+          { "name": "Cut" },
+          { "name": "Dark Pulse" },
+          { "name": "Defog" },
+          { "name": "Double-Edge" },
+          { "name": "Dual Wingbeat" },
+          { "name": "Embargo" },
+          { "name": "Endure" },
+          { "name": "Facade" },
+          { "name": "Fake Tears" },
+          { "name": "Feather Dance" },
+          { "name": "Fly" },
+          { "name": "Foul Play" },
+          { "name": "Giga Impact" },
+          { "name": "Heat Wave" },
+          { "name": "Hurricane" },
+          { "name": "Hyper Beam" },
+          { "name": "Incinerate" },
+          { "name": "Iron Defense" },
+          { "name": "Knock Off" },
+          { "name": "Lash Out" },
+          { "name": "Nasty Plot" },
+          { "name": "Payback" },
+          { "name": "Pluck" },  
+          { "name": "Protect" },
+          { "name": "Psych Up" },
+          { "name": "Rain Dance" },
+          { "name": "Rest" },
+          { "name": "Retaliate" },
+          { "name": "Rock Smash" },
+          { "name": "Rock Tomb" },
+          { "name": "Roost" },
+          { "name": "Sandstorm" },
+          { "name": "Scary Face" },
+          { "name": "Shadow Ball" },
+          { "name": "Sky Attack" },
+          { "name": "Sleep Talk" },
+          { "name": "Snarl" },
+          { "name": "Snatch" },
+          { "name": "Spite" },
+          { "name": "Steel Wing" },
+          { "name": "Substitute" },
+          { "name": "Sunny Day" },
+          { "name": "Swift" },
+          { "name": "Tailwind" },
+          { "name": "Take Down" },
+          { "name": "Taunt" },
+          { "name": "Tera Blast" },
+          { "name": "Thief" },
+          { "name": "Throat Chop" },
+          { "name": "Torment" },
+          { "name": "Toxic" },
+          { "name": "Uproar" },
+          { "name": "U-turn" }
+        ],
+        "egg": [
+          { "name": "Feint Attack" },
+          { "name": "Mean Look" },
+          { "name": "Mirror Move" },
+          { "name": "Punishment" },
+          { "name": "Roost" },
+          { "name": "Toxic" }
+        ],
+        "tutor": [
+          { "name": "Air Cutter" },
+          { "name": "Block" },
+          { "name": "Dark Pulse" },
+          { "name": "Defog" },
+          { "name": "Dual Wingbeat" },
+          { "name": "Foul Play" },
+          { "name": "Giga Impact" },
+          { "name": "Heat Wave" },
+          { "name": "Hyper Beam" },
+          { "name": "Iron Defense" },
+          { "name": "Knock Off" },
+          { "name": "Lash Out" },
+          { "name": "Rest" },
+          { "name": "Rock Smash" },
+          { "name": "Roost" },
+          { "name": "Shadow Ball" },
+          { "name": "Sky Attack" },
+          { "name": "Sleep Talk" },
+          { "name": "Snarl" },
+          { "name": "Snatch" },
+          { "name": "Spite" },
+          { "name": "Swift" },
+          { "name": "Tailwind" },
+          { "name": "Throat Chop" },
+          { "name": "Uproar" }
        ]
      }
     },

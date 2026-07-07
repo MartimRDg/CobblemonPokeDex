@@ -3103,6 +3103,54 @@
       "accuracy": 100,
       "pp": 10,
       "description": "The user steals the effects of any attempts to use a healing or stat-changing move."
+    },
+    "Fury Attack": {
+      "type": "Normal",
+      "category": "Physical",
+      "power": 15,
+      "accuracy": 85,
+      "pp": 20,
+      "description": "The user attacks by jabbing the target with a horn, a beak, or the like. This move hits two to five times in a row."
+    },
+    "Fake Tears": {
+      "type": "Dark",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user feigns crying to fluster the target. This harshly lowers the target's Sp. Def stat."
+    },
+    "Feint Attack": {
+      "type": "Dark",
+      "category": "Physical",
+      "power": 60,
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user approaches the target disarmingly, then throws a sucker punch. This attack never misses."
+    },
+    "Mean Look": {
+      "type": "Normal",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 5,
+      "description": "The user pins the target with a dark, arresting look. The target becomes unable to flee."
+    },
+    "Punishment": {
+      "type": "Dark",
+      "category": "Physical",
+      "power": 0,
+      "accuracy": 100,
+      "pp": 5,
+      "description": "The more the target has powered up with stat changes, the greater the move's power."
+    },
+    "Bone Rush": {
+      "type": "Ground",
+      "category": "Physical",
+      "power": 25,
+      "accuracy": 90,
+      "pp": 10,
+      "description": "The user attacks by striking the target with a hard bone. This move hits two to five times in a row."
     }
   }
 }

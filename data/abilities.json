@@ -131,6 +131,12 @@
     },
     "Speed Boost": {
       "description": "The Pokémon's Speed stat is boosted every turn."
+    },
+    "Big Pecks": {
+      "description": "Prevents the Pokémon from having its Defense stat lowered."
+    },
+    "Weak Armor": {
+      "description": "The Pokémon's Defense stat is lowered when it takes damage from physical moves, but its Speed stat is sharply boosted."
     }
   }
 }
