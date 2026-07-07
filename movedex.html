@@ -16,7 +16,7 @@
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title id="pageTitle">Move — Cobblemon Pokédex</title>
+  <title>Move Dex — Cobblemon Pokédex</title>
   <link rel="icon" type="image/png" href="assets/images/items/favicon.png">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="styles.css">
@@ -30,7 +30,7 @@
     <div class="container">
       <div class="nav-links">
         <a href="index.html" class="nav-link">📖 Pokédex</a>
-        <a href="movedex.html" class="nav-link">📚 Move Dex</a>
+        <a href="movedex.html" class="nav-link active">📚 Move Dex</a>
         <a href="compare.html" class="nav-link">⚔️ Compare & Calc</a>
         <a href="randomizer.html" class="nav-link">🎲 Randomizer</a>
         <a href="games.html" class="nav-link">🎮 Games</a>
@@ -42,9 +42,37 @@
 
   <div class="container" style="margin-top: 2rem; padding-bottom: 4rem;">
 
-    <a id="backLink" href="index.html" class="back-link">← Back</a>
+    <a href="index.html" class="back-link">← Back to Pokédex</a>
 
-    <div id="moveDetail"></div>
+    <section class="detail-section" style="margin-bottom:1.5rem;">
+      <h2 class="section-title">📚 Move Dex</h2>
+      <p class="section-subtitle">Search and browse every move directly — no need to dig through a Pokémon's movepool.</p>
+
+      <div class="filters-row">
+        <input id="mdSearch" type="text" placeholder="Search moves…" autocomplete="off">
+        <select id="mdTypeFilter">
+          <option value="">All Types</option>
+        </select>
+        <select id="mdCategoryFilter">
+          <option value="">All Categories</option>
+          <option value="Physical">Physical</option>
+          <option value="Special">Special</option>
+          <option value="Status">Status</option>
+        </select>
+        <select id="mdSort">
+          <option value="name">Sort: Name (A–Z)</option>
+          <option value="power">Sort: Power (high–low)</option>
+          <option value="accuracy">Sort: Accuracy (high–low)</option>
+          <option value="pp">Sort: PP (high–low)</option>
+        </select>
+      </div>
+
+      <p id="mdCount" class="section-subtitle" style="margin-top:0.75rem;margin-bottom:0;"></p>
+    </section>
+
+    <section class="detail-section">
+      <div id="mdTableWrap"></div>
+    </section>
 
   </div>
 

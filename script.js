@@ -2004,6 +2004,125 @@ window.switchMoveLearnerTab = function (index) {
 };
 
 
+// ====================== Move Dex Page ======================
+function loadMoveDexPage() {
+  var typeSelect = document.getElementById('mdTypeFilter');
+  if (typeSelect) {
+    var typesInUse = [...new Set(Object.values(State.allMoves).map(function (m) { return m.type; }).filter(Boolean))].sort();
+    typesInUse.forEach(function (t) {
+      var opt = document.createElement('option');
+      opt.value = t;
+      opt.textContent = t;
+      typeSelect.appendChild(opt);
+    });
+  }
+
+  ['mdSearch', 'mdTypeFilter', 'mdCategoryFilter', 'mdSort'].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var evt = (id === 'mdSearch') ? 'input' : 'change';
+    var handler = filterMoveDex;
+    if (id === 'mdSearch') {
+      var _mdDebounce;
+      handler = function () {
+        clearTimeout(_mdDebounce);
+        _mdDebounce = setTimeout(filterMoveDex, 160);
+      };
+    }
+    el.addEventListener(evt, handler, { passive: true });
+  });
+
+  filterMoveDex();
+}
+
+window.filterMoveDex = function () {
+  var search = (document.getElementById('mdSearch') ? document.getElementById('mdSearch').value.toLowerCase().trim() : '');
+  var typeVal = (document.getElementById('mdTypeFilter') ? document.getElementById('mdTypeFilter').value : '');
+  var catVal = (document.getElementById('mdCategoryFilter') ? document.getElementById('mdCategoryFilter').value : '');
+  var sortVal = (document.getElementById('mdSort') ? document.getElementById('mdSort').value : 'name');
+
+  var list = Object.keys(State.allMoves).map(function (name) {
+    var m = State.allMoves[name];
+    return {
+      name: name,
+      type: m.type || '',
+      category: m.category || '',
+      power: m.power,
+      accuracy: m.accuracy,
+      pp: m.pp,
+    };
+  });
+
+  if (search) {
+    list = list.filter(function (m) { return m.name.toLowerCase().indexOf(search) !== -1; });
+  }
+  if (typeVal) {
+    list = list.filter(function (m) { return m.type === typeVal; });
+  }
+  if (catVal) {
+    list = list.filter(function (m) { return m.category === catVal; });
+  }
+
+  list.sort(function (a, b) {
+    if (sortVal === 'power') return (parseInt(b.power) || 0) - (parseInt(a.power) || 0);
+    if (sortVal === 'accuracy') return (parseInt(b.accuracy) || 0) - (parseInt(a.accuracy) || 0);
+    if (sortVal === 'pp') return (parseInt(b.pp) || 0) - (parseInt(a.pp) || 0);
+    return a.name.localeCompare(b.name);
+  });
+
+  renderMoveDexTable(list);
+
+  var countEl = document.getElementById('mdCount');
+  if (countEl) {
+    var total = Object.keys(State.allMoves).length;
+    countEl.textContent = 'Showing ' + list.length + ' of ' + total + ' moves';
+  }
+};
+
+function renderMoveDexTable(moves) {
+  var wrap = document.getElementById('mdTableWrap');
+  if (!wrap) return;
+
+  if (moves.length === 0) {
+    wrap.innerHTML = '<p class="moves-empty">No moves match your search.</p>';
+    return;
+  }
+
+  var categoryColors = { Physical: '#f87171', Special: '#818cf8', Status: '#4ade80' };
+
+  var rows = moves.map(function (m) {
+    var typeCell = m.type
+      ? '<span class="type-badge type-' + m.type.toLowerCase() + ' type-xs"><img src="assets/images/elements/' + m.type.toLowerCase() + '.png" class="type-icon" alt="" onerror="this.style.display=\'none\'">' + m.type + '</span>'
+      : '\u2014';
+    var catColor = categoryColors[m.category] || '#9ca3af';
+    var catCell = m.category
+      ? '<span class="move-category-badge" style="background:' + catColor + '20;border-color:' + catColor + ';color:' + catColor + '">' + m.category + '</span>'
+      : '\u2014';
+    return (
+      '<tr>' +
+      '<td class="move-name"><a href="move.html?name=' + encodeURIComponent(m.name) + '" class="move-link">' + m.name + '</a></td>' +
+      '<td>' + typeCell + '</td>' +
+      '<td>' + catCell + '</td>' +
+      '<td class="text-center move-power">' + (m.power || '\u2014') + '</td>' +
+      '<td class="text-center">' + (m.accuracy || '\u2014') + '</td>' +
+      '<td class="text-center">' + (m.pp || '\u2014') + '</td>' +
+      '</tr>'
+    );
+  }).join('');
+
+  wrap.innerHTML =
+    '<div class="table-wrapper">' +
+    '<table class="moves-table">' +
+    '<thead><tr>' +
+    '<th>Move</th><th>Type</th><th>Cat.</th>' +
+    '<th class="text-center">Pwr</th><th class="text-center">Acc</th><th class="text-center">PP</th>' +
+    '</tr></thead>' +
+    '<tbody>' + rows + '</tbody>' +
+    '</table>' +
+    '</div>';
+}
+
+
 // ====================== Ability Detail Page ======================
 function loadAbilityDetail() {
   var container = document.getElementById('abilityDetail');
@@ -2521,6 +2640,10 @@ document.addEventListener('DOMContentLoaded', async function () {
 
   if (document.getElementById('compareResult')) {
     loadComparePage();
+  }
+
+  if (document.getElementById('mdTableWrap')) {
+    loadMoveDexPage();
   }
 
   if (document.getElementById('gamesTimeline')) {
