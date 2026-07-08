@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>
+    (function() {
+      try {
+        var s = JSON.parse(localStorage.getItem('cobblemon_settings') || '{}');
+        var t = s.theme || 'dark';
+        if (t !== 'dark') document.documentElement.classList.add('theme-' + t);
+        var fonts = ['font-sm','font-md','font-lg','font-xl'];
+        document.documentElement.classList.add(fonts[s.fontSize != null ? s.fontSize : 1] || 'font-md');
+        if (s.compact) document.documentElement.classList.add('compact');
+        if (s.animations === false) document.documentElement.classList.add('no-animations');
+      } catch(e) {}
+    })();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team Builder — Cobblemon Pokédex</title>
+  <link rel="icon" type="image/png" href="assets/images/items/favicon.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header>
+    <h1><span>Cobblemon</span> Pokédex</h1>
+  </header>
+  <nav class="site-nav">
+    <div class="container">
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">📖 Pokédex</a>
+        <a href="movedex.html" class="nav-link">📚 Move Dex</a>
+        <a href="compare.html" class="nav-link">⚔️ Compare & Calc</a>
+        <a href="randomizer.html" class="nav-link">🎲 Randomizer</a>
+        <a href="team.html" class="nav-link active">🧩 Team Builder</a>
+        <a href="games.html" class="nav-link">🎮 Games</a>
+        <a href="pokedex.html" class="nav-link">🗂️ My Pokédex</a>
+        <a href="reports.html" class="nav-link">📢 Reports</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container" style="margin-top: 2rem; padding-bottom: 4rem;">
+
+    <div class="rnd-page">
+
+      <div class="rnd-intro">
+        <p class="rnd-eyebrow">// team.build()</p>
+        <h2 class="rnd-h1">Build a Random Team</h2>
+        <p class="rnd-sub">Draw 6 random Pokémon. You can promote one of them to its Mega Evolution and one to its Gigantamax form — just like in battle, only one of each is allowed at a time.</p>
+      </div>
+
+      <!-- Query builder -->
+      <div class="rnd-query">
+
+        <div class="rnd-row">
+          <div class="rnd-row-label">
+            <span class="rnd-row-num">01</span>
+            <span>Type</span>
+          </div>
+          <div id="tbTypeChips" class="rnd-chip-group"></div>
+        </div>
+
+        <div class="rnd-row">
+          <div class="rnd-row-label">
+            <span class="rnd-row-num">02</span>
+            <span>Generation</span>
+          </div>
+          <div id="tbGenChips" class="rnd-chip-group"></div>
+        </div>
+
+        <div class="rnd-row">
+          <div class="rnd-row-label">
+            <span class="rnd-row-num">03</span>
+            <span>Rarity</span>
+          </div>
+          <div class="rnd-form-toggles">
+            <label class="rnd-toggle-pill">
+              <input type="checkbox" id="tbAllowLegendary" checked>
+              <span>Allow Legendary</span>
+            </label>
+            <label class="rnd-toggle-pill">
+              <input type="checkbox" id="tbAllowMythical" checked>
+              <span>Allow Mythical</span>
+            </label>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Action bar -->
+      <div class="rnd-action-bar">
+        <p class="section-subtitle" style="margin:0;">Leave filters empty to draw from the whole Pokédex.</p>
+
+        <div class="rnd-action-buttons">
+          <button class="rnd-reset-btn" onclick="resetTeamBuilderFilters()">Clear filters</button>
+          <button id="tbGenerateBtn" class="rnd-generate-btn" onclick="generateTeam()">
+            <span class="rnd-generate-icon">●</span> Generate Team
+          </button>
+        </div>
+      </div>
+
+      <!-- Team summary -->
+      <div id="tbSummaryBar" class="team-summary-bar" style="display:none;"></div>
+
+      <!-- Results -->
+      <div id="tbResultPanel" class="rnd-result-panel" style="margin-top:1.25rem;">
+        <div class="rnd-empty-state">
+          <div class="rnd-empty-icon">◌</div>
+          <p>No team yet. Adjust your filters if you'd like, then hit <strong>Generate Team</strong>.</p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <button id="backToTop" class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>
+
+  <script src="script.js"></script>
+</body>
+</html>

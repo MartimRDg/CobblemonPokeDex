@@ -2646,6 +2646,10 @@ document.addEventListener('DOMContentLoaded', async function () {
     loadMoveDexPage();
   }
 
+  if (document.getElementById('tbResultPanel')) {
+    loadTeamBuilderPage();
+  }
+
   if (document.getElementById('gamesTimeline')) {
     loadGamesPage();
   }
@@ -3466,6 +3470,263 @@ function resetRandomizerFilters() {
 
 function loadRandomizerPage() {
   buildRandomizerFilterUI();
+}
+
+// ====================== Team Builder Page ======================
+var TB = {
+  types: new Set(),
+  gens: new Set(),
+};
+
+var TEAM_SIZE = 6;
+var TEAM = { members: [], megaIndex: null, gmaxIndex: null };
+
+// A Pokémon's "megaEvolutions" array actually holds BOTH Mega and Gigantamax
+// forms — distinguished only by name prefix. These helpers split them out.
+function getMegaForms(poke) {
+  return (poke.megaEvolutions || []).filter(function (f) { return /^Mega /i.test(f.name); });
+}
+function getGmaxForms(poke) {
+  return (poke.megaEvolutions || []).filter(function (f) { return /^Gigantamax /i.test(f.name); });
+}
+
+function bstOf(baseStats) {
+  var bs = baseStats || {};
+  return STAT_KEYS.reduce(function (sum, s) { return sum + (bs[s.key] || 0); }, 0);
+}
+
+function buildTeamBuilderFilterUI() {
+  var types = [...new Set(State.allPokemon.flatMap(function (p) { return p.types || []; }))].sort();
+  var typeWrap = document.getElementById('tbTypeChips');
+  typeWrap.innerHTML = types.map(function (t) {
+    var tl = t.toLowerCase();
+    return '<button class="rnd-chip" data-type="' + tl + '" onclick="toggleTbSet(TB.types, \'' + tl + '\', this)">' + t + '</button>';
+  }).join('');
+
+  var gens = [...new Set(State.allPokemon.map(function (p) { return p.generation; }).filter(Boolean))].sort(function (a, b) { return a - b; });
+  var genWrap = document.getElementById('tbGenChips');
+  genWrap.innerHTML = gens.map(function (g) {
+    return '<button class="rnd-chip" data-gen="' + g + '" onclick="toggleTbSet(TB.gens, ' + g + ', this)">Gen ' + g + '</button>';
+  }).join('');
+}
+
+function toggleTbSet(set, value, btn) {
+  if (set.has(value)) { set.delete(value); btn.classList.remove('active'); }
+  else { set.add(value); btn.classList.add('active'); }
+}
+
+function passesTbFilters(poke) {
+  if (TB.types.size > 0) {
+    var pTypes = (poke.types || []).map(function (t) { return t.toLowerCase(); });
+    if (!pTypes.some(function (t) { return TB.types.has(t); })) return false;
+  }
+  if (TB.gens.size > 0 && !TB.gens.has(poke.generation)) return false;
+
+  var allowLegendary = document.getElementById('tbAllowLegendary').checked;
+  var allowMythical = document.getElementById('tbAllowMythical').checked;
+  if (!allowLegendary && poke.legendary) return false;
+  if (!allowMythical && poke.mythical) return false;
+
+  return true;
+}
+
+function buildTeamPool() {
+  return State.allPokemon.filter(passesTbFilters);
+}
+
+function pickRandomMember(pool, excludeIds) {
+  var available = pool.filter(function (p) { return excludeIds.indexOf(p.id) === -1; });
+  var choices = available.length > 0 ? available : pool;
+  return choices[Math.floor(Math.random() * choices.length)];
+}
+
+window.generateTeam = function () {
+  var pool = buildTeamPool();
+  var panel = document.getElementById('tbResultPanel');
+
+  if (pool.length === 0) {
+    panel.innerHTML = '<div class="rnd-no-match">😕 No Pokémon match these filters. Try loosening some constraints.</div>';
+    document.getElementById('tbSummaryBar').style.display = 'none';
+    return;
+  }
+
+  var usedIds = [];
+  var members = [];
+  for (var i = 0; i < TEAM_SIZE; i++) {
+    var pick = pickRandomMember(pool, usedIds);
+    usedIds.push(pick.id);
+    members.push({ base: pick, activeKind: 'base' });
+  }
+
+  TEAM.members = members;
+  TEAM.megaIndex = null;
+  TEAM.gmaxIndex = null;
+  renderTeam();
+};
+
+window.rerollTeamSlot = function (index) {
+  var pool = buildTeamPool();
+  if (pool.length === 0) return;
+
+  var usedIds = TEAM.members.map(function (m, i) { return i === index ? null : m.base.id; }).filter(function (id) { return id !== null; });
+  var pick = pickRandomMember(pool, usedIds);
+
+  TEAM.members[index] = { base: pick, activeKind: 'base' };
+  if (TEAM.megaIndex === index) TEAM.megaIndex = null;
+  if (TEAM.gmaxIndex === index) TEAM.gmaxIndex = null;
+  renderTeam();
+};
+
+window.toggleTeamMega = function (index) {
+  var member = TEAM.members[index];
+  if (!member) return;
+  var megaForms = getMegaForms(member.base);
+  if (megaForms.length === 0) return;
+
+  if (TEAM.megaIndex === index) {
+    // Turning this member's Mega off
+    member.activeKind = 'base';
+    TEAM.megaIndex = null;
+  } else {
+    // Revert whichever member currently holds the Mega slot
+    if (TEAM.megaIndex !== null && TEAM.members[TEAM.megaIndex]) {
+      TEAM.members[TEAM.megaIndex].activeKind = 'base';
+    }
+    member.activeKind = 'mega';
+    member.megaForm = megaForms[0];
+    TEAM.megaIndex = index;
+  }
+  renderTeam();
+};
+
+window.toggleTeamGmax = function (index) {
+  var member = TEAM.members[index];
+  if (!member) return;
+  var gmaxForms = getGmaxForms(member.base);
+  if (gmaxForms.length === 0) return;
+
+  if (TEAM.gmaxIndex === index) {
+    member.activeKind = 'base';
+    TEAM.gmaxIndex = null;
+  } else {
+    if (TEAM.gmaxIndex !== null && TEAM.members[TEAM.gmaxIndex]) {
+      TEAM.members[TEAM.gmaxIndex].activeKind = 'base';
+    }
+    member.activeKind = 'gmax';
+    member.gmaxForm = gmaxForms[0];
+    TEAM.gmaxIndex = index;
+  }
+  renderTeam();
+};
+
+function activeFormOf(member) {
+  if (member.activeKind === 'mega' && member.megaForm) {
+    return Object.assign({}, member.base, member.megaForm, { name: member.megaForm.name });
+  }
+  if (member.activeKind === 'gmax' && member.gmaxForm) {
+    return Object.assign({}, member.base, member.gmaxForm, { name: member.gmaxForm.name });
+  }
+  return member.base;
+}
+
+function buildTeamSlotCard(member, index) {
+  var form = activeFormOf(member);
+  var num = form.number || String(member.base.id).padStart(4, '0');
+  var sprite = form.video || form.sprite || '';
+  var bst = bstOf(form.baseStats);
+
+  var types = (form.types || []).map(function (t) {
+    var tl = t.toLowerCase();
+    return '<span class="type-badge type-' + tl + ' type-xs"><img src="assets/images/elements/' + tl + '.png" class="type-icon" alt="" onerror="this.style.display=\'none\'">' + t + '</span>';
+  }).join('');
+
+  var tag = '';
+  if (member.activeKind === 'mega') tag = '<span class="rnd-result-tag">Mega</span>';
+  else if (member.activeKind === 'gmax') tag = '<span class="rnd-result-tag">Gigantamax</span>';
+
+  var megaForms = getMegaForms(member.base);
+  var gmaxForms = getGmaxForms(member.base);
+
+  var formBtns = '';
+  if (megaForms.length > 0) {
+    var megaLockedElsewhere = TEAM.megaIndex !== null && TEAM.megaIndex !== index;
+    formBtns +=
+      '<button class="team-form-btn team-form-btn-mega' + (member.activeKind === 'mega' ? ' active' : '') + '"' +
+      (megaLockedElsewhere ? ' disabled title="Only one Mega Evolution allowed per team"' : '') +
+      ' onclick="toggleTeamMega(' + index + ')">⚡ Mega</button>';
+  }
+  if (gmaxForms.length > 0) {
+    var gmaxLockedElsewhere = TEAM.gmaxIndex !== null && TEAM.gmaxIndex !== index;
+    formBtns +=
+      '<button class="team-form-btn team-form-btn-gmax' + (member.activeKind === 'gmax' ? ' active' : '') + '"' +
+      (gmaxLockedElsewhere ? ' disabled title="Only one Gigantamax allowed per team"' : '') +
+      ' onclick="toggleTeamGmax(' + index + ')">💥 Gmax</button>';
+  }
+
+  return (
+    '<div class="team-slot-card">' +
+    '<button class="team-slot-reroll" onclick="rerollTeamSlot(' + index + ')" title="Reroll this slot">↻</button>' +
+    tag +
+    '<a href="pokemon.html?id=' + member.base.id + '" class="team-slot-link">' +
+    buildSpriteEl(sprite, form.name, 'team-slot-sprite', 'assets/images/placeholder.png') +
+    '<p class="team-slot-number">#' + num + '</p>' +
+    '<p class="team-slot-name">' + form.name + '</p>' +
+    '</a>' +
+    '<div class="badge-row" style="justify-content:center;">' + types + '</div>' +
+    '<p class="team-slot-bst">BST ' + bst + '</p>' +
+    (formBtns ? '<div class="team-slot-form-btns">' + formBtns + '</div>' : '') +
+    '</div>'
+  );
+}
+
+function renderTeam() {
+  var panel = document.getElementById('tbResultPanel');
+  var summaryBar = document.getElementById('tbSummaryBar');
+
+  var cards = TEAM.members.map(buildTeamSlotCard).join('');
+  panel.innerHTML = '<div class="team-grid">' + cards + '</div>';
+  setTimeout(playAllVideos, 100);
+
+  var totalBst = TEAM.members.reduce(function (sum, m) { return sum + bstOf(activeFormOf(m).baseStats); }, 0);
+  var megaName = TEAM.megaIndex !== null ? activeFormOf(TEAM.members[TEAM.megaIndex]).name : '—';
+  var gmaxName = TEAM.gmaxIndex !== null ? activeFormOf(TEAM.members[TEAM.gmaxIndex]).name : '—';
+
+  summaryBar.style.display = 'flex';
+  summaryBar.innerHTML =
+    '<div class="team-summary-stat"><p class="team-summary-value">' + totalBst + '</p><p class="team-summary-label">Total BST</p></div>' +
+    '<div class="team-summary-stat"><p class="team-summary-value" style="font-size:0.95rem;">' + megaName + '</p><p class="team-summary-label">Mega Slot</p></div>' +
+    '<div class="team-summary-stat"><p class="team-summary-value" style="font-size:0.95rem;">' + gmaxName + '</p><p class="team-summary-label">Gigantamax Slot</p></div>' +
+    '<button class="pdex-action-btn" onclick="copyTeamToClipboard()">📋 Copy Team</button>';
+}
+
+window.copyTeamToClipboard = function () {
+  var lines = TEAM.members.map(function (m) {
+    var form = activeFormOf(m);
+    return form.name + ' (' + (form.types || []).join('/') + ', BST ' + bstOf(form.baseStats) + ')';
+  });
+  var text = 'My Cobblemon Team:\n' + lines.join('\n');
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function () {
+      rpToast('📋 Team copied to clipboard!', 'success');
+    }).catch(function () {
+      window.prompt('Copy your team:', text);
+    });
+  } else {
+    window.prompt('Copy your team:', text);
+  }
+};
+
+window.resetTeamBuilderFilters = function () {
+  TB.types = new Set();
+  TB.gens = new Set();
+  document.querySelectorAll('#tbTypeChips .rnd-chip.active, #tbGenChips .rnd-chip.active').forEach(function (b) { b.classList.remove('active'); });
+  document.getElementById('tbAllowLegendary').checked = true;
+  document.getElementById('tbAllowMythical').checked = true;
+};
+
+function loadTeamBuilderPage() {
+  buildTeamBuilderFilterUI();
 }
 
 // ====================== Reports Page ======================
