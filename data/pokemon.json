@@ -713,6 +713,545 @@
     {
       "_comment": "Base Stats",
 
+      "id": 69,
+      "name": "Bellsprout",
+      "number": "069",
+      "types": ["Grass", "Poison"],
+      "generation": 1,
+      "rarity": "Common",
+      "rideable": false,
+      "flying": false,
+      "legendary": false,
+      "mythical": false,
+      "catchRate": 255,
+
+      "abilities": ["Chlorophyll", "Gluttony (Hidden)"],
+
+      "baseStats": {
+        "hp": 50,
+        "attack": 75,
+        "defense": 35,
+        "spAttack": 70,
+        "spDefense": 30,
+        "speed": 40
+       },
+
+       "evYield": {
+        "attack": 1
+       },
+
+       "drops": [
+        { "item": "Big Root", "chance": 2.5, "quantity": "1", "image": "assets/images/items/big_root.png"},
+        { "item": "Pinap Berry", "chance": 2.5, "quantity": "1", "image": "assets/images/items/pinap_berry.png"}
+       ],
+
+      "weaknesses": ["Fire", "Ice", "Flying", "Psychic"],
+      "resistances": ["Water", "Electric", "Grass", "Fighting", "Fairy"],
+      "immunities": ["None"],
+      
+      "spawnOptions": [
+        {
+         "label": "Any",
+         "bucket": "Common",
+         "level": "5-30",
+         "context": "Grounded",
+         "preset": "Natural",
+         "biomes": ["Jungle"],
+         "requirements": "N/A"
+        }
+      ],
+
+      "video": "assets/videos/bellsprout.gif",
+      "shinyVideo":"assets/videos/bellsprout-shiny.gif",
+
+      "_comment2": "Evolutions",
+      
+      "evolutions": [
+       { "id": 69, "name": "Bellsprout", "level": null },
+       { "id": 70, "name": "Weepinbell", "level": 21 },
+       { "id": 71, "name": "Victreebel", "method": "Item Interact: Leaf Stone" }
+      ],
+
+      "_comment3": "Movesets",
+
+      "moves": {
+        "level": [
+         { "level": 1, "name": "Vine Whip" },
+         { "level": 7, "name": "Growth" },
+         { "level": 11, "name": "Wrap" },
+         { "level": 13, "name": "Sleep Powder" },
+         { "level": 15, "name": "Poison Powder" },
+         { "level": 17, "name": "Stun Spore" },
+         { "level": 23, "name": "Acid" },
+         { "level": 27, "name": "Knock Off" },
+         { "level": 29, "name": "Sweet Scent" },
+         { "level": 35, "name": "Gastro Acid" },
+         { "level": 39, "name": "Razor Leaf" },
+         { "level": 41, "name": "Poison Jab" },
+         { "level": 47, "name": "Slam" },
+         { "level": 54, "name": "Power Whip" }
+        ],
+        "tm": [
+          { "name": "Acid Spray" },
+          { "name": "Bind" },
+          { "name": "Bullet Seed" },
+          { "name": "Cut" },
+          { "name": "Encore" },
+          { "name": "Endure" },
+          { "name": "Energy Ball" },
+          { "name": "Facade" },
+          { "name": "Flash" },
+          { "name": "Gastro Acid" },
+          { "name": "Giga Drain" },
+          { "name": "Grass Knot" },
+          { "name": "Grassy Glide" },
+          { "name": "Grassy Terrain" },
+          { "name": "Infestation" },
+          { "name": "Knock Off" },
+          { "name": "Leaf Storm" },
+          { "name": "Leech Life" },
+          { "name": "Lunge" },
+          { "name": "Magical Leaf" },
+          { "name": "Natural Gift" },
+          { "name": "Nature Power" },
+          { "name": "Poison Jab" },
+          { "name": "Pounce" },
+          { "name": "Power Whip" },
+          { "name": "Protect" },
+          { "name": "Reflect" },
+          { "name": "Rest" },
+          { "name": "Seed Bomb" },
+          { "name": "Sleep Talk" },
+          { "name": "Sludge Bomb" },
+          { "name": "Sludge Wave" },
+          { "name": "Solar Beam" },
+          { "name": "Substitute" },
+          { "name": "Sucker Punch" },
+          { "name": "Sunny Day" },
+          { "name": "Swords Dance" },
+          { "name": "Synthesis" },
+          { "name": "Tera Blast" },
+          { "name": "Thief" },
+          { "name": "Toxic" },
+          { "name": "Trailblaze" },
+          { "name": "Venoshock" },
+          { "name": "Weather Ball" },
+          { "name": "Worry Seed" }
+        ],
+        "egg": [
+          { "name": "Belch" },
+          { "name": "Clear Smog" },
+          { "name": "Ingrain" },
+          { "name": "Natural Gift" },
+          { "name": "Strength Sap" },
+          { "name": "Sucker Punch" },
+          { "name": "Synthesis" },
+          { "name": "Tickle" },
+          { "name": "Worry Seed" },
+          { "name": "Wring Out" }
+        ],
+        "tutor": [
+          { "name": "Bind" },
+          { "name": "Energy Ball" },
+          { "name": "Gastro Acid" },
+          { "name": "Giga Drain" },
+          { "name": "Grassy Glide" },
+          { "name": "Knock Off" },
+          { "name": "Leech Life" },
+          { "name": "Magical Leaf" },
+          { "name": "Poison Jab" },
+          { "name": "Rest" },
+          { "name": "Seed Bomb" },
+          { "name": "Sleep Talk" },
+          { "name": "Sludge Bomb" },
+          { "name": "Sucker Punch" },
+          { "name": "Synthesis" },
+          { "name": "Worry Seed" }
+       ]
+     }
+    },
+    {
+      "_comment": "Base Stats",
+
+      "id": 70,
+      "name": "Weepinbell",
+      "number": "070",
+      "types": ["Grass", "Poison"],
+      "generation": 1,
+      "rarity": "Common",
+      "rideable": false,
+      "flying": false,
+      "legendary": false,
+      "mythical": false,
+      "catchRate": 120,
+
+      "abilities": ["Chlorophyll", "Gluttony (Hidden)"],
+
+      "baseStats": {
+        "hp": 65,
+        "attack": 90,
+        "defense": 50,
+        "spAttack": 85,
+        "spDefense": 45,
+        "speed": 55
+       },
+
+       "evYield": {
+        "attack": 2
+       },
+
+       "drops": [
+        { "item": "Big Root", "chance": 5, "quantity": "1", "image": "assets/images/items/big_root.png"},
+        { "item": "Pinap Berry", "chance": 5, "quantity": "1", "image": "assets/images/items/pinap_berry.png"}
+       ],
+
+      "weaknesses": ["Fire", "Ice", "Flying", "Psychic"],
+      "resistances": ["Water", "Electric", "Grass", "Fighting", "Fairy"],
+      "immunities": ["None"],
+      
+      "spawnOptions": [
+        {
+         "label": "Any",
+         "bucket": "Common",
+         "level": "21-36",
+         "context": "Grounded",
+         "preset": "Natural",
+         "biomes": ["Jungle"],
+         "requirements": "N/A"
+        }
+      ],
+
+      "video": "assets/videos/weepinbell.gif",
+      "shinyVideo":"assets/videos/weepinbell-shiny.gif",
+
+      "_comment2": "Evolutions",
+      
+      "evolutions": [
+       { "id": 69, "name": "Bellsprout", "level": null },
+       { "id": 70, "name": "Weepinbell", "level": 21 },
+       { "id": 71, "name": "Victreebel", "method": "Item Interact: Leaf Stone" }
+      ],
+
+      "_comment3": "Movesets",
+
+      "moves": {
+        "level": [
+         { "level": 1, "name": "Vine Whip" },
+         { "level": 1, "name": "Growth" },
+         { "level": 1, "name": "Wrap" },
+         { "level": 13, "name": "Sleep Powder" },
+         { "level": 15, "name": "Poison Powder" },
+         { "level": 17, "name": "Stun Spore" },
+         { "level": 24, "name": "Acid" },
+         { "level": 29, "name": "Knock Off" },
+         { "level": 32, "name": "Sweet Scent" },
+         { "level": 39, "name": "Gastro Acid" },
+         { "level": 44, "name": "Razor Leaf" },
+         { "level": 47, "name": "Poison Jab" },
+         { "level": 54, "name": "Slam" },
+         { "level": 58, "name": "Power Whip" }
+        ],
+        "tm": [
+          { "name": "Acid Spray" },
+          { "name": "Bind" },
+          { "name": "Body Slam" },
+          { "name": "Bug Bite" },
+          { "name": "Bullet Seed" },
+          { "name": "Cut" },
+          { "name": "Encore" },
+          { "name": "Endure" },
+          { "name": "Energy Ball" },
+          { "name": "Facade" },
+          { "name": "Flash" },
+          { "name": "Gastro Acid" },
+          { "name": "Giga Drain" },
+          { "name": "Grass Knot" },
+          { "name": "Grassy Glide" },
+          { "name": "Grassy Terrain" },
+          { "name": "Infestation" },
+          { "name": "Knock Off" },
+          { "name": "Leaf Storm" },
+          { "name": "Leech Life" },
+          { "name": "Lunge" },
+          { "name": "Magical Leaf" },
+          { "name": "Natural Gift" },
+          { "name": "Nature Power" },
+          { "name": "Poison Jab" },
+          { "name": "Pounce" },
+          { "name": "Power Whip" },
+          { "name": "Protect" },
+          { "name": "Reflect" },
+          { "name": "Rest" },
+          { "name": "Seed Bomb" },
+          { "name": "Sleep Talk" },
+          { "name": "Sludge Bomb" },
+          { "name": "Sludge Wave" },
+          { "name": "Solar Beam" },
+          { "name": "Substitute" },
+          { "name": "Sucker Punch" },
+          { "name": "Sunny Day" },
+          { "name": "Swift" },
+          { "name": "Swords Dance" },
+          { "name": "Synthesis" },
+          { "name": "Tera Blast" },
+          { "name": "Thief" },
+          { "name": "Toxic" },
+          { "name": "Trailblaze" },
+          { "name": "Venoshock" },
+          { "name": "Weather Ball" },
+          { "name": "Worry Seed" }
+        ],
+        "egg": [
+          { "name": "Belch" },
+          { "name": "Clear Smog" },
+          { "name": "Ingrain" },
+          { "name": "Natural Gift" },
+          { "name": "Strength Sap" },
+          { "name": "Sucker Punch" },
+          { "name": "Synthesis" },
+          { "name": "Tickle" },
+          { "name": "Worry Seed" },
+          { "name": "Wring Out" }
+        ],
+        "tutor": [
+          { "name": "Bind" },
+          { "name": "Bug Bite" },
+          { "name": "Energy Ball" },
+          { "name": "Gastro Acid" },
+          { "name": "Giga Drain" },
+          { "name": "Grassy Glide" },
+          { "name": "Knock Off" },
+          { "name": "Leech Life" },
+          { "name": "Magical Leaf" },
+          { "name": "Poison Jab" },
+          { "name": "Rest" },
+          { "name": "Seed Bomb" },
+          { "name": "Sleep Talk" },
+          { "name": "Sludge Bomb" },
+          { "name": "Sucker Punch" },
+          { "name": "Swift" },
+          { "name": "Synthesis" },
+          { "name": "Worry Seed" }
+       ]
+     }
+    },
+    {
+      "_comment": "Base Stats",
+
+      "id": 71,
+      "name": "Victreebel",
+      "number": "071",
+      "types": ["Grass", "Poison"],
+      "generation": 1,
+      "rarity": "Common",
+      "rideable": false,
+      "flying": false,
+      "legendary": false,
+      "mythical": false,
+      "catchRate": 45,
+
+      "abilities": ["Chlorophyll", "Gluttony (Hidden)"],
+
+      "baseStats": {
+        "hp": 80,
+        "attack": 105,
+        "defense": 65,
+        "spAttack": 100,
+        "spDefense": 70,
+        "speed": 70
+       },
+
+       "evYield": {
+        "attack": 3
+       },
+
+       "drops": [
+        { "item": "Big Root", "chance": 10, "quantity": "1", "image": "assets/images/items/big_root.png"},
+        { "item": "Pinap Berry", "chance": 10, "quantity": "1", "image": "assets/images/items/pinap_berry.png"}
+       ],
+
+      "weaknesses": ["Fire", "Ice", "Flying", "Psychic"],
+      "resistances": ["Water", "Electric", "Grass", "Fighting", "Fairy"],
+      "immunities": ["None"],
+      
+      "spawnOptions": [
+        {
+         "label": "Any",
+         "bucket": "Common",
+         "level": "34-49",
+         "context": "Grounded",
+         "preset": "Natural",
+         "biomes": ["Jungle"],
+         "requirements": "N/A"
+        }
+      ],
+
+      "video": "assets/videos/victreebel.gif",
+      "shinyVideo":"assets/videos/victreebel-shiny.gif",
+
+      "_comment1": "Decks",
+
+      "decks": [
+        {
+         "name": "",
+         "game": "Cobbleverse",
+         "version": "Mega Victreebel",
+         "logo": "assets/games/cobbleverse.png",
+         "moves": ["Transform"]
+        }
+      ],
+
+      "_comment2": "Evolutions",
+      
+      "evolutions": [
+       { "id": 69, "name": "Bellsprout", "level": null },
+       { "id": 70, "name": "Weepinbell", "level": 21 },
+       { "id": 71, "name": "Victreebel", "method": "Item Interact: Leaf Stone" }
+      ],
+
+      "megaEvolutions": [
+       {
+        "name": "Mega Victreebel",
+        "sprite": "assets/images/victreebel-mega.png",
+        "shinySprite": "assets/images/victreebel-mega-shiny.png",
+        "abilities": ["Triage"],
+        "types": ["Grass", "Poison"],
+        "generation": 9,
+
+        "weaknesses": ["Fire", "Ice", "Flying", "Psychic"],
+        "resistances": ["Water", "Electric", "Grass", "Fighting", "Fairy"],
+        "immunities": ["None"],
+
+        "baseStats": {
+        "hp": 80,
+        "attack": 125,
+        "defense": 85,
+        "spAttack": 135,
+        "spDefense": 95,
+        "speed": 70
+       }
+      }
+    ],
+
+      "_comment3": "Movesets",
+
+      "moves": {
+        "level": [
+         { "level": 1, "name": "Stockpile" },
+         { "level": 1, "name": "Swallow" },
+         { "level": 1, "name": "Spit Up" },
+         { "level": 1, "name": "Vine Whip" },
+         { "level": 1, "name": "Sleep Powder" },
+         { "level": 1, "name": "Sweet Scent" },
+         { "level": 1, "name": "Razor Leaf" },
+         { "level": 1, "name": "Leaf Storm" },
+         { "level": 1, "name": "Knock Off" },
+         { "level": 1, "name": "Gastro Acid" },
+         { "level": 1, "name": "Leaf Tornado" },
+         { "level": 1, "name": "Power Whip" },
+         { "level": 1, "name": "Poison Jab" },
+         { "level": 1, "name": "Growth" },
+         { "level": 1, "name": "Wrap" },
+         { "level": 1, "name": "Poison Powder" },
+         { "level": 1, "name": "Stun Spore" },
+         { "level": 1, "name": "Acid" },
+         { "level": 1, "name": "Slam" },
+         { "level": 1, "name": "Wring Out" },
+         { "level": 44, "name": "Leaf Blade" }
+        ],
+        "tm": [
+          { "name": "Acid Spray" },
+          { "name": "Bind" },
+          { "name": "Body Slam" },
+          { "name": "Bug Bite" },
+          { "name": "Bullet Seed" },
+          { "name": "Cut" },
+          { "name": "Encore" },
+          { "name": "Endure" },
+          { "name": "Energy Ball" },
+          { "name": "Facade" },
+          { "name": "Flash" },
+          { "name": "Gastro Acid" },
+          { "name": "Giga Drain" },
+          { "name": "Giga Impact" },
+          { "name": "Grass Knot" },
+          { "name": "Grassy Glide" },
+          { "name": "Grassy Terrain" },
+          { "name": "Hyper Beam" },
+          { "name": "Infestation" },
+          { "name": "Knock Off" },
+          { "name": "Leaf Blade" },
+          { "name": "Leaf Storm" },
+          { "name": "Leech Life" },
+          { "name": "Lunge" },
+          { "name": "Magical Leaf" },
+          { "name": "Natural Gift" },
+          { "name": "Nature Power" },
+          { "name": "Poison Jab" },
+          { "name": "Pounce" },
+          { "name": "Power Whip" },
+          { "name": "Protect" },
+          { "name": "Reflect" },
+          { "name": "Rest" },
+          { "name": "Scary Face" },
+          { "name": "Seed Bomb" },
+          { "name": "Sleep Talk" },
+          { "name": "Sludge Bomb" },
+          { "name": "Sludge Wave" },
+          { "name": "Solar Beam" },
+          { "name": "Substitute" },
+          { "name": "Sucker Punch" },
+          { "name": "Sunny Day" },
+          { "name": "Swift" },
+          { "name": "Swords Dance" },
+          { "name": "Synthesis" },
+          { "name": "Tera Blast" },
+          { "name": "Thief" },
+          { "name": "Toxic" },
+          { "name": "Trailblaze" },
+          { "name": "Venoshock" },
+          { "name": "Weather Ball" },
+          { "name": "Worry Seed" }
+        ],
+        "egg": [
+          { "name": "Belch" },
+          { "name": "Clear Smog" },
+          { "name": "Ingrain" },
+          { "name": "Natural Gift" },
+          { "name": "Strength Sap" },
+          { "name": "Sucker Punch" },
+          { "name": "Synthesis" },
+          { "name": "Tickle" },
+          { "name": "Worry Seed" },
+          { "name": "Wring Out" }
+        ],
+        "tutor": [
+          { "name": "Bind" },
+          { "name": "Bug Bite" },
+          { "name": "Energy Ball" },
+          { "name": "Gastro Acid" },
+          { "name": "Giga Drain" },
+          { "name": "Giga Impact" },
+          { "name": "Grassy Glide" },
+          { "name": "Hyper Beam" },
+          { "name": "Knock Off" },
+          { "name": "Leech Life" },
+          { "name": "Magical Leaf" },
+          { "name": "Poison Jab" },
+          { "name": "Rest" },
+          { "name": "Seed Bomb" },
+          { "name": "Sleep Talk" },
+          { "name": "Sludge Bomb" },
+          { "name": "Sucker Punch" },
+          { "name": "Swift" },
+          { "name": "Synthesis" },
+          { "name": "Worry Seed" }
+       ]
+     }
+    },
+    {
+      "_comment": "Base Stats",
+
       "id": 79,
       "name": "Slowpoke",
       "number": "079",

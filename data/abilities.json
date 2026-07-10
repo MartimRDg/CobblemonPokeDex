@@ -137,6 +137,12 @@
     },
     "Weak Armor": {
       "description": "The Pokémon's Defense stat is lowered when it takes damage from physical moves, but its Speed stat is sharply boosted."
+    },
+    "Chlorophyll": {
+      "description": "Boosts the Pokémon's Speed stat in harsh sunlight."
+    },
+    "Triage": {
+      "description": "Gives priority to the Pokémon's healing moves."
     }
   }
 }

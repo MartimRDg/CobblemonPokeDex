@@ -3151,6 +3151,174 @@
       "accuracy": 90,
       "pp": 10,
       "description": "The user attacks by striking the target with a hard bone. This move hits two to five times in a row."
+    },
+    "Vine Whip": {
+      "type": "Grass",
+      "category": "Physical",
+      "power": 45,
+      "accuracy": 100,
+      "pp": 25,
+      "description": "The target is struck with slender, whiplike vines to inflict damage."
+    },
+    "Wrap": {
+      "type": "Normal",
+      "category": "Physical",
+      "power": 15,
+      "accuracy": 90,
+      "pp": 20,
+      "description": "A long body, vines, or the like are used to wrap and squeeze the target for four to five turns."
+    },
+    "Sleep Powder": {
+      "type": "Grass",
+      "category": "Status",
+      "power": 0,
+      "accuracy": 75,
+      "pp": 15,
+      "description": "The user scatters a cloud of soporific dust that puts the target to sleep."
+    },
+    "Stun Spore": {
+      "type": "Grass",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 75,
+      "pp": 30,
+      "description": "The user scatters a cloud of numbing powder that paralyzes the target."
+    },
+    "Sweet Scent": {
+      "type": "Normal",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user releases a scent that harshly lowers opposing Pokémon's evasiveness."
+    },
+    "Slam": {
+      "type": "Normal",
+      "category": "Physical",
+      "power": 80,
+      "accuracy": 75,
+      "pp": 20,
+      "description": "The target is slammed with a long tail, vines, or the like to inflict damage."
+    },
+    "Power Whip": {
+      "type": "Grass",
+      "category": "Physical",
+      "power": 120,
+      "accuracy": 85,
+      "pp": 10,
+      "description": "The user violently whirls its vines, tentacles, or the like to lash the target."
+    },
+    "Grassy Terrain": {
+      "type": "Grass",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user turns the ground into Grassy Terrain for five turns. This restores the HP of Pokémon on the ground a little every turn and powers up Grass-type moves."
+    },
+    "Leech Life": {
+      "type": "Bug",
+      "category": "Physical",
+      "power": 80,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user drains the target's blood. The user's HP is restored by up to half the damage taken by the target."
+    },
+    "Magical Leaf": {
+      "type": "Grass",
+      "category": "Special",
+      "power": 60,
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user scatters curious leaves that chase the target. This attack never misses."
+    },
+    "Natural Gift": {
+      "type": "Normal",
+      "category": "Physical",
+      "power": 0,
+      "accuracy": 100,
+      "pp": 15,
+      "description": "The user draws power to attack by using its held Berry. The Berry determines the move's type and power."
+    },
+    "Pounce": {
+      "type": "Bug",
+      "category": "Physical",
+      "power": 50,
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user attacks by pouncing on the target. This also lowers the target's Speed stat."
+    },
+    "Clear Smog": {
+      "type": "Poison",
+      "category": "Special",
+      "power": 50,
+      "accuracy": 100,
+      "pp": 15,
+      "description": "The user attacks the target by throwing a clump of special mud. All stat changes are eliminated."
+    },
+    "Strength Sap": {
+      "type": "Grass",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The user restores its own HP by the same amount as the target's Attack stat. It then lowers the target's Attack stat."
+    },
+    "Tickle": {
+      "type": "Normal",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user tickles the target into laughing, lowering its Attack and Defense stats."
+    },
+    "Wring Out": {
+      "type": "Normal",
+      "category": "Special",
+      "power": 0,
+      "accuracy": 100,
+      "pp": 5,
+      "description": "The user powerfully wrings the target. The more HP the target has, the greater the move's power."
+    },
+    "Stockpile": {
+      "type": "Normal",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 20,
+      "description": "The user stores power and boosts its Defense and Sp. Def stats. This move can be used up to three times."
+    },
+    "Swallow": {
+      "type": "Normal",
+      "category": "Status",
+      "power": "-",
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The power stored using the move Stockpile is absorbed by the user to restore its own HP. The more power is stored, the more HP is restored."
+    },
+    "Spit Up": {
+      "type": "Normal",
+      "category": "Special",
+      "power": 0,
+      "accuracy": 100,
+      "pp": 10,
+      "description": "The power stored using the move Stockpile is released at once in an attack. The more power is stored, the greater the move's power."
+    },
+    "Leaf Tornado": {
+      "type": "Grass",
+      "category": "Special",
+      "power": 65,
+      "accuracy": 90,
+      "pp": 10,
+      "description": "The user attacks its target by encircling it in sharp leaves. This attack may also lower the target's accuracy."
+    },
+    "Leaf Blade": {
+      "type": "Grass",
+      "category": "Physical",
+      "power": 90,
+      "accuracy": 100,
+      "pp": 15,
+      "description": "The user handles a sharp leaf like a sword and cuts the target to inflict damage. This move has a heightened chance of landing a critical hit."
     }
   }
 }
